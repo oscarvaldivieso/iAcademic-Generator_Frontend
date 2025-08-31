@@ -17,31 +17,40 @@ import { Register } from 'src/app/store/Authentication/authentication.actions';
 
 // Register Component
 export class RegisterComponent {
-  // Login Form
-  signupForm!: UntypedFormGroup;
+  // Register Form
+  registerForm!: UntypedFormGroup;
   submitted = false;
   successmsg = false;
   error = '';
   // set the current year
   year: number = new Date().getFullYear();
 
-  fieldTextType!: boolean;
+  showPassword = false;
 
   constructor(private formBuilder: UntypedFormBuilder,  public store: Store) { }
 
   ngOnInit(): void {
     /**
-     * Form Validatyion
+     * Form Validation
      */
-    this.signupForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      name: ['', [Validators.required]],
-      password: ['', Validators.required],
+    this.registerForm = this.formBuilder.group({
+      fullName: ['', [Validators.required]],
+      studentId: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      gender: [''],
+      institutionalEmail: ['', [Validators.required, Validators.email, Validators.pattern(/.*@ceutec\.edu\.hn$/)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      alternateEmail: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{4}$/)]],
+      alternatePhone: ['', [Validators.pattern(/^\d{4}-\d{4}$/)]],
+      campus: ['', [Validators.required]],
+      career: ['', [Validators.required]],
+      planYear: ['', [Validators.required]],
+      acceptTerms: [false, [Validators.requiredTrue]]
     });
   }
 
     // convenience getter for easy access to form fields
-    get f() { return this.signupForm.controls; }
+    get f() { return this.registerForm.controls; }
 
   /**
    * Register submit form
@@ -49,19 +58,34 @@ export class RegisterComponent {
   onSubmit() {
     this.submitted = true;
 
-    const email = this.f['email'].value;
-    const name = this.f['name'].value;
-    const password = this.f['password'].value;
+    // Stop here if form is invalid
+    if (this.registerForm.invalid) {
+      return;
+    }
 
-    //Dispatch Action
-    this.store.dispatch(Register({ email: email, first_name: name, password: password }));
+    const formValue = this.registerForm.value;
+
+    // Dispatch Action with all form values
+    this.store.dispatch(Register({ 
+      email: formValue.institutionalEmail,
+      first_name: formValue.fullName,
+      password: formValue.password,
+      student_id: formValue.studentId,
+      gender: formValue.gender,
+      alternate_email: formValue.alternateEmail,
+      phone: formValue.phone,
+      alternate_phone: formValue.alternatePhone,
+      campus: formValue.campus,
+      career: formValue.career,
+      plan_year: formValue.planYear
+    }));
   }
 
   /**
- * Password Hide/Show
- */
-  toggleFieldTextType() {
-    this.fieldTextType = !this.fieldTextType;
+   * Password Hide/Show
+   */
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
 }

@@ -1,3 +1,28 @@
+// Contenedor para el SVG animado
+  .animated-waves {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    pointer-events: none;
+    
+    svg {
+      .path-0, .path-1, .path-2 {
+        fill: rgba(255, 255, 255, 0.031) !important;
+        fill-opacity: 0.3 !important;
+      }
+      
+      .path-1 {
+        fill-opacity: 0.2 !important;
+      }
+      
+      .path-2 {
+        fill-opacity: 0.22 !important;
+      }
+    }
+  }
+
 .auth-page-wrapper {
   min-height: 100vh;
   background: #141a2f;
@@ -8,7 +33,7 @@
   position: relative;
 
   // Efecto de partículas/textura de fondo
-  &::before {
+  .login-container::before {
     content: '';
     position: absolute;
     top: 0;
@@ -18,6 +43,7 @@
     background-image: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
                       radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
     pointer-events: none;
+    z-index: -1;
   }
 }
 
@@ -35,7 +61,7 @@
   margin-bottom: 1rem;
 
   .brand-logo {
-    width: 80px;
+    width: 13rem;
     height: auto;
     margin-bottom: 1.5rem;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
@@ -43,8 +69,8 @@
 
   .brand-title {
     color: #ffffff;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.4rem;
+    font-weight: 400;
     margin: 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     letter-spacing: -0.5px;
@@ -61,10 +87,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 
-  &:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    transform: translateY(-2px);
-  }
+  
 }
 
 .login-form {
@@ -88,18 +111,18 @@
 .input-label {
   color: #e2e8f0;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 400;
   margin: 0;
 }
 
 .forgot-link {
-  color: #d6b68a;
+  color: #b8bfff;
   font-size: 0.75rem;
   text-decoration: none;
   transition: color 0.3s ease;
 
   &:hover {
-    color: #f4d7b0;
+    color: #ffffff;
     text-decoration: underline;
   }
 }
@@ -117,7 +140,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: .9rem;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 
@@ -127,7 +150,7 @@
 
   &:focus {
     outline: none;
-    border-color: #d6b68a;
+    border-color: #c1caff;
     box-shadow: 0 0 0 3px rgba(214, 182, 138, 0.1);
     background: rgba(255, 255, 255, 0.08);
   }
@@ -147,7 +170,7 @@
 }
 
 .input-wrapper:focus-within .input-icon {
-  color: #d6b68a;
+  color: #c1caff;
 }
 
 .toggle-password {
@@ -162,7 +185,7 @@
   transition: all 0.3s ease;
 
   &:hover {
-    color: #d6b68a;
+    color: #ffffff;
     background: rgba(255, 255, 255, 0.05);
   }
 
@@ -177,7 +200,7 @@
 }
 
 .btn-login {
-  background: linear-gradient(135deg, #d6b68a 0%, #c4a373 100%);
+  background: none;
   border: none;
   border-radius: 12px;
   padding: 1rem 2rem;
@@ -191,12 +214,9 @@
   justify-content: center;
   gap: 0.5rem;
   margin-top: 0.5rem;
-  box-shadow: 0 4px 12px rgba(214, 182, 138, 0.3);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(214, 182, 138, 0.4);
-    background: linear-gradient(135deg, #f4d7b0 0%, #d6b68a 100%);
   }
 
   &:active {
@@ -209,6 +229,53 @@
 
   .btn-icon {
     font-size: 1.125rem;
+  }
+}
+
+.signup-section {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.signup-text {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.signup-link {
+  color: #c1caff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .divider-text {
+    padding: 0 1rem;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 }
 

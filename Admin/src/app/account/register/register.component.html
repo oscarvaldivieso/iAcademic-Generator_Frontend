@@ -1,155 +1,246 @@
-<section class="auth-page-wrapper py-5 position-relative d-flex align-items-center justify-content-center min-vh-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-11">
-                <div class="card mb-0">
-                    <div class="row g-0 align-items-center">
-                        <div class="col-xxl-5">
-                            <div class="card auth-card bg-secondary h-100 border-0 shadow-none d-none d-sm-block mb-0">
-                                <div class="card-body py-5 d-flex justify-content-between flex-column h-100">
-                                    <div class="text-center">
-                                        <h3 class="text-white">Start your journey with us.</h3>
-                                        <p class="text-white opacity-75 fs-base">It brings together your tasks, projects, timelines, files and more</p>
-                                    </div>
+<section class="auth-page-wrapper">
+  <div class="register-container">
+    
+    <!-- Columna Izquierda: Branding e Imagen -->
+    <div class="register-left-panel">
+      <div class="register-brand">
+        <img src="/assets/images/logo-ceutec-horizontal.png" alt="CEUTEC Logo" class="brand-logo" />
+        <h1 class="brand-title">Crear Nueva Cuenta</h1>
+        <p class="brand-subtitle">Únete a Class Generator</p>
+      </div>
+      
+      <!-- Imagen ilustrativa -->
+      <div class="brand-illustration">
+        <img src="/assets/images/verification-img.png" alt="Estudiantes" class="illustration-image" />
+      </div>
 
-                                    <div class="auth-effect-main my-5 position-relative rounded-circle d-flex align-items-center justify-content-center mx-auto">
-                                        <div class="effect-circle-1 position-relative mx-auto rounded-circle d-flex align-items-center justify-content-center">
-                                            <div class="effect-circle-2 position-relative mx-auto rounded-circle d-flex align-items-center justify-content-center">
-                                                <div class="effect-circle-3 mx-auto rounded-circle position-relative text-white fs-4xl d-flex align-items-center justify-content-center">
-                                                    Welcome to <span class="text-primary ms-1">Steex</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="auth-user-list list-unstyled">
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-1.jpg" alt="" class="img-fluid">
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/48/avatar-2.jpg" alt="" class="img-fluid">
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-3.jpg" alt="" class="img-fluid">
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-4.jpg" alt="" class="img-fluid">
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-5.jpg" alt="" class="img-fluid">
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <p class="text-white opacity-75 mb-0 mt-3">
-                                            &copy;
-                                            {{year}} Steex. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end col-->
-                        <div class="col-xxl-6 mx-auto">
-                            <div class="card mb-0 border-0 shadow-none mb-0">
-                                <div class="card-body p-sm-5 m-lg-4">
-                                    <div class="text-center mt-2">
-                                        <h5 class="fs-3xl">Create your free account</h5>
-                                        <p class="text-muted">Get your free Steex account now</p>
-                                    </div>
-                                    <div class="p-2 mt-5">
-                                        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate action="index.html">
-
-                                            <div class="mb-3">
-                                                <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
-                                                <input type="email" class="form-control" id="useremail" placeholder="Enter email address" required formControlName="email" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
-                                                <div class="invalid-feedback">
-                                                    Please enter email
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control " id="username" placeholder="Enter username" required formControlName="name" [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
-                                                <div class="invalid-feedback">
-                                                    Please enter username
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label" for="password-input">Password <span class="text-danger">*</span></label>
-                                                <div class="position-relative auth-pass-inputgroup">
-                                                    <input [type]="fieldTextType ? 'text' : 'password'" class="form-control password-input pe-5" placeholder="Enter password" id="password-input" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required formControlName="password" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
-                                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle" [ngClass]="{'mdi-eye-off-outline': !fieldTextType, 'mdi-eye-outline': fieldTextType
-                                                    }" (click)="toggleFieldTextType()"></i></button>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <p class="mb-0 fs-xs text-muted fst-italic">By registering you agree to the Steex <a routerLink="/pages/term-conditions" class="text-primary text-decoration-underline fst-normal fw-medium">Terms of Use</a></p>
-                                            </div>
-
-                                            @if (submitted && f['password'].errors) {
-                                            <div id="password-contain" class="p-3 bg-light mb-2 rounded" class="invalid-feedback">
-                                                <h5 class="fs-sm">Password must contain:</h5>
-                                                <p id="pass-length" class="invalid fs-xs mb-2">Minimum <b>8 characters</b></p>
-                                                <p id="pass-lower" class="invalid fs-xs mb-2">At <b>lowercase</b> letter (a-z)</p>
-                                                <p id="pass-upper" class="invalid fs-xs mb-2">At least <b>uppercase</b> letter (A-Z)</p>
-                                                <p id="pass-number" class="invalid fs-xs mb-0">A least <b>number</b> (0-9)</p>
-                                            </div>
-                                            }
-
-                                            <div class="mt-4">
-                                                <button class="btn btn-primary w-100" type="submit">Sign Up</button>
-                                            </div>
-
-                                            <div class="mt-4 text-center">
-                                                <div class="signin-other-title position-relative">
-                                                    <h5 class="fs-sm mb-4 title text-muted">Create account with</h5>
-                                                </div>
-
-                                                <div>
-                                                    <button type="button" class="btn btn-subtle-primary btn-icon "><i class="ri-facebook-fill fs-lg"></i></button>
-                                                    <button type="button" class="btn btn-subtle-danger btn-icon "><i class="ri-google-fill fs-lg"></i></button>
-                                                    <button type="button" class="btn btn-subtle-dark btn-icon "><i class="ri-github-fill fs-lg"></i></button>
-                                                    <button type="button" class="btn btn-subtle-info btn-icon "><i class="ri-twitter-fill fs-lg"></i></button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="mt-4 text-center">
-                                        <p class="mb-0">Already have an account ? <a routerLink="/auth/login" class="fw-semibold text-primary text-decoration-underline"> Signin </a> </p>
-                                    </div>
-                                </div><!-- end card body -->
-                            </div><!-- end card -->
-                        </div>
-                        <!--end col-->
-                    </div>
-                    <!--end row-->
-                </div>
-            </div>
-            <!--end col-->
+      <div class="login-section">
+            <p class="login-text">¿Ya tienes una cuenta?</p>
+            <a routerLink="/auth/login" class="login-link">
+            <i class="ri-login-box-line"></i> Iniciar sesión
+            </a>
         </div>
-        <!--end row-->
+      
     </div>
-    <!--end container-->
+
+    <!-- Columna Derecha: Formulario -->
+    <div class="register-right-panel">
+      <div class="register-card">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+          
+          <!-- Datos Básicos - Compacto -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="ri-user-line"></i>
+              Datos Básicos
+            </h3>
+            
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="fullName" class="input-label">Nombre completo *</label>
+                <div class="input-wrapper">
+                  <i class="ri-user-3-line input-icon"></i>
+                  <input 
+                    type="text" 
+                    formControlName="fullName" 
+                    id="fullName" 
+                    placeholder="Tu nombre completo" 
+                    class="glass-input"
+                  />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="studentId" class="input-label">N° cuenta/matrícula *</label>
+                <div class="input-wrapper">
+                  <i class="ri-id-card-line input-icon"></i>
+                  <input 
+                    type="text" 
+                    formControlName="studentId" 
+                    id="studentId" 
+                    placeholder="202012345" 
+                    class="glass-input"
+                  />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="institutionalEmail" class="input-label">Correo institucional *</label>
+                <div class="input-wrapper">
+                  <i class="ri-mail-line input-icon"></i>
+                  <input 
+                    type="email" 
+                    formControlName="institutionalEmail" 
+                    id="institutionalEmail" 
+                    placeholder="correo@ceutec.edu.hn" 
+                    class="glass-input"
+                  />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="password" class="input-label">Contraseña *</label>
+                <div class="input-wrapper">
+                  <i class="ri-lock-2-line input-icon"></i>
+                  <input 
+                    [type]="showPassword ? 'text' : 'password'" 
+                    formControlName="password" 
+                    id="password" 
+                    placeholder="Mínimo 8 caracteres"
+                    class="glass-input"
+                  />
+                  <button type="button" class="toggle-password" (click)="togglePassword()">
+                    <i class="ri-eye-line" *ngIf="!showPassword"></i>
+                    <i class="ri-eye-off-line" *ngIf="showPassword"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Datos de Contacto - Compacto -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="ri-phone-line"></i>
+              Contacto
+            </h3>
+            
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="alternateEmail" class="input-label">Correo alterno *</label>
+                <div class="input-wrapper">
+                  <i class="ri-mail-add-line input-icon"></i>
+                  <input 
+                    type="email" 
+                    formControlName="alternateEmail" 
+                    id="alternateEmail" 
+                    placeholder="personal@gmail.com" 
+                    class="glass-input"
+                  />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="phone" class="input-label">Teléfono *</label>
+                <div class="input-wrapper">
+                  <i class="ri-smartphone-line input-icon"></i>
+                  <input 
+                    type="tel" 
+                    formControlName="phone" 
+                    id="phone" 
+                    placeholder="9999-9999" 
+                    class="glass-input"
+                  />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="alternatePhone" class="input-label">Teléfono alterno</label>
+                <div class="input-wrapper">
+                  <i class="ri-phone-line input-icon"></i>
+                  <input 
+                    type="tel" 
+                    formControlName="alternatePhone" 
+                    id="alternatePhone" 
+                    placeholder="Emergencia (opcional)" 
+                    class="glass-input"
+                  />
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="gender" class="input-label">Género</label>
+                <div class="input-wrapper">
+                  <i class="ri-user-heart-line input-icon"></i>
+                  <select formControlName="gender" id="gender" class="glass-input glass-select">
+                    <option value="">Seleccionar</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="otro">Otro</option>
+                    <option value="prefiero-no-decir">Prefiero no decir</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Datos Académicos - Compacto -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <i class="ri-graduation-cap-line"></i>
+              Académicos
+            </h3>
+            
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="campus" class="input-label">Campus *</label>
+                <div class="input-wrapper">
+                  <i class="ri-building-line input-icon"></i>
+                  <select formControlName="campus" id="campus" class="glass-input glass-select">
+                    <option value="">Seleccionar campus</option>
+                    <option value="tegucigalpa">Sede Norte</option>
+                    <option value="san-pedro-sula">Sede Central</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="career" class="input-label">Carrera *</label>
+                <div class="input-wrapper">
+                  <i class="ri-book-open-line input-icon"></i>
+                  <select formControlName="career" id="career" class="glass-input glass-select">
+                    <option value="">Seleccionar carrera</option>
+                    <option value="ingenieria-sistemas">Ing. Informática</option>
+                    <option value="ingenieria-industrial">Ing. Logistica</option>
+                    <option value="administracion-empresas">Admin. Empresas</option>
+                    <option value="contaduria-publica">Contaduría Pública</option>
+                    <option value="mercadotecnia">Mercadotecnia</option>
+                    <option value="psicologia">Psicología</option>
+                    <option value="derecho">Derecho</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="input-group col-span-2">
+                <label for="planYear" class="input-label">Año del plan *</label>
+                <div class="input-wrapper">
+                  <i class="ri-calendar-line input-icon"></i>
+                  <select formControlName="planYear" id="planYear" class="glass-input glass-select">
+                    <option value="">Seleccionar año</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2014</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Términos y Botón -->
+          <div class="form-footer">
+            <div class="checkbox-group">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" formControlName="acceptTerms" />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">
+                  Acepto los <a href="/terms" class="terms-link">términos</a> y 
+                  <a href="/privacy" class="terms-link">política de privacidad</a>
+                </span>
+              </label>
+            </div>
+
+            <!-- Botón de ingreso -->
+            <div class="btn-container">
+                <button type="submit" class="btn-login">
+                <span class="btn-text">Registrarse</span>
+                <i class="ri-login-box-line btn-icon"></i>
+                </button>
+            </div>
+
+            
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
 </section>
