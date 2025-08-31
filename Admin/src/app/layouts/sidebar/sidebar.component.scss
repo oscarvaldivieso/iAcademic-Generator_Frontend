@@ -19,17 +19,18 @@
 
 .navbar-nav {
   .menu-title {
-    color: rgb(210, 182, 148) !important;
+    color: rgb(190, 190, 190) !important;
 
   }
 
   .nav-item {
     .nav-link {
-      color: #d5b58a !important;
+      color: #dbdbdb !important;
 
 
       &:hover {
-        background-color: rgb(185, 139, 12) !important;
+        background-color: rgb(134, 36, 36) !important;
+        border-radius: 10px;
         color: rgb(255, 255, 255) !important;
 
         i {
@@ -38,7 +39,8 @@
       }
 
       &.active {
-        background-color: #262b40
+        background-color: #262b40;
+        border-radius: 10px;
       }
       &.show {
         background-color: #262b40;
@@ -58,7 +60,7 @@
       }
 
       i {
-        color: #d5b58a !important;
+        color: #ff5559 !important;
       }
     }
   }
