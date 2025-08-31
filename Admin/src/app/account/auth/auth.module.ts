@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // page routing
 import { AuthRoutingModule } from './auth-routing.module';
@@ -31,6 +32,8 @@ import { TwostepComponent } from './twostep/twostep.component';
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AuthRoutingModule,
     ErrorsModule,
     NgOtpInputModule

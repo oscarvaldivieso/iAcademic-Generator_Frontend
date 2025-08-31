@@ -1,114 +1,298 @@
-<section class="auth-page-wrapper py-5 position-relative d-flex align-items-center justify-content-center min-vh-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-11">
-                <div class="card mb-0">
-                    <div class="row g-0 align-items-center">
-                        <div class="col-xxl-5">
-                            <div class="card auth-card bg-secondary h-100 border-0 shadow-none d-none d-sm-block mb-0">
-                                <div class="card-body py-5 d-flex justify-content-between flex-column h-100">
-                                    <div class="text-center">
-                                        <h3 class="text-white">Start your journey with us.</h3>
-                                        <p class="text-white opacity-75 fs-base">It brings together your tasks, projects, timelines, files and more</p>
-                                    </div>
+<section class="auth-page-wrapper">
+  <div class="password-reset-container">
+    
+    <!-- Columna Izquierda: Branding e Imagen -->
+    <div class="password-reset-left-panel">
+      <div class="password-reset-brand">
+        <img src="/assets/images/logo-ceutec-horizontal.png" alt="CEUTEC Logo" class="brand-logo" />
+        <h1 class="brand-title">Restablecer Contraseña</h1>
+        <p class="brand-subtitle">Recupera el acceso a tu cuenta</p>
+      </div>
+      
+      <!-- Imagen ilustrativa -->
+      <div class="brand-illustration">
+        <img src="/assets/images/forgot-password.png" alt="Restablecer contraseña" class="illustration-image" />
+      </div>
 
-                                    <div class="auth-effect-main my-5 position-relative rounded-circle d-flex align-items-center justify-content-center mx-auto">
-                                        <div class="effect-circle-1 position-relative mx-auto rounded-circle d-flex align-items-center justify-content-center">
-                                            <div class="effect-circle-2 position-relative mx-auto rounded-circle d-flex align-items-center justify-content-center">
-                                                <div class="effect-circle-3 mx-auto rounded-circle position-relative text-white fs-4xl d-flex align-items-center justify-content-center">
-                                                    Welcome to <span class="text-primary ms-1">Steex</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="auth-user-list list-unstyled">
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-1.jpg" alt="" class="img-fluid" />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/48/avatar-2.jpg" alt="" class="img-fluid" />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-3.jpg" alt="" class="img-fluid" />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-4.jpg" alt="" class="img-fluid" />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="avatar-sm d-inline-block">
-                                                    <div class="avatar-title bg-white shadow-lg overflow-hidden rounded-circle">
-                                                        <img src="assets/images/users/avatar-5.jpg" alt="" class="img-fluid" />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <p class="text-white opacity-75 mb-0 mt-3">&copy; {{year}}> Steex. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end col-->
-                        <div class="col-xxl-6 mx-auto">
-                            <div class="card mb-0 border-0 shadow-none mb-0">
-                                <div class="card-body p-sm-5 m-lg-4">
-                                    <div class="text-center mt-2">
-                                        <h5 class="fs-3xl">Forgot Password?</h5>
-                                        <p class="text-muted mb-4">Reset password with Steex</p>
-                                        <div class="pb-4">
-                                            <img src="assets/images/auth/email.png" alt="" class="avatar-md" />
-                                        </div>
-                                    </div>
-
-                                    <div class="alert border-0 alert-warning text-center mb-2 mx-2" role="alert">
-                                        Enter your email and instructions will be sent to you!
-                                    </div>
-                                    <div class="p-2">
-                                        <form>
-                                            <div class="mb-4">
-                                                <label class="form-label">Email</label>
-                                                <input type="email" class="form-control password-input" id="email" placeholder="Enter Email" required />
-                                            </div>
-
-                                            <div class="text-center mt-4">
-                                                <button class="btn btn-primary w-100" type="submit">Send Reset Link</button>
-                                            </div>
-                                        </form>
-                                        <!-- end form -->
-                                    </div>
-                                    <div class="mt-4 text-center">
-                                        <p class="mb-0">Wait, I remember my password... <a routerLink="/auth/signin" class="fw-semibold text-primary text-decoration-underline"> Click here </a></p>
-                                    </div>
-                                </div>
-                                <!-- end card body -->
-                            </div>
-                            <!-- end card -->
-                        </div>
-                        <!--end col-->
-                    </div>
-                    <!--end row-->
-                </div>
-            </div>
-            <!--end col-->
-        </div>
-        <!--end row-->
+      
+      <div class="login-section">
+        <p class="login-text">¿Recordaste tu contraseña?</p>
+        <a routerLink="/auth/login" class="login-link">
+          <i class="ri-arrow-left-line"></i> Volver al inicio de sesión
+        </a>
+      </div>
+      
     </div>
-    <!--end container-->
+
+    <!-- Columna Derecha: Formulario -->
+    <div class="password-reset-right-panel">
+      <div class="password-reset-card">
+        
+        <!-- Paso 1: Solicitar email -->
+        <div class="reset-step" *ngIf="currentStep === 'request'">
+          <div class="step-header">
+            <div class="step-icon">
+              <i class="ri-mail-send-line"></i>
+            </div>
+            <h2 class="step-title">Ingresa tu correo electrónico</h2>
+            <p class="step-description">
+              Te enviaremos un código de verificación para restablecer tu contraseña
+            </p>
+          </div>
+
+          <form [formGroup]="resetRequestForm" (ngSubmit)="onRequestSubmit()" class="reset-form">
+            <div class="form-section">
+              <div class="input-group">
+                <label for="email" class="input-label">Correo electrónico *</label>
+                <div class="input-wrapper">
+                  <i class="ri-mail-line input-icon"></i>
+                  <input 
+                    type="email" 
+                    formControlName="email" 
+                    id="email" 
+                    placeholder="correo@ceutec.edu.hn" 
+                    class="glass-input"
+                  />
+                </div>
+                <div class="input-hint">
+                  Usa tu correo institucional o el correo alterno registrado
+                </div>
+              </div>
+            </div>
+
+            <div class="form-footer">
+              <div class="btn-container">
+                <button type="submit" class="btn-login" [disabled]="resetRequestForm.invalid || isLoading">
+                  <span class="btn-text" *ngIf="!isLoading">Enviar código</span>
+                  <span class="btn-text" *ngIf="isLoading">Enviando...</span>
+                  <i class="ri-send-plane-line btn-icon" *ngIf="!isLoading"></i>
+                  <i class="ri-loader-4-line btn-icon spinning" *ngIf="isLoading"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Paso 2: Verificar código -->
+        <div class="reset-step" *ngIf="currentStep === 'verify'">
+          <div class="step-header">
+            <div class="step-icon">
+              <i class="ri-shield-check-line"></i>
+            </div>
+            <h2 class="step-title">Verifica tu código</h2>
+            <p class="step-description">
+              Ingresa el código de 6 dígitos que enviamos a <strong>{{ maskedEmail }}</strong>
+            </p>
+          </div>
+
+          <form [formGroup]="verifyCodeForm" (ngSubmit)="onVerifySubmit()" class="reset-form">
+            <div class="form-section">
+              <div class="verification-code-group">
+                <label class="input-label">Código de verificación *</label>
+                <div class="code-inputs">
+                  <input 
+                    type="text" 
+                    maxlength="1" 
+                    class="code-input glass-input"
+                    formControlName="digit1"
+                    (input)="onCodeInput($event, 0)"
+                    (keydown)="onCodeKeydown($event, 0)"
+                  />
+                  <input 
+                    type="text" 
+                    maxlength="1" 
+                    class="code-input glass-input"
+                    formControlName="digit2"
+                    (input)="onCodeInput($event, 1)"
+                    (keydown)="onCodeKeydown($event, 1)"
+                  />
+                  <input 
+                    type="text" 
+                    maxlength="1" 
+                    class="code-input glass-input"
+                    formControlName="digit3"
+                    (input)="onCodeInput($event, 2)"
+                    (keydown)="onCodeKeydown($event, 2)"
+                  />
+                  <input 
+                    type="text" 
+                    maxlength="1" 
+                    class="code-input glass-input"
+                    formControlName="digit4"
+                    (input)="onCodeInput($event, 3)"
+                    (keydown)="onCodeKeydown($event, 3)"
+                  />
+                  <input 
+                    type="text" 
+                    maxlength="1" 
+                    class="code-input glass-input"
+                    formControlName="digit5"
+                    (input)="onCodeInput($event, 4)"
+                    (keydown)="onCodeKeydown($event, 4)"
+                  />
+                  <input 
+                    type="text" 
+                    maxlength="1" 
+                    class="code-input glass-input"
+                    formControlName="digit6"
+                    (input)="onCodeInput($event, 5)"
+                    (keydown)="onCodeKeydown($event, 5)"
+                  />
+                </div>
+              </div>
+
+              <div class="resend-section">
+                <p class="resend-text">¿No recibiste el código?</p>
+                <button type="button" class="resend-link" (click)="resendCode()" [disabled]="resendCooldown > 0">
+                  <span *ngIf="resendCooldown === 0">Reenviar código</span>
+                  <span *ngIf="resendCooldown > 0">Reenviar en {{ resendCooldown }}s</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-footer">
+              <div class="btn-container">
+                <button type="button" class="btn-secondary" (click)="goToStep('request')">
+                  <i class="ri-arrow-left-line btn-icon"></i>
+                  <span class="btn-text">Atrás</span>
+                </button>
+                <button type="submit" class="btn-primary" [disabled]="verifyCodeForm.invalid || isLoading">
+                  <span class="btn-text" *ngIf="!isLoading">Verificar</span>
+                  <span class="btn-text" *ngIf="isLoading">Verificando...</span>
+                  <i class="ri-check-line btn-icon" *ngIf="!isLoading"></i>
+                  <i class="ri-loader-4-line btn-icon spinning" *ngIf="isLoading"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Paso 3: Nueva contraseña -->
+        <div class="reset-step" *ngIf="currentStep === 'reset'">
+          <div class="step-header">
+            <div class="step-icon">
+              <i class="ri-lock-2-line"></i>
+            </div>
+            <h2 class="step-title">Nueva contraseña</h2>
+            <p class="step-description">
+              Crea una contraseña segura para tu cuenta
+            </p>
+          </div>
+
+          <form [formGroup]="newPasswordForm" (ngSubmit)="onResetSubmit()" class="reset-form">
+            <div class="form-section">
+              <div class="input-group">
+                <label for="newPassword" class="input-label">Nueva contraseña *</label>
+                <div class="input-wrapper">
+                  <i class="ri-lock-2-line input-icon"></i>
+                  <input 
+                    [type]="showNewPassword ? 'text' : 'password'" 
+                    formControlName="newPassword" 
+                    id="newPassword" 
+                    placeholder="Mínimo 8 caracteres"
+                    class="glass-input"
+                  />
+                  <button type="button" class="toggle-password" (click)="toggleNewPassword()">
+                    <i class="ri-eye-line" *ngIf="!showNewPassword"></i>
+                    <i class="ri-eye-off-line" *ngIf="showNewPassword"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="confirmPassword" class="input-label">Confirmar contraseña *</label>
+                <div class="input-wrapper">
+                  <i class="ri-lock-2-line input-icon"></i>
+                  <input 
+                    [type]="showConfirmPassword ? 'text' : 'password'" 
+                    formControlName="confirmPassword" 
+                    id="confirmPassword" 
+                    placeholder="Repetir contraseña"
+                    class="glass-input"
+                  />
+                  <button type="button" class="toggle-password" (click)="toggleConfirmPassword()">
+                    <i class="ri-eye-line" *ngIf="!showConfirmPassword"></i>
+                    <i class="ri-eye-off-line" *ngIf="showConfirmPassword"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Indicador de fortaleza de contraseña -->
+              <div class="password-strength" *ngIf="newPasswordForm.get('newPassword')?.value">
+                <div class="strength-label">Fortaleza de la contraseña:</div>
+                <div class="strength-bar">
+                  <div class="strength-fill" [class]="getPasswordStrengthClass()"></div>
+                </div>
+                <div class="strength-text">{{ getPasswordStrengthText() }}</div>
+              </div>
+
+              <!-- Requisitos de contraseña -->
+              <div class="password-requirements">
+                <p class="requirements-title">La contraseña debe contener:</p>
+                <div class="requirement-item" [class.met]="hasMinLength()">
+                  <i class="ri-check-line" *ngIf="hasMinLength()"></i>
+                  <i class="ri-close-line" *ngIf="!hasMinLength()"></i>
+                  <span>Al menos 8 caracteres</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasUppercase()">
+                  <i class="ri-check-line" *ngIf="hasUppercase()"></i>
+                  <i class="ri-close-line" *ngIf="!hasUppercase()"></i>
+                  <span>Una letra mayúscula</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasLowercase()">
+                  <i class="ri-check-line" *ngIf="hasLowercase()"></i>
+                  <i class="ri-close-line" *ngIf="!hasLowercase()"></i>
+                  <span>Una letra minúscula</span>
+                </div>
+                <div class="requirement-item" [class.met]="hasNumber()">
+                  <i class="ri-check-line" *ngIf="hasNumber()"></i>
+                  <i class="ri-close-line" *ngIf="!hasNumber()"></i>
+                  <span>Un número</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-footer">
+              <div class="btn-container">
+                <button type="button" class="btn-secondary" (click)="goToStep('verify')">
+                  <i class="ri-arrow-left-line btn-icon"></i>
+                  <span class="btn-text">Atrás</span>
+                </button>
+                <button type="submit" class="btn-primary" [disabled]="newPasswordForm.invalid || isLoading">
+                  <span class="btn-text" *ngIf="!isLoading">Restablecer</span>
+                  <span class="btn-text" *ngIf="isLoading">Restableciendo...</span>
+                  <i class="ri-refresh-line btn-icon" *ngIf="!isLoading"></i>
+                  <i class="ri-loader-4-line btn-icon spinning" *ngIf="isLoading"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Paso 4: Éxito -->
+        <div class="reset-step" *ngIf="currentStep === 'success'">
+          <div class="step-header success">
+            <div class="step-icon success">
+              <i class="ri-check-double-line"></i>
+            </div>
+            <h2 class="step-title">¡Contraseña restablecida!</h2>
+            <p class="step-description">
+              Tu contraseña ha sido actualizada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.
+            </p>
+          </div>
+
+          <div class="form-footer">
+            <div class="btn-container">
+              <button type="button" class="btn-primary full-width" (click)="goToLogin()">
+                <span class="btn-text">Iniciar sesión</span>
+                <i class="ri-login-box-line btn-icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </section>
