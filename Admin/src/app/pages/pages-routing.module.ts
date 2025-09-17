@@ -88,6 +88,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./general/general.module').then((m) => m.GeneralModule),
   },
+  {
+    path: 'uni',
+    loadChildren: () =>
+      import('./UNI/UNI.module').then((m) => m.UNIModule),
+  },
 ];
 
 @NgModule({
