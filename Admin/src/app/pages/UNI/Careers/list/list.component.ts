@@ -236,11 +236,16 @@ export class ListComponent implements OnInit {
     
     console.log('Eliminando estado civil:', this.estadoCivilAEliminar);
     
-    this.http.post(`${environment.apiBaseUrl}/EstadosCiviles/Eliminar/${this.estadoCivilAEliminar.esCv_Id}`, {}, {
+    // Usar el proxy configurado
+    const url = `/api/EstadosCiviles/Eliminar/${this.estadoCivilAEliminar.esCv_Id}`;
+    
+    this.http.post(url, {}, {
       headers: { 
-        'X-Api-Key': environment.apiKey,
-        'accept': '*/*'
-      }
+        'x-api-key': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true
     }).subscribe({
       next: (response: any) => {
         console.log('Respuesta del servidor:', response);
@@ -348,14 +353,29 @@ export class ListComponent implements OnInit {
 
   private cargardatos(state: boolean): void {
     this.mostrarOverlayCarga = state;
-    this.http.get<Careers[]>(`${environment.apiBaseUrl}/Careers/list`, {
-      headers: { 'x-api-key': environment.apiKey }
-    }).subscribe(data => {
-      setTimeout(() => {
-
-        this.table.setData(data);
+    
+    // Usar el proxy configurado
+    const url = '/Careers/list';
+    
+    this.http.get<Careers[]>(url, {
+      headers: { 
+        'x-api-key': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true  // Importante para enviar cookies si es necesario
+    }).subscribe({
+      next: (data) => {
+        setTimeout(() => {
+          this.table.setData(data);
+          this.mostrarOverlayCarga = false;
+        }, 500);
+      },
+      error: (error) => {
+        console.error('Error al cargar las carreras:', error);
+        this.mostrarMensaje('error', 'Error al cargar las carreras. Por favor, intente de nuevo.');
         this.mostrarOverlayCarga = false;
-      }, 500);
+      }
     });
   }
 }
