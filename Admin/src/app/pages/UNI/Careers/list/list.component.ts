@@ -15,11 +15,18 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.prod';
 import { TableModule } from 'src/app/pages/table/table.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { EstadoCivil } from 'src/app/Modelos/general/EstadoCivil.Model';
 import { Careers } from 'src/app/Modelos/uni/career.model';
 import { CreateComponent } from '../create/create.component';
 import { EditComponent } from '../edit/edit.component';
 import { FloatingMenuService } from 'src/app/shared/floating-menu.service';
+
+interface ApiResponse<T> {
+  type: number;
+  code: number;
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 @Component({
   selector: 'app-list',
@@ -70,28 +77,53 @@ import { FloatingMenuService } from 'src/app/shared/floating-menu.service';
   ]
 })
 export class ListComponent implements OnInit {
-
-  
   // Overlay de carga animado
   mostrarOverlayCarga = false;
   // bread crumb items
   breadCrumbItems!: Array<{}>;
 
+  constructor(
+    public table: ReactiveTableService<Careers>, 
+    private http: HttpClient, 
+    private router: Router, 
+    private route: ActivatedRoute,
+    public floatingMenuService: FloatingMenuService
+  ) {
+    this.cargardatos(true);
+  }   
+
+  activeActionRow: number | null = null;
+  showEdit = true;
+  showDetails = true;
+  showDelete = true;
+  showCreateForm = false;
+  showEditForm = false;
+  showDetailsForm = false;
+  carreraEditando: Careers | null = null;
+  carreraDetalle: Careers | null = null;
   
+  // Propiedades para alertas
+  mostrarAlertaExito = false;
+  mensajeExito = '';
+  mostrarAlertaError = false;
+  mensajeError = '';
+  mostrarAlertaWarning = false;
+  mensajeWarning = '';
+  
+  // Propiedades para confirmación de eliminación
+  mostrarConfirmacionEliminar = false;
+  carreraAEliminar: Careers | null = null;
+
+  // Estado de exportación
+  exportando = false;
+  tipoExportacion: 'excel' | 'pdf' | 'csv' | null = null;
 
   ngOnInit(): void {
-    /**
-     * BreadCrumb
-     */
     this.breadCrumbItems = [
-      { label: 'General' },
+      { label: 'UNI' },
       { label: 'Carreras', active: true }
     ];
   }
-
-  
-
-  
 
   /**
    * Sistema de mensajes mejorado con tipos adicionales
@@ -123,73 +155,32 @@ export class ListComponent implements OnInit {
     }
   }
 
-
-  // Métodos para los botones de acción principales (crear, editar, detalles)
+  // Métodos para los botones de acción principales
   crear(): void {
     console.log('Toggleando formulario de creación...');
     this.showCreateForm = !this.showCreateForm;
-    this.showEditForm = false; // Cerrar edit si está abierto
-    this.showDetailsForm = false; // Cerrar details si está abierto
-    this.activeActionRow = null; // Cerrar menú de acciones
+    this.showEditForm = false;
+    this.showDetailsForm = false;
+    this.activeActionRow = null;
   }
 
-  editar(estadoCivil: EstadoCivil): void {
-    console.log('Abriendo formulario de edición para:', estadoCivil);
-    console.log('Datos específicos:', {
-      id: estadoCivil.esCv_Id,
-      descripcion: estadoCivil.esCv_Descripcion,
-      completo: estadoCivil
-    });
-    this.estadoCivilEditando = { ...estadoCivil }; // Hacer copia profunda
+  editar(carrera: Careers): void {
+    console.log('Abriendo formulario de edición para:', carrera);
+    this.carreraEditando = { ...carrera };
     this.showEditForm = true;
-    this.showCreateForm = false; // Cerrar create si está abierto
-    this.showDetailsForm = false; // Cerrar details si está abierto
-    this.activeActionRow = null; // Cerrar menú de acciones
+    this.showCreateForm = false;
+    this.showDetailsForm = false;
+    this.activeActionRow = null;
   }
 
-  detalles(estadoCivil: EstadoCivil): void {
-    console.log('Abriendo detalles para:', estadoCivil);
-    this.estadoCivilDetalle = { ...estadoCivil }; // Hacer copia profunda
+  detalles(carrera: Careers): void {
+    console.log('Abriendo detalles para:', carrera);
+    this.carreraDetalle = { ...carrera };
     this.showDetailsForm = true;
-    this.showCreateForm = false; // Cerrar create si está abierto
-    this.showEditForm = false; // Cerrar edit si está abierto
-    this.activeActionRow = null; // Cerrar menú de acciones
+    this.showCreateForm = false;
+    this.showEditForm = false;
+    this.activeActionRow = null;
   }
-  // Estado de exportación
-  exportando = false;
-  tipoExportacion: 'excel' | 'pdf' | 'csv' | null = null;
-
-   constructor(public table: ReactiveTableService<Careers>, 
-    private http: HttpClient, 
-    private router: Router, 
-    private route: ActivatedRoute,
-    public floatingMenuService: FloatingMenuService
-  )
-    {
-    this.cargardatos(true);
-  }   
-
-  activeActionRow: number | null = null;
-  showEdit = true;
-  showDetails = true;
-  showDelete = true;
-  showCreateForm = false; // Control del collapse
-  showEditForm = false; // Control del collapse de edición
-  showDetailsForm = false; // Control del collapse de detalles
-  estadoCivilEditando: EstadoCivil | null = null;
-  estadoCivilDetalle: EstadoCivil | null = null;
-  
-  // Propiedades para alertas
-  mostrarAlertaExito = false;
-  mensajeExito = '';
-  mostrarAlertaError = false;
-  mensajeError = '';
-  mostrarAlertaWarning = false;
-  mensajeWarning = '';
-  
-  // Propiedades para confirmación de eliminación
-  mostrarConfirmacionEliminar = false;
-  estadoCivilAEliminar: EstadoCivil | null = null;
 
   cerrarFormulario(): void {
     this.showCreateForm = false;
@@ -198,117 +189,81 @@ export class ListComponent implements OnInit {
   cerrarFormularioEdicion(): void {
     this.mostrarOverlayCarga = false;
     this.showEditForm = false;
-    this.estadoCivilEditando = null;
+    this.carreraEditando = null;
   }
 
   cerrarFormularioDetalles(): void {
     this.showDetailsForm = false;
-    this.estadoCivilDetalle = null;
+    this.carreraDetalle = null;
   }
 
-  guardarEstadoCivil(estadoCivil: EstadoCivil): void {
-    console.log('Estado civil guardado exitosamente desde create component:', estadoCivil);
-    // Recargar los datos de la tabla sin overlay
+  guardarCarrera(carrera: Careers): void {
+    console.log('Carrera guardada exitosamente:', carrera);
     this.cargardatos(false);
     this.cerrarFormulario();
   }
 
-  actualizarEstadoCivil(estadoCivil: EstadoCivil): void {
-    console.log('Estado civil actualizado exitosamente desde edit component:', estadoCivil);
-    // Recargar los datos de la tabla sin overlay
+  actualizarCarrera(carrera: Careers): void {
+    console.log('Carrera actualizada exitosamente:', carrera);
     this.cargardatos(false);
     this.cerrarFormularioEdicion();
   }
 
-  confirmarEliminar(estadoCivil: EstadoCivil): void {
-    console.log('Solicitando confirmación para eliminar:', estadoCivil);
-    this.estadoCivilAEliminar = estadoCivil;
+  confirmarEliminar(carrera: Careers): void {
+    console.log('Solicitando confirmación para eliminar:', carrera);
+    this.carreraAEliminar = carrera;
     this.mostrarConfirmacionEliminar = true;
   }
 
   cancelarEliminar(): void {
     this.mostrarConfirmacionEliminar = false;
-    this.estadoCivilAEliminar = null;
+    this.carreraAEliminar = null;
   }
 
   eliminar(): void {
-    if (!this.estadoCivilAEliminar) return;
+    if (!this.carreraAEliminar) return;
     
-    console.log('Eliminando estado civil:', this.estadoCivilAEliminar);
+    console.log('Eliminando carrera:', this.carreraAEliminar);
     
-    // Usar el proxy configurado
-    const url = `/api/EstadosCiviles/Eliminar/${this.estadoCivilAEliminar.esCv_Id}`;
+    const url = `https://localhost:7228/Careers/Eliminar/${this.carreraAEliminar.car_codigo}`;
     
-    this.http.post(url, {}, {
+    this.http.post<ApiResponse<any>>(url, {}, {
       headers: { 
-        'x-api-key': environment.apiKey,
+        'XApiKey': environment.apiKey,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
       withCredentials: true
     }).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         console.log('Respuesta del servidor:', response);
         
-        // Verificar el código de estado en la respuesta
         if (response.success && response.data) {
           if (response.data.code_Status === 1) {
-            // Éxito: eliminado correctamente
-            console.log('Estado civil eliminado exitosamente');
-            this.mensajeExito = `Estado civil "${this.estadoCivilAEliminar!.esCv_Descripcion}" eliminado exitosamente`;
-            this.mostrarAlertaExito = true;
-            
-            // Ocultar la alerta después de 3 segundos
-            setTimeout(() => {
-              this.mostrarAlertaExito = false;
-              this.mensajeExito = '';
-            }, 3000);
-            
-
+            console.log('Carrera eliminada exitosamente');
+            this.mostrarMensaje('success', `Carrera "${this.carreraAEliminar!.car_nombre}" eliminada exitosamente`);
             this.cargardatos(false);
             this.cancelarEliminar();
           } else if (response.data.code_Status === -1) {
-            //result: está siendo utilizado
-            console.log('Estado civil está siendo utilizado');
-            this.mostrarAlertaError = true;
-            this.mensajeError = response.data.message_Status || 'No se puede eliminar: el estado civil está siendo utilizado.';
-            
-            setTimeout(() => {
-              this.mostrarAlertaError = false;
-              this.mensajeError = '';
-            }, 5000);
-            
-            // Cerrar el modal de confirmación
+            console.log('Carrera está siendo utilizada');
+            this.mostrarMensaje('error', response.data.message_Status || 'No se puede eliminar: la carrera está siendo utilizada.');
             this.cancelarEliminar();
-          } else if (response.data.code_Status === 0) {
-            // Error general
+          } else {
             console.log('Error general al eliminar');
-            this.mostrarAlertaError = true;
-            this.mensajeError = response.data.message_Status || 'Error al eliminar el estado civil.';
-            
-            setTimeout(() => {
-              this.mostrarAlertaError = false;
-              this.mensajeError = '';
-            }, 5000);
-            
-            // Cerrar el modal de confirmación
+            this.mostrarMensaje('error', response.data.message_Status || 'Error al eliminar la carrera.');
             this.cancelarEliminar();
           }
         } else {
-          // Respuesta inesperada
           console.log('Respuesta inesperada del servidor');
-          this.mostrarAlertaError = true;
-          this.mensajeError = response.message || 'Error inesperado al eliminar el estado civil.';
-          
-          setTimeout(() => {
-            this.mostrarAlertaError = false;
-            this.mensajeError = '';
-          }, 5000);
-          
-          // Cerrar el modal de confirmación
+          this.mostrarMensaje('error', response.message || 'Error inesperado al eliminar la carrera.');
           this.cancelarEliminar();
         }
       },
+      error: (error) => {
+        console.error('Error en la solicitud de eliminación:', error);
+        this.mostrarMensaje('error', 'Error de conexión al eliminar la carrera.');
+        this.cancelarEliminar();
+      }
     });
   }
 
@@ -321,59 +276,48 @@ export class ListComponent implements OnInit {
     this.mensajeWarning = '';
   }
 
-  // AQUI EMPIEZA LO BUENO PARA LAS ACCIONES
-  private cargarAccionesUsuario(): void {
-    // OBTENEMOS PERMISOSJSON DEL LOCALSTORAGE
-    const permisosRaw = localStorage.getItem('permisosJson');
-    console.log('Valor bruto en localStorage (permisosJson):', permisosRaw);
-    let accionesArray: string[] = [];
-    if (permisosRaw) {
-      try {
-        const permisos = JSON.parse(permisosRaw);
-        // BUSCAMOS EL MÓDULO DE ESTADOS CIVILES
-        let modulo = null;
-        if (Array.isArray(permisos)) {
-          // BUSCAMOS EL MÓDULO DE ESTADOS CIVILES POR ID
-          modulo = permisos.find((m: any) => m.Pant_Id === 14);
-        } else if (typeof permisos === 'object' && permisos !== null) {
-          // ESTO ES PARA CUANDO LOS PERMISOS ESTÁN EN UN OBJETO CON CLAVES
-          modulo = permisos['Estados Civiles'] || permisos['estados civiles'] || null;
-        }
-        if (modulo && modulo.Acciones && Array.isArray(modulo.Acciones)) {
-          // AQUI SACAMOS SOLO EL NOMBRE DE LA ACCIÓN
-          accionesArray = modulo.Acciones.map((a: any) => a.Accion).filter((a: any) => typeof a === 'string');
-          console.log('Acciones del módulo:', accionesArray);
-        }
-      } catch (e) {
-        console.error('Error al parsear permisosJson:', e);
-      }
-    } 
-    
-  }
+  
 
   private cargardatos(state: boolean): void {
     this.mostrarOverlayCarga = state;
     
-    // Usar el proxy configurado
-    const url = '/Careers/list';
+    const url = 'https://localhost:7228/Careers/list';
     
-    this.http.get<Careers[]>(url, {
+    this.http.get<ApiResponse<Careers[]>>(url, {
       headers: { 
-        'x-api-key': environment.apiKey,
+        'XApiKey': environment.apiKey,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      withCredentials: true  // Importante para enviar cookies si es necesario
+      withCredentials: true
     }).subscribe({
-      next: (data) => {
-        setTimeout(() => {
-          this.table.setData(data);
+      next: (response) => {
+        console.log('Respuesta completa de la API:', response);
+        
+        if (response.success && response.data) {
+          console.log('Datos de carreras:', response.data);
+          setTimeout(() => {
+            this.table.setData(response.data);
+            this.mostrarOverlayCarga = false;
+          }, 500);
+        } else {
+          console.error('Respuesta de API no exitosa:', response);
+          this.mostrarMensaje('error', response.message || 'Error al cargar las carreras.');
           this.mostrarOverlayCarga = false;
-        }, 500);
+        }
       },
       error: (error) => {
         console.error('Error al cargar las carreras:', error);
-        this.mostrarMensaje('error', 'Error al cargar las carreras. Por favor, intente de nuevo.');
+        
+        // Mensaje más específico basado en el error
+        let mensaje = 'Error al cargar las carreras. Por favor, intente de nuevo.';
+        if (error.status === 401) {
+          mensaje = 'Error de autorización. Verifique la API Key.';
+        } else if (error.status === 0) {
+          mensaje = 'Error de conexión. Verifique que la API esté funcionando.';
+        }
+        
+        this.mostrarMensaje('error', mensaje);
         this.mostrarOverlayCarga = false;
       }
     });

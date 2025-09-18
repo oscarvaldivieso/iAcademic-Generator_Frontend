@@ -59,8 +59,7 @@ export class LoginComponent {
     const email = this.f['email'].value; // Get the username from the form
     const password = this.f['password'].value; // Get the password from the form
 
-    // Login Api
-    this.store.dispatch(login({ email: email, password: password }));
+    this.router.navigate(['/']);
   }
 
   /**

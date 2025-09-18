@@ -15,6 +15,10 @@ export class AuthGuard  {
     ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        // Deshabilitado temporalmente para pruebas
+        return true;
+        
+        /* Código original comentado
         if (environment.defaultauth === 'firebase') {
             const currentUser = this.authenticationService.currentUser();
             if (currentUser) {
@@ -31,9 +35,10 @@ export class AuthGuard  {
             if(localStorage.getItem('currentUser')) {
                 return true;
             }
-        }
-        // not logged in so redirect to login page with the return url
-        this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
-        return false;
+        }*/
+        
+        // Código original comentado
+        // this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+        // return false;
     }
 }
