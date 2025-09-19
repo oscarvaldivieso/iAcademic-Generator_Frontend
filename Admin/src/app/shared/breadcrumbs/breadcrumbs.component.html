@@ -1,15 +1,10 @@
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
-        <div class="page-title-box d-flex align-items-start justify-content-between gap-2">
+        <div class="page-title-box d-flex align-items-center justify-content-between gap-2">
             <div class="w-100">
               <h4 class="mb-sm-0">{{title}}</h4>
-              <div class="page-title-right text-start mt-2">
-                  <ol class="breadcrumb m-0">
-                      @for (item of breadcrumbItems; track $index) {
-                      <li class="breadcrumb-item active">{{ item.label }}</li>
-                      }
-                  </ol>
+              <div class="page-title-right text-end mt-2">
               </div>
             </div>
             <ng-content></ng-content>

@@ -54,13 +54,26 @@ export class LoginComponent {
    * Form submit
    */
   onSubmit() {
-    this.submitted = true;
+  this.submitted = true;
 
-    const email = this.f['email'].value; // Get the username from the form
-    const password = this.f['password'].value; // Get the password from the form
-
-    this.router.navigate(['/']);
+  if (this.loginForm.invalid) {
+    return;
   }
+
+  const email = this.f['email'].value;
+  const password = this.f['password'].value;
+
+  // Prueba rápida: login "fake"
+  if (email === 'admin@themesbrand.com' && password === '123456') {
+    // Guardar usuario en localStorage para simular sesión
+    localStorage.setItem('currentUser', JSON.stringify({ email }));
+
+    // Redirigir al home
+    this.router.navigate(['/']);
+  } else {
+    this.error = 'Email o contraseña incorrectos';
+  }
+}
 
   /**
    * Password Hide/Show

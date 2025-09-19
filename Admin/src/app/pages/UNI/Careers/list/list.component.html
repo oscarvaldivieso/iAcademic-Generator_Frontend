@@ -1,185 +1,260 @@
 <!-- Overlay de carga animado -->
 <div *ngIf="mostrarOverlayCarga" class="overlay-carga">
-  <div class="typing-indicator">
-    <div class="typing-circle"></div>
-    <div class="typing-circle"></div>
-    <div class="typing-circle"></div>
-    <div class="typing-shadow"></div>
-    <div class="typing-shadow"></div>
-    <div class="typing-shadow"></div>
+    <div class="typing-indicator">
+      <div class="typing-circle"></div>
+      <div class="typing-circle"></div>
+      <div class="typing-circle"></div>
+      <div class="typing-shadow"></div>
+      <div class="typing-shadow"></div>
+      <div class="typing-shadow"></div>
+    </div>
   </div>
-</div>
-<app-breadcrumbs
-  [title]="'Carreras'"
-  [breadcrumbItems]="[
-    { label: 'Uni' },
-    { label: 'Carreras', active: true }
-  ]"
->
-<img class="icon-breadcrumb" style="width: 10vh; height: 10vh;" src="assets/images/svg/Vector.svg" alt="breadcrumb icon" />
-</app-breadcrumbs>
-
-<div class="row">
-  <div class="col-lg-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between mb-3 flex-wrap" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
-          <!-- AQUI EMPIEZA LO BUENO PARA LAS ACCIONES, TENEMOS ACCIONPERMITIDA QUE VIENE DEL TS DONDE VEMOS LAS ACCIONES -->
-          <button  type="button" class="btn btn-primary me-2 mb-2" (click)="crear()">
-            <span class="btn-text">Nuevo</span>
-            <span class="btn-icon"><i class="ri-add-line"></i></span>
-          </button>
-           <div class="d-flex align-items-center gap-2 flex-wrap">
-           
-
-            <!-- Campo de búsqueda -->
-            <div class="search-box mb-2">
-              <input type="text" class="form-control search" placeholder="Buscar..." [(ngModel)]="table.searchTerm"
-                (ngModelChange)="table.setSearchTerm($event)">
-              <i class="ri-search-line search-icon"></i>
+  
+  <app-breadcrumbs
+    [title]="'Carreras'"
+  >
+  
+  </app-breadcrumbs>
+  
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          
+          <!-- Barra de herramientas -->
+          <div class="d-flex justify-content-between mb-4 flex-wrap" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+            <button type="button" class="btn btn-primary me-2 mb-2" (click)="crear()">
+              <span class="btn-text">Nuevo</span>
+              <span class="btn-icon"><i class="ri-add-line"></i></span>
+            </button>
+            
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <!-- Campo de búsqueda -->
+              <div class="search-box mb-2">
+                <input type="text" class="form-control search" placeholder="Buscar carreras..." [(ngModel)]="table.searchTerm"
+                  (ngModelChange)="table.setSearchTerm($event)">
+                <i class="ri-search-line search-icon"></i>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Collapse para el formulario de creación -->
+          <div class="collapse" [ngClass]="{ 'show': showCreateForm }" id="createFormCollapse">
+            <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
+              <div class="container-fluid flex-grow-1">
+                <app-create (onCancel)="cerrarFormulario()" (onSave)="guardarCarrera($event)"></app-create>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Collapse para el formulario de edición -->
+          <div class="collapse" [ngClass]="{ 'show': showEditForm }" id="editFormCollapse">
+            <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
+              <div class="container-fluid flex-grow-1">
+                <app-edit 
+                   
+                  (onCancel)="cerrarFormularioEdicion()" 
+                  >
+                </app-edit>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Cards de carreras -->
+          <div class="careers-container" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+            <div class="row g-4">
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let carrera of table.paginated$ | async; let i = index">
+                <div class="card h-100 career-card position-relative overflow-hidden shadow-sm" 
+                     [class.card-hover]="true" 
+                     style="border-radius: 16px; border: 1px solid #e3e6f0; transition: all 0.3s ease;">
+                  
+                  <!-- Botones de acción flotantes -->
+                  <div class="position-absolute top-0 end-0 p-2 d-flex gap-1 action-buttons" 
+                       style="z-index: 10; opacity: 0; transition: opacity 0.3s ease;">
+                    <button class="btn btn-sm btn-outline-primary rounded-circle p-1 shadow-sm" 
+                            (click)="editar(carrera)" 
+                            title="Editar carrera"
+                            style="width: 32px; height: 32px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                      <i class="ri-edit-2-line"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger rounded-circle p-1 shadow-sm" 
+                            (click)="confirmarEliminar(carrera)" 
+                            title="Eliminar carrera"
+                            style="width: 32px; height: 32px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                      <i class="ri-delete-bin-6-line"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="card-body d-flex flex-column p-4">
+                    <!-- Header de la card -->
+                    <div class="d-flex align-items-start mb-3">
+                      <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                          <div class="career-icon" style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                            <i class="ri-graduation-cap-line text-white"></i>
+                          </div>
+                          <div>
+                            <h6 class="card-title mb-0 fw-bold text-dark" style="font-size: 0.95rem;">{{carrera.car_codigo}}</h6>
+                            <small class="text-muted">Código</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Nombre de la carrera -->
+                    <h5 class="card-subtitle mb-3 fw-semibold text-primary" 
+                        style="line-height: 1.4; font-size: 1.1rem;" 
+                        [title]="carrera.car_nombre">
+                      {{carrera.car_nombre}}
+                    </h5>
+                    
+                    <!-- Información adicional -->
+                    <div class="mt-auto">
+                      <div class="row g-2 mb-3">
+                        <div class="col-6">
+                          <div class="info-item p-2 rounded-3" style="background: #f8f9fc; border: 1px solid #ebeef5;">
+                            <small class="text-muted d-block mb-1">Año Plan</small>
+                            <span class="fw-bold text-dark">{{carrera.car_anio_plan}}</span>
+                          </div>
+                        </div>
+                        <div class="col-6" *ngIf="carrera.car_orientacion && carrera.car_orientacion !== '%'">
+                          <div class="info-item p-2 rounded-3" style="background: #f0f8ff; border: 1px solid #c6e2ff;">
+                            <small class="text-muted d-block mb-1">Orientación</small>
+                            <span class="fw-bold text-primary text-truncate d-block" 
+                                  [title]="carrera.car_orientacion">{{carrera.car_orientacion}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Estado activo -->
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge px-3 py-1 rounded-pill" 
+                              [ngClass]="carrera.active ? 'bg-success' : 'bg-secondary'"
+                              style="font-size: 0.75rem;">
+                          <i [ngClass]="carrera.active ? 'ri-check-line' : 'ri-close-line'" class="me-1"></i>
+                          {{carrera.active ? 'Activa' : 'Inactiva'}}
+                        </span>
+                        <small class="text-muted">
+                          <i class="ri-time-line me-1"></i>
+                          {{carrera.created_at | date:'dd/MM/yyyy'}}
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Mensaje cuando no hay carreras -->
+            <div class="mt-5" *ngIf="(table.paginated$ | async)?.length === 0">
+              <div class="text-center py-5">
+                <div class="empty-state-icon mb-3" 
+                     style="width: 80px; height: 80px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                  <i class="ri-graduation-cap-line text-white" style="font-size: 2rem;"></i>
+                </div>
+                <h5 class="text-dark mb-2">No se encontraron carreras</h5>
+                <p class="text-muted mb-4">Intenta con otros términos de búsqueda o crea una nueva carrera</p>
+                <button class="btn btn-primary" (click)="crear()">
+                  <i class="ri-add-line me-2"></i>Crear primera carrera
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Paginación -->
+          <div class="row justify-content-md-between align-items-md-center mt-4" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+            <ng-container *ngIf="(table.paginated$ | async) as paginados">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info mb-2 text-muted" role="status" aria-live="polite">
+                  Mostrando {{ (table.page - 1) * table.pageSizeValue + 1 }} - 
+                  {{ (table.page - 1) * table.pageSizeValue + paginados.length }} de 
+                  {{ table.total$ | async }} carreras
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-7">
+                <div class="text-md-right float-md-end gridjs-pagination">
+                  <pagination 
+                    [totalItems]="(table.total$ | async) || 0" 
+                    [(ngModel)]="table.page" 
+                    [itemsPerPage]="table.pageSizeValue" 
+                    (pageChanged)="table.setPage($event.page)"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    [boundaryLinks]="true">
+                  </pagination>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Contenedor de alertas flotantes -->
+  <div class="alert-container">
+    <div *ngIf="mostrarAlertaExito" class="alert alert-success alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-check-double-line me-3 align-middle fs-lg"></i>
+      <strong>¡Éxito!</strong> {{ mensajeExito }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+  
+    <div *ngIf="mostrarAlertaWarning" class="alert alert-warning alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-alert-line me-3 align-middle fs-lg"></i>
+      <strong>¡Atención!</strong> {{ mensajeWarning }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+  
+    <div *ngIf="mostrarAlertaError" class="alert alert-danger alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-error-warning-line me-3 align-middle fs-lg"></i>
+      <strong>¡Error!</strong> {{ mensajeError }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+  </div>
+  
+  <!-- Modal de confirmación para eliminar -->
+  <div class="modal fade custom-modal" [ngClass]="{ 'show': mostrarConfirmacionEliminar }" [style.display]="mostrarConfirmacionEliminar ? 'block' : 'none'" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+        <div class="modal-header custom-modal-header d-flex justify-content-between align-items-center border-0 pb-0">
+          <div class="d-flex align-items-center gap-3">
+            <div class="modal-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <i class="ri-alert-line text-white"></i>
+            </div>
+            <div>
+              <h5 class="mb-0">Confirmar eliminación</h5>
+              <small class="text-muted">Esta acción no se puede deshacer</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" (click)="cancelarEliminar()" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body custom-modal-body px-4 py-3">
+          <div class="text-center"> 
+            <p class="mt-2 mb-4 text-muted">
+              ¿Está seguro(a) que desea eliminar la carrera 
+              <strong class="text-dark">{{ carreraAEliminar?.car_nombre }}</strong>?
+            </p>
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+              <i class="ri-information-line me-2"></i>
+              Esta acción eliminará permanentemente la carrera del sistema.
             </div>
           </div>
         </div>
         
-
-
-
-       <div class="table-radius-container">
-          <div class="table-responsive" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
-            <table class="table table-gridjs table-style">
-              <thead>
-                <tr>
-                  <th class="gridjs-th" >Acciones</th>
-                  <!-- no es necesario ordenar todas la columnas-->
-                  
-                  <th class="gridjs-th"  style="cursor:pointer;">
-                    <span style="display: flex; align-items: center; justify-content: flex-start; gap: 4px;">
-                      Descripción
-                      <!-- iconos para ordenar -->
-                      <span style="display: flex; flex-direction: column; margin-left: 6px;">
-                         <i class="ri-arrow-up-s-line icon-sort"
-                        >
-                      </i>
-                      <i class="ri-arrow-down-s-line icon-sort"
-                        >
-                      </i>
-                      </span>
-                    </span>
-                  </th>
-                </tr>
-                <tr class="gridjs-th" *ngFor="let data of table.paginated$ | async; let i = index">
-                  <td class="position-relative">
-                    <div class="dropdown-action-list">
-                      <button type="button"
-                    class="dropdown-toggle"
-                    [attr.aria-expanded]="false"
-                    (click)="floatingMenuService.open($event, data)">
-                    <span>Acciones</span>
-                    <i class="ri-settings-3-line"></i>
-                  </button>
-                  </div>
-                  </td>
-                  <td>{{data.car_nombre}}</td>
-                </tr>
-                </thead>
-            </table>
-          </div>
-        </div>
-        <div class="row justify-content-md-between align-items-md-center" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
-          <ng-container *ngIf="(table.paginated$ | async) as paginados">
-            <div class="col-sm-12 col-md-5">
-              <div class="dataTables_info mb-2" role="status" aria-live="polite">
-                Mostrando
-                {{ (table.page - 1) * table.pageSizeValue + paginados.length }} de {{ table.  total$ | async }}
-                registros
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-5">
-              <div class="text-md-right float-md-end gridjs-pagination">
-                <pagination [totalItems]="(table.total$ | async) || 0" [(ngModel)]="table.page" [itemsPerPage]="table.pageSizeValue" (pageChanged)="table.setPage($event.page)"></pagination>
-              </div>
-            </div>
-          </ng-container>
-        </div>
+        <div class="modal-footer custom-modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-light me-2" (click)="cancelarEliminar()">
+            <span class="btn-text">Cancelar</span>
+          </button>
+          <button type="button" class="btn btn-danger" (click)="eliminar()">
+            <span class="btn-text">Eliminar carrera</span>
+            <span class="btn-icon ms-2"><i class="ri-delete-bin-line"></i></span>
+          </button>
+        </div> 
       </div>
     </div>
   </div>
-</div>
-
-<!-- Contenedor de alertas flotantes -->
-<div class="alert-container">
-  <div *ngIf="mostrarAlertaExito" class="alert alert-success alert-border-left alert-dismissible fade show floating-alert" role="alert">
-    <i class="ri-check-double-line me-3 align-middle fs-lg"></i>
-    <strong>¡Éxito!</strong> {{ mensajeExito }}
-    <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
-  </div>
-
-  <div *ngIf="mostrarAlertaWarning" class="alert alert-warning alert-border-left alert-dismissible fade show floating-alert" role="alert">
-    <i class="ri-alert-line me-3 align-middle fs-lg"></i>
-    <strong>¡Atención!</strong> {{ mensajeWarning }}
-    <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
-  </div>
-
-  <div *ngIf="mostrarAlertaError" class="alert alert-danger alert-border-left alert-dismissible fade show floating-alert" role="alert">
-    <i class="ri-error-warning-line me-3 align-middle fs-lg"></i>
-    <strong>¡Error!</strong> {{ mensajeError }}
-    <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
-  </div>
-</div>
-
-<!-- Modal de confirmación para eliminar -->
-<div class="modal fade custom-modal" [ngClass]="{ 'show': mostrarConfirmacionEliminar }" [style.display]="mostrarConfirmacionEliminar ? 'block' : 'none'" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header custom-modal-header d-flex justify-content-between align-items-center">
-        <span>Confirmación</span>
-        <i class="ri-close-line custom-modal-close" (click)="cancelarEliminar()"></i>
-      </div>
-      <hr class="custom-modal-divider">
-      <div class="modal-body custom-modal-body">
-        <div class="text-center"> 
-          <p class="mt-2 custom-modal-text">
-            <i class="ri-alert-line me-2 custom-modal-alert-icon" (click)="cancelarEliminar()"></i>¿Está seguro(a) que desea eliminar el estado civil <strong>{{ carreraAEliminar?.car_codigo }}</strong>?
-          </p>
-        </div>
-      </div>
-      <div class="modal-footer custom-modal-footer">
-        <button type="button" class="btn btn-primary gray btn-sm btn-minw-5" (click)="cancelarEliminar()"><span class="btn-text">No</span><span class="btn-icon"><i class="ri-close-circle-line"></i></span></button>
-        <button type="button" class="btn btn-primary red btn-sm btn-minw-5" (click)="eliminar()">
-          <span class="btn-text">Si</span>
-          <span class="btn-icon"><i class="ri-delete-bin-line"></i></span>
-        </button>
-      </div> 
-    </div>
-  </div>
-</div>
-
-<!-- Overlay para el modal -->
-<div class="modal-backdrop fade" [ngClass]="{ 'show': mostrarConfirmacionEliminar }" *ngIf="mostrarConfirmacionEliminar"></div>
-
-
-
-<ul
-  *ngIf="floatingMenuService.show"
-  class="dropdown-menu show"  
-  [ngStyle]="{
-    position: 'absolute',
-    top: floatingMenuService.top + 'px',
-    left: floatingMenuService.left + 'px',
-  }">
-  <li >
-    <button type="button" class="dropdown-action-btn" (click)="editar(floatingMenuService.data); floatingMenuService.close()">
-      Editar <i class="ri-edit-line"></i>
-    </button>
-  </li>
-  <li >
-    <button type="button" class="dropdown-action-btn" (click)="confirmarEliminar(floatingMenuService.data); floatingMenuService.close()">
-      Eliminar <i class="ri-delete-bin-line"></i>
-    </button>
-  </li>
-  <li >
-    <button type="button" class="dropdown-action-btn" (click)="detalles(floatingMenuService.data); floatingMenuService.close()">
-      Detalles <i class="ri-error-warning-fill"></i>
-    </button>
-  </li>
-</ul>
+  
+  <!-- Overlay para el modal -->
+  <div class="modal-backdrop fade" [ngClass]="{ 'show': mostrarConfirmacionEliminar }" *ngIf="mostrarConfirmacionEliminar"></div>
+  
