@@ -1,1 +1,116 @@
-<p>create works!</p>
+<div class="d-flex flex-column" style="height: 100%; min-height: 250px;">
+    <!-- Título del componente -->
+    <h5 class="card-title mb-4">Crear Nueva Carrera</h5>
+    
+    <!-- Contenedor de alertas flotantes -->
+    <div class="alert-container">
+      <!-- Alerta de éxito -->
+      <div *ngIf="mostrarAlertaExito" class="alert alert-success alert-border-left alert-dismissible fade show floating-alert" role="alert">
+        <i class="ri-check-double-line me-3 align-middle fs-lg"></i>
+        <strong>¡Éxito!</strong> {{ mensajeExito }}
+        <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+      </div>
+      
+      <!-- Alerta de advertencia -->
+      <div *ngIf="mostrarAlertaWarning" class="alert alert-warning alert-border-left alert-dismissible fade show floating-alert" role="alert">
+        <i class="ri-alert-line me-3 align-middle fs-lg"></i>
+        <strong>¡Atención!</strong> {{ mensajeWarning }}
+        <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+      </div>
+      
+      <!-- Alerta de error -->
+      <div *ngIf="mostrarAlertaError" class="alert alert-danger alert-border-left alert-dismissible fade show floating-alert" role="alert">
+        <i class="ri-error-warning-line me-3 align-middle fs-lg"></i>
+        <strong>¡Error!</strong> {{ mensajeError }}
+        <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+      </div>
+    </div>
+    
+    <div class="flex-grow-1">
+      <div class="row">
+        <!-- Código de la Carrera -->
+        <div class="col-md-6 mb-3">
+          <label for="codigoCarrera" class="form-label">Código de la Carrera <span class="text-danger">*</span></label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [class.is-invalid]="!career.car_codigo?.trim() && mostrarErrores"
+            id="codigoCarrera"
+            [(ngModel)]="career.car_codigo"
+            name="car_codigo"
+            placeholder="Ej: ING-SIS"
+            required>
+          <div class="invalid-feedback" *ngIf="!career.car_codigo?.trim() && mostrarErrores">
+            El código de la carrera es requerido
+          </div>
+        </div>
+
+        <!-- Nombre de la Carrera -->
+        <div class="col-md-6 mb-3">
+          <label for="nombreCarrera" class="form-label">Nombre de la Carrera <span class="text-danger">*</span></label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [class.is-invalid]="!career.car_nombre?.trim() && mostrarErrores"
+            id="nombreCarrera"
+            name="car_nombre"
+            [(ngModel)]="career.car_nombre"
+            placeholder="Ingrese el nombre de la carrera"
+            required>
+          <div class="invalid-feedback" *ngIf="!career.car_nombre?.trim() && mostrarErrores">
+            El nombre de la carrera es requerido
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Año del Plan de Estudio -->
+        <div class="col-md-6 mb-3">
+          <label for="anioPlan" class="form-label">Año del Plan de Estudio <span class="text-danger">*</span></label>
+          <input 
+            type="number" 
+            class="form-control" 
+            [class.is-invalid]="(!career.car_anio_plan && career.car_anio_plan !== 0) && mostrarErrores"
+            id="anioPlan"
+            name="car_anio_plan"
+            [(ngModel)]="career.car_anio_plan"
+            min="1900"
+            placeholder="Ej: 2014"
+            required>
+          <div class="invalid-feedback" *ngIf="(!career.car_anio_plan && career.car_anio_plan !== 0) && mostrarErrores">
+            El año del plan de estudio es requerido
+          </div>
+        </div>
+
+        <!-- Orientación -->
+        <div class="col-md-6 mb-3">
+          <label for="orientacion" class="form-label">Orientación</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="orientacion"
+            name="car_orientacion"
+            [(ngModel)]="career.car_orientacion"
+            placeholder="Ingrese la orientación de la carrera">
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-auto pt-3" >
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-primary gold" (click)="cancelar()">
+              <span class="btn-text">Cancelar</span>
+              <span class="btn-icon"><i class="ri-close-circle-line"></i></span>
+            </button>
+            <button type="button" class="btn btn-primary" (click)="guardar()">
+              <span class="btn-text">Guardar</span>
+              <span class="btn-icon"><i class="ri-save-line"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
