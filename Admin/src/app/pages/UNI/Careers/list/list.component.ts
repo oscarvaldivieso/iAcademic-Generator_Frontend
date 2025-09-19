@@ -21,6 +21,14 @@ import { CreateComponent } from '../create/create.component';
 import { EditComponent } from '../edit/edit.component';
 import { FloatingMenuService } from 'src/app/shared/floating-menu.service';
 
+interface ApiResponse<T> {
+  type: number;
+  code: number;
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 @Component({
   selector: 'app-list',
   standalone: true,
@@ -237,7 +245,7 @@ export class ListComponent implements OnInit {
     console.log('Eliminando estado civil:', this.estadoCivilAEliminar);
     
     // Usar el proxy configurado
-    const url = `/api/EstadosCiviles/Eliminar/${this.estadoCivilAEliminar.esCv_Id}`;
+    const url = `/EstadosCiviles/Eliminar/${this.estadoCivilAEliminar.esCv_Id}`;
     
     this.http.post(url, {}, {
       headers: { 
@@ -351,31 +359,46 @@ export class ListComponent implements OnInit {
     
   }
 
-  private cargardatos(state: boolean): void {
-    this.mostrarOverlayCarga = state;
-    
-    // Usar el proxy configurado
-    const url = '/Careers/list';
-    
-    this.http.get<Careers[]>(url, {
-      headers: { 
-        'x-api-key': environment.apiKey,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      withCredentials: true  // Importante para enviar cookies si es necesario
-    }).subscribe({
-      next: (data) => {
+// Cambiar el método cargardatos():
+private cargardatos(state: boolean): void {
+  this.mostrarOverlayCarga = state;
+  
+  // Usar el proxy configurado
+  const url = 'https://localhost:7228/Careers/list';
+  
+  // Cambiar el tipo genérico aquí para manejar la respuesta completa de la API
+  this.http.get<ApiResponse<Careers[]>>(url, {
+    headers: { 
+      'XApiKey': environment.apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    withCredentials: true  // Importante para enviar cookies si es necesario
+  }).subscribe({
+    next: (response) => {
+      console.log('Respuesta completa de la API:', response);
+      
+      // Verificar que la respuesta sea exitosa y tenga datos
+      if (response.success && response.data) {
+        console.log('Datos de carreras:', response.data);
         setTimeout(() => {
-          this.table.setData(data);
+          // Usar response.data en lugar de response directamente
+          this.table.setData(response.data);
           this.mostrarOverlayCarga = false;
         }, 500);
-      },
-      error: (error) => {
-        console.error('Error al cargar las carreras:', error);
-        this.mostrarMensaje('error', 'Error al cargar las carreras. Por favor, intente de nuevo.');
+      } else {
+        console.error('Respuesta de API no exitosa:', response);
+        this.mostrarMensaje('error', response.message || 'Error al cargar las carreras.');
         this.mostrarOverlayCarga = false;
       }
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Error al cargar las carreras:', error);
+      this.mostrarMensaje('error', 'Error al cargar las carreras. Por favor, intente de nuevo.');
+      this.mostrarOverlayCarga = false;
+    }
+  });
+}
+
+  
 }
