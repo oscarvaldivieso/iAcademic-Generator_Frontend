@@ -48,10 +48,11 @@
           <div class="collapse" [ngClass]="{ 'show': showEditForm && campusEditando }" id="editFormCollapse">
             <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
               <div class="container-fluid flex-grow-1">
-                <app-edit *ngIf="campusEditando">
-                  <!-- [campusData]="campusEditando" -->
-                  <!-- (onSave)="actualizarCampus($event)" -->
-                  <!-- (onCancel)="cerrarFormularioEdicion()"> -->
+                <app-edit 
+                  *ngIf="campusEditando"
+                  [campusData]="campusEditando"
+                  (onSave)="actualizarCampus($event)"
+                  (onCancel)="cerrarFormularioEdicion()">
                 </app-edit>
               </div>
             </div>

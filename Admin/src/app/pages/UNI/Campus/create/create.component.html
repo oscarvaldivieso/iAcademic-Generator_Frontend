@@ -66,17 +66,20 @@
       <!-- Ciudad del Campus -->
       <div class="col-md-4 mb-3">
         <label for="ciudadCampus" class="form-label">Ciudad <span class="text-danger">*</span></label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [class.is-invalid]="!campus.cam_ciudad.trim() && mostrarErrores"
+        <select 
+          class="form-select" 
+          [class.is-invalid]="!campus.cam_ciudad && mostrarErrores"
           id="ciudadCampus"
           name="cam_ciudad"
           [(ngModel)]="campus.cam_ciudad"
-          placeholder="Ej: San Pedro Sula"
           required>
-        <div class="invalid-feedback" *ngIf="!campus.cam_ciudad.trim() && mostrarErrores">
-          La ciudad del campus es requerida
+          <option value="" disabled selected>Seleccione una ciudad</option>
+          <option *ngFor="let ciudad of ciudades" [value]="ciudad">
+            {{ ciudad }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="!campus.cam_ciudad && mostrarErrores">
+          Por favor seleccione una ciudad
         </div>
       </div>
     </div>

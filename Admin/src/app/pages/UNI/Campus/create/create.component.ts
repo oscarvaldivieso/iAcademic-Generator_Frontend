@@ -32,6 +32,13 @@ export class CreateComponent {
   mostrarAlertaWarning = false;
   mensajeWarning = '';
 
+  // Lista de ciudades disponibles
+  ciudades: string[] = [
+    'San Pedro Sula',
+    'Tegucigalpa',
+    'Comayagua'
+  ];
+
   campus: Campus = new Campus({
     cam_codigo: '',
     cam_nombre: '',
