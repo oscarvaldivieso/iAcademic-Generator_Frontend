@@ -38,15 +38,21 @@
                 <div class="collapse menu-dropdown" [ngClass]="{'show': generalOpen}" id="general-menu">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
-                        <a [routerLink]="'General/Personas'" class="nav-link">
+                        <a [routerLink]="'/uni/modalities/list'" class="nav-link">
                         <i class="ri-group-line"></i>
-                        <span> personas  </span>
+                        <span> Modalidades  </span>
                         </a>
                     </li>
                     <li class="nav-item">
                      <a routerLink="/uni/careers/list" class="nav-link">
                         <i class="ri-group-line"></i>
                         <span> Estados Civiles </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a [routerLink]="'/uni/periods/list'" class="nav-link">
+                        <i class="ri-group-line"></i>
+                        <span> Periodos </span>
                         </a>
                     </li>
                     <!-- Agrega más ítems aquí -->

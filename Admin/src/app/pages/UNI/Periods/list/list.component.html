@@ -1,0 +1,194 @@
+<!-- Overlay de carga animado -->
+<div *ngIf="mostrarOverlayCarga" class="overlay-carga">
+    <div class="typing-indicator">
+      <div class="typing-circle"></div>
+      <div class="typing-circle"></div>
+      <div class="typing-circle"></div>
+      <div class="typing-shadow"></div>
+      <div class="typing-shadow"></div>
+      <div class="typing-shadow"></div>
+    </div>
+  </div>
+  
+  <app-breadcrumbs [title]="'Períodos'"></app-breadcrumbs>
+  
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          
+          <!-- Barra de herramientas -->
+          <div class="d-flex justify-content-between mb-4 flex-wrap" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+            <button type="button" class="btn btn-primary me-2 mb-2" (click)="crear()">
+              <span class="btn-text">Nuevo</span>
+              <span class="btn-icon"><i class="ri-add-line"></i></span>
+            </button>
+            
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <!-- Campo de búsqueda -->
+              <div class="search-box mb-2">
+                <input type="text" class="form-control search" placeholder="Buscar períodos..." [(ngModel)]="table.searchTerm"
+                  (ngModelChange)="table.setSearchTerm($event)">
+                <i class="ri-search-line search-icon"></i>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Formulario de creación -->
+          <div class="collapse" [ngClass]="{ 'show': showCreateForm }" id="createFormCollapse">
+            <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
+              <div class="container-fluid flex-grow-1">
+                <app-create (onCancel)="cerrarFormulario()" ></app-create>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Formulario de edición -->
+          <div class="collapse" [ngClass]="{ 'show': showEditForm }" id="editFormCollapse">
+            <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
+              <div class="container-fluid flex-grow-1">
+                <app-edit 
+                  (onCancel)="cerrarFormularioEdicion()">
+                </app-edit>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Cards de períodos -->
+          <div class="periods-container" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+            <div class="row g-3">
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let periodo of table.paginated$ | async; let i = index">
+                <div class="period-card-container">
+                  <div class="period-card">
+                    <!-- Botones de acción -->
+                    <div class="action-buttons">
+                      <button class="action-btn edit-btn" 
+                              (click)="editar(periodo); $event.stopPropagation()" 
+                              title="Editar período">
+                        <i class="ri-edit-line"></i>
+                      </button>
+                      <button class="action-btn delete-btn" 
+                              (click)="confirmarEliminar(periodo); $event.stopPropagation()" 
+                              title="Eliminar período">
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                    </div>
+                    
+                    <!-- Contenido de la card -->
+                    <div class="card-content">
+                      <div>
+                        <div class="code-chip">
+                          <span class="code-value">{{periodo.per_codigo}}</span>
+                        </div>
+                        <div class="module-section">
+                          <h3 class="period-module" [title]="periodo.per_modulo">
+                            Q{{periodo.per_modulo}} - {{periodo.per_anio}}
+                          </h3>
+                        </div>
+                        <div class="dates-section">
+                          <div class="date-range">
+                            <span class="date-label">Inicio:</span>
+                            <span class="date-value">{{periodo.per_inicio | date:'dd/MM/yyyy'}}</span>
+                          </div>
+                          <div class="date-range">
+                            <span class="date-label">Fin:</span>
+                            <span class="date-value">{{periodo.per_fin | date:'dd/MM/yyyy'}}</span>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Mensaje cuando no hay períodos -->
+            <div class="mt-5" *ngIf="(table.paginated$ | async)?.length === 0">
+              <div class="text-center py-5">
+                <div class="empty-state-icon mb-3">
+                  <i class="ri-calendar-line"></i>
+                </div>
+                <h5 class="text-dark mb-2">No se encontraron períodos</h5>
+                <p class="text-muted mb-4">Intenta con otros términos de búsqueda o crea un nuevo período</p>
+                <button class="btn btn-primary" (click)="crear()">
+                  <i class="ri-add-line me-2"></i>Crear primer período
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Paginación -->
+          <div class="row justify-content-md-between align-items-md-center mt-4" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+            <ng-container *ngIf="(table.paginated$ | async) as paginados">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info mb-2 text-muted" role="status" aria-live="polite">
+                  Mostrando {{ (table.page - 1) * table.pageSizeValue + 1 }} - 
+                  {{ (table.page - 1) * table.pageSizeValue + paginados.length }} de 
+                  {{ table.total$ | async }} períodos
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-7">
+                <div class="text-md-right float-md-end">
+                  <pagination 
+                    [totalItems]="(table.total$ | async) || 0" 
+                    [(ngModel)]="table.page" 
+                    [itemsPerPage]="table.pageSizeValue" 
+                    (pageChanged)="table.setPage($event.page)"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    [boundaryLinks]="true">
+                  </pagination>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Contenedor de alertas flotantes -->
+  <div class="alert-container">
+    <div *ngIf="mostrarAlertaExito" class="alert alert-success alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-check-double-line me-3 align-middle fs-lg"></i>
+      <strong>¡Éxito!</strong> {{ mensajeExito }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+    
+    <div *ngIf="mostrarAlertaError" class="alert alert-danger alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-error-warning-line me-3 align-middle fs-lg"></i>
+      <strong>¡Error!</strong> {{ mensajeError }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+    
+    <div *ngIf="mostrarAlertaWarning" class="alert alert-warning alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-alert-line me-3 align-middle fs-lg"></i>
+      <strong>Atención:</strong> {{ mensajeWarning }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+  </div>
+  
+  <!-- Modal de confirmación de eliminación -->
+  <div class="modal fade show" [ngClass]="{'d-block': mostrarConfirmacionEliminar}" tabindex="-1" *ngIf="mostrarConfirmacionEliminar">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar eliminación</h5>
+          <button type="button" class="btn-close" (click)="cancelarEliminar()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro de que deseas eliminar el período <strong>{{periodoAEliminar?.per_modulo}} - {{periodoAEliminar?.per_anio}}</strong>?</p>
+          <p class="text-muted mb-0">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="cancelarEliminar()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminar()" [disabled]="mostrarOverlayCarga">
+            <span *ngIf="!mostrarOverlayCarga">Eliminar</span>
+            <div class="spinner-border spinner-border-sm" role="status" *ngIf="mostrarOverlayCarga">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="mostrarConfirmacionEliminar"></div>

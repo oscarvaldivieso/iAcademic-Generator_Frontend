@@ -7,6 +7,16 @@ const routes: Routes = [
     loadChildren: () =>
       import('./Careers/careers.module').then(m => m.CareersModule)
   },
+  {
+    path: 'modalities',
+    loadChildren: () =>
+      import('./Modalities/modalities.module').then(m => m.ModalitiesModule)
+  },
+  {
+    path: 'periods',
+    loadChildren: () =>
+      import('./Periods/periods.module').then(m => m.PeriodsModule)
+  },
 ];
 
 @NgModule({
