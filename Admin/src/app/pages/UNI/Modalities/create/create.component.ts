@@ -98,16 +98,25 @@ export class CreateComponent {
       }).subscribe({
         next: (response) => {
           console.log('Modalidad guardada exitosamente:', response);
-          this.mensajeExito = `Modalidad "${this.modality.mod_nombre}" guardada exitosamente`;
-          this.mostrarAlertaExito = true;
-          this.mostrarErrores = false;
-          
-          // Ocultar la alerta después de 3 segundos
-          setTimeout(() => {
-            this.mostrarAlertaExito = false;
-            this.onSave.emit(this.modality);
-            this.cancelar();
-          }, 3000);
+          if (response.success) {
+            // La actualización fue exitosa
+            this.mostrarAlertaExito = true;
+            this.mensajeExito = response.data.messageStatus;
+            
+            // Actualizar el modelo local con los datos de respuesta
+            const modalidadCreada: Modality = {
+              ...this.modality,
+              code_Status: response.data.codeStatus,
+              message_Status: response.data.messageStatus
+            };
+            
+            // Emitir la modalidad actualizada al componente padre
+            this.onSave.emit(modalidadCreada);
+          } else {
+            // Manejar caso de error en la respuesta
+            this.mostrarAlertaError = true;
+            this.mensajeError = response.message || 'Error al crear la modalidad.';
+          }
         },
         error: (error) => {
           console.error('Error al guardar la modalidad:', error);

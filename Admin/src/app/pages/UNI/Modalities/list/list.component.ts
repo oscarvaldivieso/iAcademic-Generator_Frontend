@@ -155,7 +155,7 @@ export class ListComponent implements OnInit {
     console.log('Modalidad guardada exitosamente:', modalidad);
     this.mostrarMensaje('success', 'Modalidad creada exitosamente');
     this.cargarDatos(false);
-    this.showCreateForm = false;
+    this.cerrarFormulario();
   }
 
   actualizarModalidad(modalidad: Modality): void {
