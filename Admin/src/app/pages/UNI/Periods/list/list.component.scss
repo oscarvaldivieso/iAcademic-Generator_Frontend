@@ -25,11 +25,7 @@
     transform-style: preserve-3d;
   }
   
-  /* Hover Effect - Simplified */
-  .period-card:hover {
-    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
-    border-color: #cbd5e1;
-  }
+  
   
  
   
@@ -86,13 +82,13 @@
   }
   
   .edit-btn {
-    color: var(--primary-color);
-    background: var(--primary-light);
+    color: rgb(143, 117, 0);
+  background: rgba(236, 217, 177, 0.75);
   }
   
   .delete-btn {
-    color: var(--secondary-color);
-    background: var(--secondary-light);
+    color: #ff4d4f;
+    background: rgba(248, 184, 185, 0.616);
   }
   
   .action-btn:hover {
@@ -230,7 +226,7 @@
     right: 0;
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, var(--primary-light) 0%, rgba(20, 26, 47, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(20, 26, 47, 0.1) 0%, rgba(20, 26, 47, 0.05) 100%);
     border-bottom-left-radius: 50%;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 0;

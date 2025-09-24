@@ -38,24 +38,35 @@
           <div class="collapse" [ngClass]="{ 'show': showCreateForm }" id="createFormCollapse">
             <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
               <div class="container-fluid flex-grow-1">
-                <app-create (onCancel)="cerrarFormulario()" ></app-create>
+                <app-create (onCancel)="cerrarFormulario()" (onSave)="onPeriodoSaved($event)"></app-create>
               </div>
             </div>
           </div>
   
           <!-- Formulario de edición -->
-          <div class="collapse" [ngClass]="{ 'show': showEditForm }" id="editFormCollapse">
-            <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
+          <div *ngIf="showEditForm" class="mb-4">
+            <div class="card card-body shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
               <div class="container-fluid flex-grow-1">
                 <app-edit 
-                  (onCancel)="cerrarFormularioEdicion()">
+                  [periodData]="periodoEditando"
+                  (onCancel)="cerrarFormularioEdicion()"
+                  (onSave)="onPeriodoActualizado($event)">
                 </app-edit>
               </div>
             </div>
           </div>
   
+          <!-- Skeletons durante la carga -->
+          <div class="periods-container" *ngIf="isLoading && !showCreateForm && !showEditForm && !showDetailsForm">
+            <div class="row g-3">
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+                <app-skeleton-card></app-skeleton-card>
+              </div>
+            </div>
+          </div>
+
           <!-- Cards de períodos -->
-          <div class="periods-container" *ngIf="!showCreateForm && !showEditForm && !showDetailsForm">
+          <div class="periods-container" *ngIf="!isLoading && !showCreateForm && !showEditForm && !showDetailsForm">
             <div class="row g-3">
               <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let periodo of table.paginated$ | async; let i = index">
                 <div class="period-card-container">
@@ -96,6 +107,7 @@
                           </div>
                         </div>
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>

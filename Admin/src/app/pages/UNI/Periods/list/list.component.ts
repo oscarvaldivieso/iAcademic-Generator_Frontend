@@ -11,6 +11,7 @@ import { CreateComponent } from '../create/create.component';
 import { EditComponent } from '../edit/edit.component';
 import { BreadcrumbsComponent } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
 import { ReactiveTableService } from 'src/app/shared/reactive-table.service';
+import { SkeletonCardComponent } from 'src/app/shared/skeleton-card/skeleton-card.component';
 
 interface ApiResponse<T> {
   type: number;
@@ -31,7 +32,8 @@ interface ApiResponse<T> {
     TableModule,
     PaginationModule,
     CreateComponent,
-    EditComponent
+    EditComponent,
+    SkeletonCardComponent
   ],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
@@ -40,6 +42,9 @@ export class ListComponent implements OnInit {
   // Overlay de carga
   mostrarOverlayCarga = false;
   
+  // Estado de carga
+  isLoading = true;
+
   // bread crumb items
   breadCrumbItems!: Array<{}>;
 
@@ -120,10 +125,46 @@ export class ListComponent implements OnInit {
   }
 
   editar(periodo: Period): void {
-    this.periodoEditando = { ...periodo };
-    this.showEditForm = true;
+    console.log('Editando período:', periodo);
+    
+    // Cerrar otros formularios
     this.showCreateForm = false;
     this.showDetailsForm = false;
+    
+    // Crear una copia profunda del período a editar
+    this.periodoEditando = new Period({
+      ...periodo,
+      per_inicio: new Date(periodo.per_inicio),
+      per_fin: new Date(periodo.per_fin)
+    });
+    
+    console.log('Período a editar (copia):', this.periodoEditando);
+    
+    // Mostrar el formulario de edición
+    this.showEditForm = true;
+    
+    // Desplazarse al formulario de edición
+    setTimeout(() => {
+      const editFormElement = document.getElementById('editFormCollapse');
+      if (editFormElement) {
+        editFormElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+
+  /**
+   * Maneja el evento cuando se actualiza un período
+   * @param periodo El período que se acaba de actualizar
+   */
+  onPeriodoActualizado(periodo: Period): void {
+    // Cerrar el formulario de edición
+    this.cerrarFormularioEdicion();
+    
+    // Mostrar mensaje de éxito
+    this.mostrarMensaje('success', 'Período actualizado exitosamente');
+    
+    // Recargar los datos
+    this.cargarDatos(false);
   }
 
   detalles(periodo: Period): void {
@@ -135,6 +176,11 @@ export class ListComponent implements OnInit {
 
   cerrarFormulario(): void {
     this.showCreateForm = false;
+    this.showEditForm = false;
+    this.showDetailsForm = false;
+    this.periodoEditando = null;
+    this.periodoDetalle = null;
+    this.cerrarAlerta();
   }
 
   cerrarFormularioEdicion(): void {
@@ -146,6 +192,21 @@ export class ListComponent implements OnInit {
   cerrarFormularioDetalles(): void {
     this.showDetailsForm = false;
     this.periodoDetalle = null;
+  }
+
+  /**
+   * Maneja el evento cuando se guarda un nuevo período
+   * @param periodo El período que se acaba de guardar
+   */
+  onPeriodoSaved(periodo: Period): void {
+    // Cerrar el formulario de creación
+    this.cerrarFormulario();
+    
+    // Mostrar mensaje de éxito
+    this.mostrarMensaje('success', 'Período creado exitosamente');
+    
+    // Recargar los datos
+    this.cargarDatos(false);
   }
 
   guardarPeriodo(periodo: Period): void {
@@ -225,6 +286,7 @@ export class ListComponent implements OnInit {
 
   // Método para cargar datos de períodos
   private cargarDatos(state: boolean): void {
+    this.isLoading = true;
     this.mostrarOverlayCarga = state;
     
     const url = `${environment.apiBaseUrl}/Periods/list`;
@@ -245,11 +307,13 @@ export class ListComponent implements OnInit {
           setTimeout(() => {
             this.table.setData(response.data);
             this.table.setPage(1);
+            this.isLoading = false;
             this.mostrarOverlayCarga = false;
           }, 500);
         } else {
           console.error('Respuesta de API no exitosa:', response);
           this.mostrarMensaje('error', response.message || 'Error al cargar los períodos.');
+          this.isLoading = false;
           this.mostrarOverlayCarga = false;
         }
       },
@@ -265,6 +329,7 @@ export class ListComponent implements OnInit {
         }
         
         this.mostrarMensaje('error', mensaje);
+        this.isLoading = false;
         this.mostrarOverlayCarga = false;
       }
     });

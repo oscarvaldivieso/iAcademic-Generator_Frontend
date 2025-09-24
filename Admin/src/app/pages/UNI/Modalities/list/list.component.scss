@@ -84,13 +84,13 @@
 }
 
 .edit-btn {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
+  color: rgb(143, 117, 0);
+  background: rgba(236, 217, 177, 0.75);
 }
 
 .delete-btn {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
+  color: #ff4d4f;
+  background: rgba(248, 184, 185, 0.616);
 }
 
 .action-btn:hover {
@@ -183,7 +183,7 @@
   right: 0;
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, var(--primary-light) 0%, rgba(20, 26, 47, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(20, 26, 47, 0.1) 0%, rgba(20, 26, 47, 0.05) 100%);
   border-bottom-left-radius: 50%;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
