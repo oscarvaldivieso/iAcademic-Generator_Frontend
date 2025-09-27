@@ -1,5 +1,4 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -49,7 +48,6 @@ import { HorizontalTopbarComponent } from './horizontal-topbar/horizontal-topbar
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     RouterModule,
     SimplebarAngularModule,
     BsDropdownModule.forRoot(),
@@ -62,5 +60,17 @@ import { HorizontalTopbarComponent } from './horizontal-topbar/horizontal-topbar
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [LanguageService],
+  exports: [
+    LayoutComponent,
+    VerticalComponent,
+    TopbarComponent,
+    SidebarComponent,
+    FooterComponent,
+    RightsidebarComponent,
+    TwoColumnComponent,
+    TwoColumnSidebarComponent,
+    HorizontalComponent,
+    HorizontalTopbarComponent,
+  ]
 })
 export class LayoutsModule { }

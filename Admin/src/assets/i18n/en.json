@@ -237,6 +237,14 @@
           }
         }
       }
+    },
+    "WEBSITE": {
+      "TEXT": "Opciones",
+      "LIST": {
+        "INICIO": "Inicio",
+        "PREMATRICULA": "Prematricula",
+        "REQUEST": "Solicitud"
+      }
     }
   }
 }

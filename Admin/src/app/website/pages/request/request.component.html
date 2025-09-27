@@ -1,0 +1,116 @@
+<div class="request-container">
+    <div class="request-header">
+        <h1>Solicitud de Apertura de Clase</h1>
+        <p>Complete el formulario para solicitar la apertura de una nueva clase</p>
+    </div>
+
+    <form class="request-form" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+        <!-- Información de la Clase -->
+        <div class="form-section">
+            <h2><i class="ri-book-2-line"></i> Información de la Clase</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="classCode">Código de Clase</label>
+                    <select id="classCode" formControlName="classCode" (change)="onClassSelect()">
+                        <option value="">Seleccione una clase</option>
+                        <option *ngFor="let class of availableClasses" [value]="class.code">
+                            {{class.code}} - {{class.name}}
+                        </option>
+                    </select>
+                    <small class="error" *ngIf="requestForm.get('classCode')?.errors?.['required'] && requestForm.get('classCode')?.touched">
+                        El código de clase es requerido
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre de la Clase</label>
+                    <input type="text" [value]="selectedClass?.name || ''" disabled />
+                </div>
+            </div>
+
+            <!-- Prerrequisitos -->
+            <div class="prerequisites-section" *ngIf="selectedClass?.prerequisites?.length">
+                <h3>Prerrequisitos</h3>
+                <div class="prerequisites-list">
+                    <div class="prerequisite-item" *ngFor="let prereq of selectedClass?.prerequisites"
+                         [class.completed]="prereq.completed">
+                        <i class="ri-checkbox-circle-line" *ngIf="prereq.completed"></i>
+                        <i class="ri-close-circle-line" *ngIf="!prereq.completed"></i>
+                        <span>{{prereq.code}} - {{prereq.name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Horario Propuesto -->
+        <div class="form-section">
+            <h2><i class="ri-time-line"></i> Horario Propuesto</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="schedule">Horario</label>
+                    <select id="schedule" formControlName="schedule">
+                        <option value="">Seleccione un horario</option>
+                        <option value="morning">Matutino (7:00 AM - 12:00 PM)</option>
+                        <option value="afternoon">Vespertino (1:00 PM - 5:00 PM)</option>
+                        <option value="evening">Nocturno (6:00 PM - 9:00 PM)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Días de Clase</label>
+                    <div class="days-selector">
+                        <div class="day-checkbox" *ngFor="let day of availableDays">
+                            <input type="checkbox" [id]="day.value" [formControlName]="day.value">
+                            <label [for]="day.value">{{day.label}}</label>
+                        </div>
+                    </div>
+                    <small class="error" *ngIf="requestForm.errors?.['noDaySelected']">
+                        Debe seleccionar al menos un día de clase
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Adicional -->
+        <div class="form-section">
+            <h2><i class="ri-information-line"></i> Información Adicional</h2>
+            <div class="form-group">
+                <label for="comments">Comentarios o Justificación</label>
+                <textarea id="comments" formControlName="comments" rows="4"
+                    placeholder="Explique brevemente por qué necesita esta apertura de clase..."></textarea>
+            </div>
+        </div>
+
+        <!-- Status de la Solicitud -->
+        <div class="request-status" *ngIf="selectedClass">
+            <h3>Estado de la Solicitud</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <i class="ri-book-mark-line"></i>
+                    <span>Prerrequisitos</span>
+                    <div [class.status-ok]="allPrerequisitesMet" [class.status-error]="!allPrerequisitesMet">
+                        {{allPrerequisitesMet ? 'Cumplidos' : 'Pendientes'}}
+                    </div>
+                </div>
+                <div class="status-item">
+                    <i class="ri-user-follow-line"></i>
+                    <span>Cupo Mínimo</span>
+                    <div class="status-pending">Pendiente (0/15)</div>
+                </div>
+                <div class="status-item">
+                    <i class="ri-calendar-check-line"></i>
+                    <span>Período</span>
+                    <div class="status-ok">Disponible</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="form-actions">
+            <button type="button" class="btn btn-outline" (click)="onCancel()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!requestForm.valid || !allPrerequisitesMet">
+                Enviar Solicitud
+            </button>
+        </div>
+    </form>
+</div>

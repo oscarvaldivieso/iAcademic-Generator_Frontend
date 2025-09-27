@@ -19,6 +19,7 @@ import { InstructorReducer, InstructorState } from "./Learning-instructor/instru
 import { CustomerReducer, CustomerState } from "./Customer/customer.reducer";
 import { StudentsReducer, studentState } from "./students/student.reducer";
 import { CourcesReducer, CourcesState } from "./Learning-cources/cources.reducer";
+import { websiteLayoutReducer } from "./layouts/layout-reducers";
 
 
 export interface RootReducerState {
@@ -47,6 +48,55 @@ export interface RootReducerState {
 
 export const rootReducer: ActionReducerMap<RootReducerState> = {
     layout: layoutReducer,
+    statlist: AnalyticsReducer,
+    CRMlist: CRMReducer,
+    auth: authenticationReducer,
+    Ecommercelist: ECoReducer,
+    Learninglist: LearningReducer,
+    Realist: RealReducer,
+    Apprealestate: AppRealestateReducer,
+    Agentlist: AgentReducer,
+    Agenciesdata: AgenciesReducer,
+    ticketlist: TicketReducer,
+    Chatmessage: ChatReducer,
+    product: ProductReducer,
+    Invoice: InvoiceReducer,
+    Sellerlist: SelleReducer,
+    Orderlist: OrderReducer,
+    LearningList: InstructorReducer,
+    CustomerList: CustomerReducer,
+    SubscriptionList: StudentsReducer,
+    CourcesList: CourcesReducer,
+    Instructorlist: InstructorReducer
+}
+
+
+export interface websiteRootReducerState {
+    layout: LayoutState,
+    auth: AuthenticationState;
+    statlist: AnalyticsState;
+    CRMlist: CRMState;
+    Ecommercelist: ECoState;
+    Learninglist: LearningState;
+    Realist: RealState;
+    Apprealestate: AppRealestateState;
+    Agentlist: AgentState;
+    Agenciesdata: AgenciesState;
+    ticketlist: TicketState;
+    Chatmessage: ChatState;
+    product: ProductState;
+    Invoice: InvoiceState;
+    Sellerlist: SellerState;
+    Orderlist: OrderState;
+    LearningList: InstructorState;
+    CustomerList: CustomerState;
+    SubscriptionList: studentState;
+    CourcesList: CourcesState;
+    Instructorlist: InstructorState
+}
+
+export const websiteRootReducer: ActionReducerMap<websiteRootReducerState> = {
+    layout: websiteLayoutReducer,
     statlist: AnalyticsReducer,
     CRMlist: CRMReducer,
     auth: authenticationReducer,
