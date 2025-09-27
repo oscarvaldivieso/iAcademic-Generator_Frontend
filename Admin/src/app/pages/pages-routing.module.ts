@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CrudComponent } from '../Personas/crudcomponent.component';
 
 const routes: Routes = [
   {
@@ -11,11 +10,6 @@ const routes: Routes = [
   {
     path: 'apps',
     loadChildren: () => import('./apps/apps.module').then((m) => m.AppsModule),
-  },
-  {
-    path: 'ecommerce',
-    loadChildren: () =>
-      import('./ecommerce/ecommerce.module').then((m) => m.EcommerceModule),
   },
   {
     path: 'learning',
@@ -82,7 +76,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./extrapages/extrapages.module').then((m) => m.ExtrapagesModule),
   },
-  { path: 'General/Personas', component: CrudComponent },
   {
     path: 'general',
     loadChildren: () =>
