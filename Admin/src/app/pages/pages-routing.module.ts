@@ -86,6 +86,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./UNI/UNI.module').then((m) => m.UNIModule),
   },
+  {
+    path: 'exp',
+    loadChildren: () =>
+      import('./EXP/exp.module').then((m) => m.ExpModule),
+  }
 ];
 
 @NgModule({

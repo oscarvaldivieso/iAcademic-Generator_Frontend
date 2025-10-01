@@ -99,7 +99,7 @@ export class EditComponent implements OnInit {
       
       const periodActualizar = {
         per_codigo: this.period.per_codigo,
-        per_modulo: this.period.per_modulo,
+        per_modulo: this.period.per_trimestre,
         per_anio: this.period.per_anio,
         per_inicio: fechaInicio,
         per_fin: fechaFin,
@@ -124,7 +124,7 @@ export class EditComponent implements OnInit {
         next: (response) => {
           console.log('Período actualizado exitosamente:', response);
           this.mostrarAlertaExito = true;
-          this.mensajeExito = `Período "${this.period.per_modulo}" actualizado exitosamente`;
+          this.mensajeExito = `Período "${this.period.per_trimestre}" actualizado exitosamente`;
           this.mostrarErrores = false;
           
           // Emitir el evento de guardado exitoso
@@ -175,7 +175,7 @@ export class EditComponent implements OnInit {
   
   private validarCampos(): boolean {
     return !!(this.period.per_codigo?.trim() && 
-             this.period.per_modulo?.trim() && 
+             this.period.per_trimestre?.trim() && 
              this.period.per_anio &&
              this.period.per_inicio &&
              this.period.per_fin);

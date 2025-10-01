@@ -254,7 +254,7 @@ export class ListComponent implements OnInit {
         
         if (response && response.success) {
           console.log('Período eliminado exitosamente');
-          this.mostrarMensaje('success', `Período "${this.periodoAEliminar!.per_modulo} - ${this.periodoAEliminar!.per_anio}" eliminado exitosamente`);
+          this.mostrarMensaje('success', `Período "${this.periodoAEliminar!.per_trimestre} - ${this.periodoAEliminar!.per_anio}" eliminado exitosamente`);
           // Forzar recarga de datos
           this.cargarDatos(false);
           this.cancelarEliminar();

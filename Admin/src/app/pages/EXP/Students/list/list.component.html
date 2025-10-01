@@ -1,0 +1,180 @@
+<!-- Breadcrumbs -->
+<app-breadcrumbs title="Estudiantes" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+
+
+
+<!-- Contenedor de alertas flotantes -->
+  <div class="alert-container">
+    <div *ngIf="mostrarAlertaExito" class="alert alert-success alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-check-double-line me-3 align-middle fs-lg"></i>
+      <strong>¡Éxito!</strong> {{ mensajeExito }}
+      <button type="button" class="btn-close" (click)="mostrarAlertaExito = false" aria-label="Close"></button>
+    </div>
+    
+    <div *ngIf="mostrarAlertaError" class="alert alert-danger alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-error-warning-line me-3 align-middle fs-lg"></i>
+      <strong>¡Error!</strong> {{ mensajeError }}
+      <button type="button" class="btn-close" (click)="mostrarAlertaWarning = false" aria-label="Close"></button>
+    </div>
+    
+    <div *ngIf="mostrarAlertaWarning" class="alert alert-warning alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-alert-line me-3 align-middle fs-lg"></i>
+      <strong>Atención:</strong> {{ mensajeWarning }}
+      <button type="button" class="btn-close" (click)="mostrarAlertaError = false" aria-label="Close"></button>
+    </div>
+  </div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+
+            <!-- Buscador y filtros -->
+            <div class="card-body border-bottom">
+                <div class="d-flex justify-content-between mb-4 flex-wrap">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary me-2 mb-2" (click)="openCreate()">
+                            <span class="btn-text">Nuevo</span>
+                            <span class="btn-icon"><i class="ri-add-line"></i></span>
+                        </button>
+                        
+                        <button type="button" class="btn btn-soft-info mb-2" (click)="openUploadModal()">
+                            <span class="btn-text">Cargar Datos</span>
+                            <span class="btn-icon"><i class="ri-upload-cloud-line"></i></span>
+                        </button>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="search-box">
+                            <input type="text" class="form-control search" placeholder="Buscar por nombre o código..." 
+                                [(ngModel)]="searchTerm" (ngModelChange)="filterStudents()">
+                            <i class="ri-search-line search-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de carga de datos -->
+                <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" [class.show]="showUploadModal" 
+                    [style.display]="showUploadModal ? 'block' : 'none'" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Cargar Datos de Estudiantes</h5>
+                                <button type="button" class="btn-close" (click)="closeUploadModal()"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="upload-area" [class.dragging]="isDragging" 
+                                    (dragover)="onDragOver($event)" 
+                                    (dragleave)="onDragLeave($event)"
+                                    (drop)="onDrop($event)">
+                                    <div class="upload-content text-center">
+                                        <i class="ri-upload-cloud-2-line display-4 text-muted"></i>
+                                        <p class="mt-2">Arrastra y suelta el archivo Excel aquí o</p>
+                                        <label class="btn btn-soft-primary btn-sm">
+                                            Seleccionar archivo
+                                            <input type="file" class="d-none" 
+                                                accept=".xlsx,.xls" 
+                                                (change)="onFileSelected($event)">
+                                        </label>
+                                        <p class="text-muted small mt-2">Formatos permitidos: .xlsx, .xls</p>
+                                    </div>
+                                    <div *ngIf="selectedFile" class="selected-file mt-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ri-file-excel-2-line text-success me-2"></i>
+                                            <span class="flex-grow-1">{{selectedFile.name}}</span>
+                                            <button type="button" class="btn btn-sm btn-soft-danger" 
+                                                (click)="removeSelectedFile()">
+                                                <i class="ri-close-line"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" (click)="closeUploadModal()">Cancelar</button>
+                                <button type="button" class="btn btn-primary" 
+                                    [disabled]="!selectedFile || isUploading"
+                                    (click)="uploadFile()">
+                                    <span *ngIf="!isUploading">Subir archivo</span>
+                                    <span *ngIf="isUploading">
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                        Subiendo...
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless align-middle table-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Acciones</th>
+                                <th scope="col">Código</th>
+                                <th scope="col">Nombre Completo</th>
+                                <th scope="col">Indice de graduación</th>
+                                <th scope="col">Indice general</th>
+                                <th scope="col">Carrera</th>
+                                <th scope="col">Estado</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let student of pagedStudents">
+                                <td>
+                                    <div class="hstack gap-3 fs-base">
+                                        <button class="btn-sm btn-soft-warning" (click)="openEdit(student)">
+                                            <i class="ri-pencil-line"></i>
+                                        </button>
+                                        <button class="btn-sm btn-soft-danger" (click)="confirmDelete(student)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="fw-medium">{{student.est_codigo}}</td>
+                                <td>{{student.est_nombre}}</td>
+                                <td>{{student.est_indice_graduacion}}</td>
+                                <td>{{student.est_indice_general}}</td>
+                                <td>{{student.car_nombre}}</td>
+                                <td>
+                                    <span class="badge" [ngClass]="student.active ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+                                        {{student.active ? 'Activo' : 'Inactivo'}}
+                                    </span>
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div *ngIf="!pagedStudents?.length" class="text-center p-4">
+                    <div class="empty-state">
+                        <div class="empty-state-icon bg-light">
+                            <i class="ri-file-list-3-line"></i>
+                        </div>
+                        <h5 class="mt-2">No hay estudiantes registrados</h5>
+                        <p class="text-muted mb-0">
+                            No se encontraron estudiantes. Puedes agregar uno nuevo usando el botón superior.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paginación -->
+                <div class="d-flex justify-content-end mt-3">
+                    <pagination
+                        [totalItems]="filteredStudents.length"
+                        [itemsPerPage]="itemsPerPage"
+                        [(ngModel)]="currentPage"
+                        (pageChanged)="pageChanged($event)"
+                        [maxSize]="5"
+                        class="pagination-rounded">
+                    </pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

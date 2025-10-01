@@ -48,17 +48,17 @@
 
       <!-- Módulo -->
       <div class="col-md-6 mb-3">
-        <label for="modulo" class="form-label">Módulo <span class="text-danger">*</span></label>
+        <label for="modulo" class="form-label">Trimestre <span class="text-danger">*</span></label>
         <input 
           type="text" 
           class="form-control" 
-          [class.is-invalid]="!period.per_modulo?.trim() && mostrarErrores"
+          [class.is-invalid]="!period.per_trimestre?.trim() && mostrarErrores"
           id="modulo"
           name="per_modulo"
-          [(ngModel)]="period.per_modulo"
+          [(ngModel)]="period.per_trimestre"
           placeholder="Ej: Primer Semestre"
           required>
-        <div class="invalid-feedback" *ngIf="!period.per_modulo?.trim() && mostrarErrores">
+        <div class="invalid-feedback" *ngIf="!period.per_trimestre?.trim() && mostrarErrores">
           El módulo es requerido
         </div>
       </div>

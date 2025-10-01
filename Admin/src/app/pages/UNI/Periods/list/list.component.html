@@ -92,8 +92,8 @@
                           <span class="code-value">{{periodo.per_codigo}}</span>
                         </div>
                         <div class="module-section">
-                          <h3 class="period-module" [title]="periodo.per_modulo">
-                            Q{{periodo.per_modulo}} - {{periodo.per_anio}}
+                          <h3 class="period-module" [title]="periodo.per_trimestre">
+                            Q{{periodo.per_trimestre}} - {{periodo.per_anio}}
                           </h3>
                         </div>
                         <div class="dates-section">
@@ -188,7 +188,7 @@
           <button type="button" class="btn-close" (click)="cancelarEliminar()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>¿Estás seguro de que deseas eliminar el período <strong>{{periodoAEliminar?.per_modulo}} - {{periodoAEliminar?.per_anio}}</strong>?</p>
+          <p>¿Estás seguro de que deseas eliminar el período <strong>{{periodoAEliminar?.per_trimestre}} - {{periodoAEliminar?.per_anio}}</strong>?</p>
           <p class="text-muted mb-0">Esta acción no se puede deshacer.</p>
         </div>
         <div class="modal-footer">

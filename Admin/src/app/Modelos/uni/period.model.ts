@@ -1,6 +1,6 @@
 export class Period {
   per_codigo: string = '';
-  per_modulo: string = '';
+  per_trimestre: string = '';
   per_anio: number = new Date().getFullYear();
   per_inicio: Date = new Date();
   per_fin: Date = new Date();

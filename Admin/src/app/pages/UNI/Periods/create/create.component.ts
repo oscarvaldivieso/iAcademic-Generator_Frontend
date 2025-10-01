@@ -58,7 +58,7 @@ export class CreateComponent {
   
   private validarCampos(): boolean {
     if (!this.period.per_codigo?.trim() || 
-        !this.period.per_modulo?.trim() || 
+        !this.period.per_trimestre?.trim() || 
         !this.period.per_anio ||
         !this.period.per_inicio ||
         !this.period.per_fin) {
@@ -115,7 +115,7 @@ export class CreateComponent {
       
       const periodGuardar = {
         per_codigo: this.period.per_codigo.trim(),
-        per_modulo: this.period.per_modulo.trim(),
+        per_modulo: this.period.per_trimestre.trim(),
         per_anio: this.period.per_anio,
         per_inicio: fechaInicio,
         per_fin: fechaFin,
