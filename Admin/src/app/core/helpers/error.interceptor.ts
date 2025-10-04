@@ -11,8 +11,8 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            // Solo manejamos 401 si no estamos en una ruta pública
-            if (err.status === 401 && !window.location.pathname.startsWith('/website') && !window.location.pathname.startsWith('/auth')) {
+            // Solo manejamos 401 si no estamos en una ruta de autenticación
+            if (err.status === 401 && !window.location.pathname.startsWith('/auth')) {
                 this.authenticationService.logout();
                 location.reload();
             }
