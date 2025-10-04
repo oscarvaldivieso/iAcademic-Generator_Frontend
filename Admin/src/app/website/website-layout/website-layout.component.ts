@@ -29,7 +29,7 @@ export class WebsiteLayoutComponent {
         document.documentElement.setAttribute('data-sidebar-image', data.SIDEBAR_IMAGE);
         document.documentElement.setAttribute('data-layout-position', data.LAYOUT_POSITION);
         document.documentElement.setAttribute('data-layout-style', data.SIDEBAR_VIEW);
-        document.documentElement.setAttribute('data-topbar', data.TOPBAR);
+        document.documentElement.setAttribute('data-topbar', 'dark');
         document.documentElement.setAttribute('data-preloader', data.DATA_PRELOADER)
         document.documentElement.setAttribute('data-theme', data.LAYOUT_THEME)
   
