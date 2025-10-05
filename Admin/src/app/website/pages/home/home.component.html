@@ -1,109 +1,92 @@
 <div class="home-container">
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1>🎓 Portal Estudiantil</h1>
-                <p class="hero-subtitle">Gestiona tu prematrícula y solicitudes académicas de manera fácil y eficiente</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary">
-                        <i class="ri-calendar-check-line"></i>
-                        Iniciar Prematrícula
-                    </button>
-                    <button class="btn btn-outline">
-                        <i class="ri-add-circle-line"></i>
-                        Solicitar Apertura de Clase
-                    </button>
-                </div>
-            </div>
-        </section>
+    <!-- Bento Grid 4x3 -->
+    <div class="bento-grid">
+        
+        <!-- Card 1: Isotipo CEUTEC (1x1) - Fila 1, Columna 1 -->
+        <div class="card isotipo-card">
+            <div class="wave-pattern"></div>
+            <img src="assets/images/isotipo-ceutec-blanco.png" alt="CEUTEC" class="isotipo">
+        </div>
 
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="ri-book-open-line"></i>
-                </div>
-                <div class="stat-number">15</div>
-                <div class="stat-label">Clases Disponibles</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="ri-file-list-3-line"></i>
-                </div>
-                <div class="stat-number">3</div>
-                <div class="stat-label">Solicitudes Activas</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="ri-calendar-event-line"></i>
-                </div>
-                <div class="stat-number">8</div>
-                <div class="stat-label">Días Restantes</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="ri-check-double-line"></i>
-                </div>
-                <div class="stat-number">12</div>
-                <div class="stat-label">Clases Completadas</div>
-            </div>
-        </section>
+        <!-- Card 2: Bienvenida (1x3) - Fila 1, Columnas 2-4 -->
+        <div class="card welcome-card">
+            <h1>Bienvenido, Oscar</h1>
+            <p>Nos alegra tenerte de vuelta. Desde aquí puedes gestionar tu prematrícula, solicitudes académicas y consultar toda tu información estudiantil de manera rápida y sencilla.</p>
+        </div>
 
-        <!-- Features Section -->
-        <section class="features-section">
-            <h2 class="section-title">Servicios Disponibles</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ri-calendar-line"></i>
+        <!-- Card 3: Sistema Info (2x2) - Filas 2-3, Columnas 1-2 -->
+        <div class="card sistema-card">
+            <div class="sistema-image">
+                <img src="https://ceutec.hn/wp-content/uploads/2025/05/se-trata-de-vos-ceutec-educacion.jpg" alt="Sistema">
+                <div class="sistema-overlay"></div>
+            </div>
+            <div class="sistema-content">
+                <h2>Portal Estudiantil</h2>
+                <p>Tu centro de gestión académica completo. Accede a todos los servicios que CEUTEC tiene para ti en un solo lugar.</p>
+                <div class="sistema-features">
+                    <div class="feature-item">
+                        <i class="ri-check-line"></i>
+                        <span>Prematrícula en línea</span>
                     </div>
-                    <h3>Prematrícula</h3>
-                    <p>Planifica tu próximo período académico seleccionando las clases que deseas cursar de forma intuitiva</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ri-file-list-line"></i>
+                    <div class="feature-item">
+                        <i class="ri-check-line"></i>
+                        <span>Gestión de solicitudes</span>
                     </div>
-                    <h3>Solicitudes</h3>
-                    <p>Gestiona solicitudes para apertura de clases y otros trámites académicos en tiempo real</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ri-time-line"></i>
+                    <div class="feature-item">
+                        <i class="ri-check-line"></i>
+                        <span>Consulta de horarios</span>
                     </div>
-                    <h3>Carga Académica</h3>
-                    <p>Visualiza y organiza tu carga académica de manera eficiente con nuestro calendario interactivo</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="ri-history-line"></i>
-                    </div>
-                    <h3>Historial</h3>
-                    <p>Accede a tu historial completo de solicitudes y prematrículas de períodos anteriores</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Quick Actions Section -->
-        <section class="quick-actions-section">
-            <h2 class="section-title">Acciones Rápidas</h2>
-            <div class="actions-grid">
-                <button class="action-button">
-                    <i class="ri-add-circle-line"></i>
-                    <span>Nueva Solicitud</span>
-                </button>
-                <button class="action-button">
-                    <i class="ri-file-list-3-line"></i>
-                    <span>Ver Solicitudes</span>
-                </button>
-                <button class="action-button">
-                    <i class="ri-calendar-check-line"></i>
-                    <span>Estado Prematrícula</span>
-                </button>
-                <button class="action-button">
-                    <i class="ri-question-line"></i>
-                    <span>Centro de Ayuda</span>
-                </button>
+        <!-- Card 4: Prematrícula (1x1) - Fila 2, Columna 3 -->
+        <div class="card prematricula-card">
+            <div class="card-icon">
+                <i class="ri-calendar-check-line"></i>
             </div>
-        </section>
+            <h3>Prematrícula</h3>
+            <p>Inscribe tus clases para el próximo período</p>
+            <button class="btn-arrow">
+                <i class="ri-arrow-right-line"></i>
+            </button>
+        </div>
+
+        <!-- Card 5: Solicitud Apertura (1x1) - Fila 3, Columna 3 -->
+        <div class="card solicitud-card">
+            <div class="card-icon">
+                <i class="ri-file-add-line"></i>
+            </div>
+            <h3>Apertura de Clase</h3>
+            <p>Solicita la apertura de una nueva sección</p>
+            <button class="btn-arrow">
+                <i class="ri-arrow-right-line"></i>
+            </button>
+        </div>
+
+        <!-- Card 6: Ayuda/Contacto (2x1) - Filas 2-3, Columna 4 -->
+        <div class="card ayuda-card">
+            <div class="ayuda-image">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80" alt="Ayuda">
+                <div class="ayuda-overlay"></div>
+            </div>
+            <div class="ayuda-content">
+                <div class="ayuda-icon">
+                    <i class="ri-customer-service-2-line"></i>
+                </div>
+                <h3>¿Necesitas Ayuda?</h3>
+                <p>Nuestro equipo de soporte está disponible para asistirte</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="ri-phone-line"></i>
+                        <span>2216-5100</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="ri-mail-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
