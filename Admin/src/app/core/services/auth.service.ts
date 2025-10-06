@@ -6,7 +6,7 @@ import { LoginRequest, LoginResponse, AuthData } from '../models/auth.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService {
+export class  AuthenticationService {
     private currentUserSubject: BehaviorSubject<AuthData | null>;
     public currentUser$: Observable<AuthData | null>;
     private apiUrl = environment.apiBaseUrl;

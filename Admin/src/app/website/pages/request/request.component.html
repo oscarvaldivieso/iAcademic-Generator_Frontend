@@ -1,10 +1,62 @@
 <div class="request-container">
-    <div class="request-header">
-        <h1>Solicitud de Apertura de Clase</h1>
-        <p>Complete el formulario para solicitar la apertura de una nueva clase</p>
+    <!-- Header con breadcrumb -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="breadcrumb">
+                <i class="ri-home-line"></i>
+                <span>Inicio</span>
+                <i class="ri-arrow-right-s-line"></i>
+                <span class="active">Solicitud de Apertura</span>
+            </div>
+            <h1>Solicitud de Apertura de Clase</h1>
+            <p>Complete el formulario para solicitar la apertura de una nueva clase</p>
+        </div>
     </div>
 
-    <form class="request-form" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+    <!-- Contenedor principal con sidebar -->
+    <div class="main-content">
+        <!-- Sidebar con información -->
+        <aside class="info-sidebar">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="ri-information-line"></i>
+                </div>
+                <h3>Información Importante</h3>
+                <ul class="info-list">
+                    <li>
+                        <i class="ri-checkbox-circle-line"></i>
+                        <span>Debe cumplir con todos los prerrequisitos</span>
+                    </li>
+                    <li>
+                        <i class="ri-checkbox-circle-line"></i>
+                        <span>Se requiere un mínimo de 15 estudiantes</span>
+                    </li>
+                    <li>
+                        <i class="ri-checkbox-circle-line"></i>
+                        <span>La solicitud será revisada en 48 horas</span>
+                    </li>
+                    <li>
+                        <i class="ri-checkbox-circle-line"></i>
+                        <span>Recibirá notificación por correo</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="help-card">
+                <div class="help-icon">
+                    <i class="ri-customer-service-2-line"></i>
+                </div>
+                <h4>¿Necesitas Ayuda?</h4>
+                <p>Contacta a soporte académico</p>
+                <a href="mailto:soporte@ceutec.hn" class="help-link">
+                    <i class="ri-mail-line"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Formulario principal -->
+        <div class="form-container">
+            <form class="request-form" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
         <!-- Información de la Clase -->
         <div class="form-section">
             <h2><i class="ri-book-2-line"></i> Información de la Clase</h2>
@@ -107,10 +159,16 @@
 
         <!-- Botones de Acción -->
         <div class="form-actions">
-            <button type="button" class="btn btn-outline" (click)="onCancel()">Cancelar</button>
+            <button type="button" class="btn btn-outline" (click)="onCancel()">
+                <i class="ri-close-line"></i>
+                Cancelar
+            </button>
             <button type="submit" class="btn btn-primary" [disabled]="!requestForm.valid || !allPrerequisitesMet">
+                <i class="ri-send-plane-line"></i>
                 Enviar Solicitud
             </button>
         </div>
     </form>
+        </div>
+    </div>
 </div>

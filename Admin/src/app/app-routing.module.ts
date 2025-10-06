@@ -10,7 +10,8 @@ const routes: Routes = [
   { 
     path: 'website', 
     loadChildren: () => import('./website/website.module').then(m => m.WebsiteModule),
-    data: { public: true }
+    data: { public: true },
+    canActivate: [AuthGuard] 
   },
   { 
     path: 'auth', 
