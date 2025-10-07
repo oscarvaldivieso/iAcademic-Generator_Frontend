@@ -15,6 +15,16 @@ interface Prerequisite {
   completed: boolean;
 }
 
+interface Teacher {
+  id: string;
+  name: string;
+}
+
+interface Campus {
+  id: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-request',
   standalone: true,
@@ -62,13 +72,39 @@ export class RequestComponent implements OnInit {
     }
   ];
 
-  availableDays = [
-    { value: 'monday', label: 'Lunes' },
-    { value: 'tuesday', label: 'Martes' },
-    { value: 'wednesday', label: 'Miércoles' },
-    { value: 'thursday', label: 'Jueves' },
-    { value: 'friday', label: 'Viernes' },
-    { value: 'saturday', label: 'Sábado' }
+  availableTeachers: Teacher[] = [
+    { id: '1', name: 'Dr. Juan Pérez' },
+    { id: '2', name: 'Dra. María González' },
+    { id: '3', name: 'Ing. Carlos Rodríguez' },
+    { id: '4', name: 'Lic. Ana Martínez' }
+  ];
+
+  availableCampus: Campus[] = [
+    { id: '1', name: 'Campus Tegucigalpa' },
+    { id: '2', name: 'Campus San Pedro Sula' },
+    { id: '3', name: 'Campus La Ceiba' },
+    { id: '4', name: 'Campus Choluteca' }
+  ];
+
+  modalities = [
+    { value: 'presencial', label: 'Presencial' },
+    { value: 'virtual', label: 'Virtual' },
+    { value: 'hibrida', label: 'Híbrida' }
+  ];
+
+  periods = [
+    { value: '1', label: 'Periodo 1' },
+    { value: '2', label: 'Periodo 2' },
+    { value: '3', label: 'Periodo 3' },
+    { value: '4', label: 'Periodo 4' }
+  ];
+
+  scheduleOptions = [
+    { value: 'lunes-miercoles', label: 'Lunes y Miércoles - 1:30 horas cada día' },
+    { value: 'martes-jueves', label: 'Martes y Jueves - 1:30 horas cada día' },
+    { value: 'viernes', label: 'Viernes - 3 horas' },
+    { value: 'sabado', label: 'Sábado - 3 horas' },
+    { value: 'domingo', label: 'Domingo - 3 horas' }
   ];
 
   constructor(
@@ -77,31 +113,12 @@ export class RequestComponent implements OnInit {
   ) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
+      teacher: ['', Validators.required],
+      modality: ['', Validators.required],
+      campus: ['', Validators.required],
+      period: ['', Validators.required],
       schedule: ['', Validators.required],
-      monday: [false],
-      tuesday: [false],
-      wednesday: [false],
-      thursday: [false],
-      friday: [false],
-      saturday: [false],
-      comments: ['', [Validators.required, Validators.minLength(10)]]
-    });
-
-    // Agregar validación para asegurar que al menos un día está seleccionado
-    const daysControls = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    daysControls.forEach(day => {
-      this.requestForm.get(day)?.valueChanges.subscribe(() => {
-        const anyDaySelected = daysControls.some(d => this.requestForm.get(d)?.value);
-        if (!anyDaySelected) {
-          this.requestForm.setErrors({ noDaySelected: true });
-        } else {
-          const currentErrors = this.requestForm.errors;
-          if (currentErrors) {
-            delete currentErrors['noDaySelected'];
-            this.requestForm.setErrors(Object.keys(currentErrors).length ? currentErrors : null);
-          }
-        }
-      });
+      observations: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
 
@@ -119,13 +136,15 @@ export class RequestComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.requestForm.valid && this.allPrerequisitesMet) {
+    if (this.requestForm.valid) {
       // Aquí iría la lógica para enviar la solicitud
       console.log('Formulario enviado:', this.requestForm.value);
       alert('Solicitud enviada con éxito');
       this.router.navigate(['/website']);
     }
   }
+
+  
 
   onCancel() {
     this.router.navigate(['/website']);
