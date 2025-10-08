@@ -5,8 +5,8 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl:'https://iacademicgenerator-api-latest.onrender.com',
-  //apiBaseUrl: 'https://localhost:7228',
+  //apiBaseUrl:'https://iacademicgenerator-api-latest.onrender.com',
+  apiBaseUrl: 'https://localhost:7228',
   apiKey: '4b567cb1c6b24b51ab55248f8e66e5cc'
 };
 

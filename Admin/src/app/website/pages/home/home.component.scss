@@ -10,6 +10,72 @@ $border-color: #e9ecef;
     margin: 0 auto;
     padding:0rem 0.5rem;
     background: $gray-light;
+    animation: fadeIn 0.6s ease-out;
+}
+
+// Animaciones de entrada
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-5deg) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
 }
 
 // Bento Grid 4 columnas x 3 filas
@@ -40,6 +106,12 @@ $border-color: #e9ecef;
     position: relative;
     overflow: hidden;
     margin-bottom:0;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
 }
 
 // Card 1: Isotipo CEUTEC (1x1)
@@ -51,6 +123,7 @@ $border-color: #e9ecef;
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
+    animation: scaleIn 0.6s ease-out 0.1s both;
 
     .wave-pattern {
         position: absolute;
@@ -80,6 +153,7 @@ $border-color: #e9ecef;
         position: relative;
         z-index: 1;
         filter: brightness(0) invert(1);
+        animation: rotateIn 0.8s ease-out 0.3s both;
     }
 
     @media (max-width: 768px) {
@@ -97,6 +171,7 @@ $border-color: #e9ecef;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    animation: slideInRight 0.7s ease-out 0.2s both;
 
     h1 {
         color: $dark-blue;
@@ -135,6 +210,7 @@ $border-color: #e9ecef;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
+    animation: slideInLeft 0.7s ease-out 0.3s both;
 
     .sistema-image {
         position: absolute;
@@ -223,6 +299,7 @@ $border-color: #e9ecef;
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease;
+    animation: slideInUp 0.7s ease-out 0.4s both;
 
     &:hover {
         
@@ -325,6 +402,7 @@ $border-color: #e9ecef;
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease;
+    animation: slideInUp 0.7s ease-out 0.5s both;
 
     &:hover {
         
@@ -417,6 +495,7 @@ $border-color: #e9ecef;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
+    animation: slideInRight 0.7s ease-out 0.6s both;
 
     .ayuda-image {
         position: absolute;

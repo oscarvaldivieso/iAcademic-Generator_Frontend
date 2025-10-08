@@ -1,17 +1,20 @@
 <div class="request-container">
     <!-- Header con breadcrumb -->
-    <div class="page-header">
-        <div class="header-content">
-            <div class="breadcrumb">
-                <i class="ri-home-line"></i>
-                <span>Inicio</span>
-                <i class="ri-arrow-right-s-line"></i>
-                <span class="active">Solicitud de Apertura</span>
+    <div class="header-container">
+        <div class="page-header">
+            <div class="header-content">
+                <div class="breadcrumb">
+                    <i class="ri-home-line"></i>
+                    <span>Inicio</span>
+                    <i class="ri-arrow-right-s-line"></i>
+                    <span class="active">Solicitud de Apertura</span>
+                </div>
+                <h1>Solicitud de Apertura de Clase</h1>
+                <p>Complete el formulario para solicitar la apertura de una nueva clase</p>
             </div>
-            <h1>Solicitud de Apertura de Clase</h1>
-            <p>Complete el formulario para solicitar la apertura de una nueva clase</p>
         </div>
     </div>
+    
 
     <!-- Contenedor principal con sidebar -->
     <div class="main-content">
@@ -59,16 +62,63 @@
             <form class="request-form" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
         <!-- Información de la Materia -->
         <div class="form-section">
-            <h2><i class="ri-book-2-line"></i> Información de la Materia</h2>
+            <h2><i class="ri-book-2-line"></i> Agregar Materias</h2>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="classCode">Materia <span class="required">*</span></label>
-                    <select id="classCode" formControlName="classCode" (change)="onClassSelect()">
-                        <option value="">Seleccione una materia</option>
-                        <option *ngFor="let class of availableClasses" [value]="class.code">
-                            {{class.code}} - {{class.name}}
-                        </option>
-                    </select>
+                    <div class="subject-search-container" (click)="$event.stopPropagation()">
+                        <div class="search-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="classCode"
+                                class="subject-search-input"
+                                [(ngModel)]="subjectSearchTerm"
+                                [ngModelOptions]="{standalone: true}"
+                                (focus)="onSubjectInputFocus()"
+                                (input)="onSubjectSearchInput()"
+                                [placeholder]="isLoadingSubjects ? 'Cargando materias...' : 'Buscar materia por código o nombre...'"
+                                [disabled]="isLoadingSubjects"
+                                autocomplete="off"
+                            />
+                            <i class="ri-search-line search-icon" *ngIf="!isLoadingSubjects"></i>
+                            <div class="spinner-border spinner-border-sm search-icon" role="status" *ngIf="isLoadingSubjects">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Dropdown de resultados -->
+                        <div class="subject-dropdown" *ngIf="showSubjectDropdown && !isLoadingSubjects">
+                            <div class="dropdown-header">
+                                <span class="results-count">
+                                    {{ filteredSubjects.length }} materia(s) encontrada(s)
+                                </span>
+                            </div>
+                            <div class="subject-list">
+                                <div 
+                                    *ngFor="let subject of filteredSubjects" 
+                                    class="subject-item"
+                                    [class.selected]="requestForm.get('classCode')?.value === subject.mat_codigo"
+                                    (click)="selectSubject(subject)"
+                                >
+                                    <div class="subject-info">
+                                        <div class="subject-name">{{ subject.mat_nombre }}</div>
+                                        <div class="subject-details">
+                                            <span class="subject-code">{{ subject.mat_codigo }}</span>
+                                            <span class="subject-badge" *ngIf="subject.mat_es_core">
+                                                <i class="ri-star-fill"></i> Core
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <i class="ri-check-line check-icon" *ngIf="requestForm.get('classCode')?.value === subject.mat_codigo"></i>
+                                </div>
+                                <div class="no-results" *ngIf="filteredSubjects.length === 0">
+                                    <i class="ri-search-line"></i>
+                                    <p>No se encontraron materias</p>
+                                    <small>Intenta con otro término de búsqueda</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <small class="error" *ngIf="requestForm.get('classCode')?.errors?.['required'] && requestForm.get('classCode')?.touched">
                         La materia es requerida
                     </small>
@@ -76,15 +126,210 @@
 
                 <div class="form-group">
                     <label for="teacher">Docente <span class="required">*</span></label>
-                    <select id="teacher" formControlName="teacher">
-                        <option value="">Seleccione un docente</option>
-                        <option *ngFor="let teacher of availableTeachers" [value]="teacher.id">
-                            {{teacher.name}}
-                        </option>
-                    </select>
+                    <div class="teacher-search-container" (click)="$event.stopPropagation()">
+                        <div class="search-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="teacher"
+                                class="teacher-search-input"
+                                [(ngModel)]="teacherSearchTerm"
+                                [ngModelOptions]="{standalone: true}"
+                                (focus)="onTeacherInputFocus()"
+                                (input)="onTeacherSearchInput()"
+                                [placeholder]="isLoadingTeachers ? 'Cargando docentes...' : 'Buscar docente por nombre o código...'"
+                                [disabled]="isLoadingTeachers"
+                                autocomplete="off"
+                            />
+                            <i class="ri-search-line search-icon" *ngIf="!isLoadingTeachers"></i>
+                            <div class="spinner-border spinner-border-sm search-icon" role="status" *ngIf="isLoadingTeachers">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Dropdown de resultados -->
+                        <div class="teacher-dropdown" *ngIf="showTeacherDropdown && !isLoadingTeachers">
+                            <div class="dropdown-header">
+                                <span class="results-count">
+                                    {{ filteredTeachers.length }} docente(s) encontrado(s)
+                                </span>
+                            </div>
+                            <div class="teacher-list">
+                                <div 
+                                    *ngFor="let teacher of filteredTeachers" 
+                                    class="teacher-item"
+                                    [class.selected]="requestForm.get('teacher')?.value === teacher.doc_codigo"
+                                    (click)="selectTeacher(teacher)"
+                                >
+                                    <div class="teacher-info">
+                                        <div class="teacher-name">{{ teacher.doc_nombre }}</div>
+                                    </div>
+                                    <i class="ri-check-line check-icon" *ngIf="requestForm.get('teacher')?.value === teacher.doc_codigo"></i>
+                                </div>
+                                <div class="no-results" *ngIf="filteredTeachers.length === 0">
+                                    <i class="ri-search-line"></i>
+                                    <p>No se encontraron docentes</p>
+                                    <small>Intenta con otro término de búsqueda</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <small class="error" *ngIf="requestForm.get('teacher')?.errors?.['required'] && requestForm.get('teacher')?.touched">
                         El docente es requerido
                     </small>
+                </div>
+            </div>
+
+            <!-- Botón para agregar materia -->
+            <div class="add-subject-action">
+                <button type="button" class="btn btn-add-subject" (click)="addSubjectToRequest()">
+                    <i class="ri-add-circle-line"></i>
+                    Agregar Materia a la Solicitud
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de Materias Seleccionadas -->
+        <div class="form-section" *ngIf="selectedSubjects.length > 0">
+            <h2><i class="ri-file-list-3-line"></i> Materias Seleccionadas ({{selectedSubjects.length}})</h2>
+            <div class="selected-subjects-list">
+                <div class="subject-card" *ngFor="let item of selectedSubjects; let i = index">
+                    <div class="subject-card-header">
+                        <div class="subject-badge-icon">
+                            <i class="ri-book-open-line"></i>
+                        </div>
+                        <div class="subject-card-info">
+                            <h4>{{item.subject.mat_nombre}}</h4>
+                            <p class="subject-code-text">{{item.subject.mat_codigo}}</p>
+                        </div>
+                        <button type="button" class="btn-remove-subject" (click)="removeSubjectFromRequest(i)" title="Eliminar">
+                            <i class="ri-close-line"></i>
+                        </button>
+                    </div>
+                    <div class="subject-card-body">
+                        <div class="info-row">
+                            <i class="ri-user-line"></i>
+                            <span class="info-label">Docente:</span>
+                            <span class="info-value">{{item.teacher.doc_nombre}}</span>
+                        </div>
+                        <div class="info-row" *ngIf="item.schedule">
+                            <i class="ri-time-line"></i>
+                            <span class="info-label">Horario:</span>
+                            <span class="info-value">{{item.schedule.formatted}}</span>
+                        </div>
+                        <div class="schedule-action">
+                            <button 
+                                type="button" 
+                                class="btn-schedule" 
+                                (click)="openScheduleModal(i)"
+                                [class.has-schedule]="item.schedule"
+                            >
+                                <i [class]="item.schedule ? 'ri-edit-line' : 'ri-calendar-line'"></i>
+                                {{item.schedule ? 'Editar Horario' : 'Asignar Horario'}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Horario -->
+        <div class="schedule-modal-overlay" *ngIf="editingScheduleIndex >= 0" (click)="closeScheduleModal()">
+            <div class="schedule-modal" (click)="$event.stopPropagation()">
+                <div class="modal-drag-indicator">
+                    <div class="drag-handle"></div>
+                </div>
+                <div class="modal-header">
+                    <h3>
+                        <i class="ri-calendar-check-line"></i>
+                        Configurar Horario
+                    </h3>
+                    <button type="button" class="btn-close-modal" (click)="closeScheduleModal()">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-subject-info" *ngIf="selectedSubjects[editingScheduleIndex]">
+                        <h4>{{selectedSubjects[editingScheduleIndex].subject.mat_nombre}}</h4>
+                        <p>{{selectedSubjects[editingScheduleIndex].subject.mat_codigo}}</p>
+                    </div>
+
+                    <div class="schedule-selector">
+                        <div class="schedule-step">
+                            <span class="step-label">1. Selecciona los días</span>
+                            <div class="day-patterns-grid">
+                                <div 
+                                    *ngFor="let pattern of dayPatterns" 
+                                    class="day-pattern-card"
+                                    [class.selected]="tempDayPattern?.value === pattern.value"
+                                    (click)="selectTempDayPattern(pattern)"
+                                >
+                                    <div class="pattern-icon">
+                                        <i class="ri-calendar-line"></i>
+                                    </div>
+                                    <div class="pattern-info">
+                                        <h4>{{pattern.label}}</h4>
+                                        <p>{{pattern.description}}</p>
+                                    </div>
+                                    <i class="ri-check-circle-fill check-icon" *ngIf="tempDayPattern?.value === pattern.value"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="schedule-step" *ngIf="tempDayPattern">
+                            <span class="step-label">2. Selecciona la hora de inicio</span>
+                            <div class="time-selector">
+                                <div class="time-input-group">
+                                    <label for="tempStartTime">Hora de inicio</label>
+                                    <input 
+                                        type="time" 
+                                        id="tempStartTime"
+                                        [(ngModel)]="tempStartTime"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (change)="onTempStartTimeChange(tempStartTime)"
+                                        class="time-input"
+                                    />
+                                </div>
+                                <div class="time-separator">
+                                    <i class="ri-arrow-right-line"></i>
+                                </div>
+                                <div class="time-input-group">
+                                    <label for="tempEndTime">Hora de fin (automática)</label>
+                                    <input 
+                                        type="time" 
+                                        id="tempEndTime"
+                                        [value]="tempEndTime"
+                                        class="time-input"
+                                        readonly
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="schedule-summary" *ngIf="tempDayPattern && tempStartTime && tempEndTime">
+                            <div class="summary-icon">
+                                <i class="ri-time-line"></i>
+                            </div>
+                            <div class="summary-text">
+                                <span class="summary-label">Horario seleccionado:</span>
+                                <span class="summary-value">{{getTempFormattedSchedule()}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" (click)="closeScheduleModal()">
+                        Cancelar
+                    </button>
+                    <button 
+                        type="button" 
+                        class="btn btn-save" 
+                        (click)="saveScheduleForSubject()"
+                        [disabled]="!tempDayPattern || !tempStartTime || !tempEndTime"
+                    >
+                        <i class="ri-check-line"></i>
+                        Guardar Horario
+                    </button>
                 </div>
             </div>
         </div>
@@ -121,9 +366,9 @@
             </div>
         </div>
 
-        <!-- Periodo y Horario -->
+        <!-- Periodo -->
         <div class="form-section">
-            <h2><i class="ri-time-line"></i> Periodo y Horario</h2>
+            <h2><i class="ri-time-line"></i> Periodo Académico</h2>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="period">Periodo <span class="required">*</span></label>
@@ -137,19 +382,10 @@
                         El periodo es requerido
                     </small>
                 </div>
-
-                <div class="form-group full-width">
-                    <label for="schedule">Horario <span class="required">*</span></label>
-                    <select id="schedule" formControlName="schedule">
-                        <option value="">Seleccione un horario</option>
-                        <option *ngFor="let schedule of scheduleOptions" [value]="schedule.value">
-                            {{schedule.label}}
-                        </option>
-                    </select>
-                    <small class="error" *ngIf="requestForm.get('schedule')?.errors?.['required'] && requestForm.get('schedule')?.touched">
-                        El horario es requerido
-                    </small>
-                </div>
+            </div>
+            <div class="info-note">
+                <i class="ri-information-line"></i>
+                <p>El horario se configura individualmente para cada materia en la lista de materias seleccionadas.</p>
             </div>
         </div>
 
