@@ -353,10 +353,10 @@
 
                 <div class="form-group">
                     <label for="modality">Modalidad <span class="required">*</span></label>
-                    <select id="modality" formControlName="modality">
-                        <option value="">Seleccione una modalidad</option>
-                        <option *ngFor="let modality of modalities" [value]="modality.value">
-                            {{modality.label}}
+                    <select id="modality" formControlName="modality" [disabled]="isLoadingModality">
+                        <option value="">{{ isLoadingModality ? 'Cargando modalidades...' : 'Seleccione una modalidad' }}</option>
+                        <option *ngFor="let modality of availableModalities" [value]="modality.mod_codigo">
+                            {{modality.mod_nombre}}
                         </option>
                     </select>
                     <small class="error" *ngIf="requestForm.get('modality')?.errors?.['required'] && requestForm.get('modality')?.touched">

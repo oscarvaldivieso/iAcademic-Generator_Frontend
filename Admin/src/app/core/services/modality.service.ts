@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Teachers } from '../../Modelos/aca/teacher.model';
+import { Subject } from '../../Modelos/uni/subject.model';
+import { Modality } from 'src/app/Modelos/uni/modalities.model';
 
 interface ApiResponse<T> {
   type: number;
@@ -15,22 +16,22 @@ interface ApiResponse<T> {
 @Injectable({
   providedIn: 'root'
 })
-export class TeacherService {
-  private apiUrl = `${environment.apiBaseUrl}/Teachers`;
+export class ModalityService {
+  private apiUrl = `${environment.apiBaseUrl}/Modalities`;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Obtiene la lista de todos los docentes
+   * Obtiene la lista de todas las materias
    */
-  getTeachersList(): Observable<ApiResponse<Teachers[]>> {
+  getModalitiesList(): Observable<ApiResponse<Modality[]>> {
     const headers = new HttpHeaders({
       'XApiKey': environment.apiKey,
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
 
-    return this.http.get<ApiResponse<Teachers[]>>(`${this.apiUrl}/List`, {
+    return this.http.get<ApiResponse<Modality[]>>(`${this.apiUrl}/List`, {
       headers,
       withCredentials: true
     });

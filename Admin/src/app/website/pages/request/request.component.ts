@@ -5,9 +5,11 @@ import { Router } from '@angular/router';
 import { CampusService } from '../../../core/services/campus.service';
 import { TeacherService } from '../../../core/services/teacher.service';
 import { SubjectService } from '../../../core/services/subject.service';
+import { ModalityService } from 'src/app/core/services/modality.service';
 import { Campus } from '../../../Modelos/uni/campus.model';
-import { Teacher } from '../../../Modelos/uni/teacher.model';
+import { Teachers } from '../../../Modelos/aca/teacher.model';
 import { Subject } from '../../../Modelos/uni/subject.model';
+import { Modality } from '../../../Modelos/uni/modalities.model';
 
 interface Prerequisite {
   code: string;
@@ -17,7 +19,7 @@ interface Prerequisite {
 
 interface SelectedSubjectRequest {
   subject: Subject;
-  teacher: Teacher;
+  teacher: Teachers;
   schedule?: {
     dayPattern: string;
     startTime: string;
@@ -52,14 +54,20 @@ export class RequestComponent implements OnInit {
   subjectSearchTerm: string = '';
   showSubjectDropdown: boolean = false;
 
-  availableTeachers: Teacher[] = [];
-  filteredTeachers: Teacher[] = [];
+  //Teachers (Docentes)
+  availableTeachers: Teachers[] = [];
+  filteredTeachers: Teachers[] = [];
   isLoadingTeachers: boolean = false;
   teacherSearchTerm: string = '';
   showTeacherDropdown: boolean = false;
 
+  //Campus
   availableCampus: Campus[] = [];
   isLoadingCampus: boolean = false;
+
+  //Modalities
+  availableModalities: Modality[]=[];
+  isLoadingModality: boolean = false;
 
   modalities = [
     { value: 'presencial', label: 'Presencial' },
@@ -123,7 +131,8 @@ export class RequestComponent implements OnInit {
     private router: Router,
     private campusService: CampusService,
     private teacherService: TeacherService,
-    private subjectService: SubjectService
+    private subjectService: SubjectService,
+    private modalityService: ModalityService
   ) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
@@ -140,6 +149,7 @@ export class RequestComponent implements OnInit {
     this.loadCampusList();
     this.loadTeachersList();
     this.loadSubjectsList();
+    this.loadModalitiesList();
   }
 
   /**
@@ -162,6 +172,29 @@ export class RequestComponent implements OnInit {
       }
     });
   }
+
+  /**
+   * Carga la lista de campus desde el API
+   */
+  loadModalitiesList() {
+    this.isLoadingModality = true;
+    this.modalityService.getModalitiesList().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Filtrar solo los campus activos
+          this.availableModalities = response.data.filter(modality => modality.active);
+        }
+        this.isLoadingModality = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar la lista de campus:', error);
+        this.isLoadingModality = false;
+        // Opcional: mostrar mensaje de error al usuario
+      }
+    });
+  }
+
+
 
   /**
    * Carga la lista de materias desde el API
@@ -228,7 +261,7 @@ export class RequestComponent implements OnInit {
   /**
    * Selecciona un docente del dropdown
    */
-  selectTeacher(teacher: Teacher) {
+  selectTeacher(teacher: Teachers) {
     this.requestForm.patchValue({ teacher: teacher.doc_codigo });
     this.teacherSearchTerm = teacher.doc_nombre;
     this.showTeacherDropdown = false;
