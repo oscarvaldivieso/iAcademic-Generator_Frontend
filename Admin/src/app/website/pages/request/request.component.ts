@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CampusService } from '../../../core/services/campus.service';
+import { Campus } from '../../../Modelos/uni/campus.model';
 
 interface Class {
   code: string;
@@ -20,10 +22,6 @@ interface Teacher {
   name: string;
 }
 
-interface Campus {
-  id: string;
-  name: string;
-}
 
 @Component({
   selector: 'app-request',
@@ -79,12 +77,8 @@ export class RequestComponent implements OnInit {
     { id: '4', name: 'Lic. Ana Martínez' }
   ];
 
-  availableCampus: Campus[] = [
-    { id: '1', name: 'Campus Tegucigalpa' },
-    { id: '2', name: 'Campus San Pedro Sula' },
-    { id: '3', name: 'Campus La Ceiba' },
-    { id: '4', name: 'Campus Choluteca' }
-  ];
+  availableCampus: Campus[] = [];
+  isLoadingCampus: boolean = false;
 
   modalities = [
     { value: 'presencial', label: 'Presencial' },
@@ -109,7 +103,8 @@ export class RequestComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private campusService: CampusService
   ) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
@@ -123,7 +118,28 @@ export class RequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Inicialización adicional si es necesaria
+    this.loadCampusList();
+  }
+
+  /**
+   * Carga la lista de campus desde el API
+   */
+  loadCampusList() {
+    this.isLoadingCampus = true;
+    this.campusService.getCampusList().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Filtrar solo los campus activos
+          this.availableCampus = response.data.filter(campus => campus.active);
+        }
+        this.isLoadingCampus = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar la lista de campus:', error);
+        this.isLoadingCampus = false;
+        // Opcional: mostrar mensaje de error al usuario
+      }
+    });
   }
 
   onClassSelect() {

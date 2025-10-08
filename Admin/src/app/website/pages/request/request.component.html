@@ -95,10 +95,10 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="campus">Campus <span class="required">*</span></label>
-                    <select id="campus" formControlName="campus">
-                        <option value="">Seleccione un campus</option>
-                        <option *ngFor="let campus of availableCampus" [value]="campus.id">
-                            {{campus.name}}
+                    <select id="campus" formControlName="campus" [disabled]="isLoadingCampus">
+                        <option value="">{{ isLoadingCampus ? 'Cargando campus...' : 'Seleccione un campus' }}</option>
+                        <option *ngFor="let campus of availableCampus" [value]="campus.cam_codigo">
+                            {{campus.cam_nombre}} - {{campus.cam_ciudad}}
                         </option>
                     </select>
                     <small class="error" *ngIf="requestForm.get('campus')?.errors?.['required'] && requestForm.get('campus')?.touched">
