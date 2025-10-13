@@ -85,6 +85,11 @@ const routes: Routes = [
     path: 'exp',
     loadChildren: () =>
       import('./EXP/exp.module').then((m) => m.ExpModule),
+  },
+  {
+    path: 'aca',
+    loadChildren: () =>
+      import('./ACA/aca.module').then((m) => m.AcaModule),
   }
 ];
 

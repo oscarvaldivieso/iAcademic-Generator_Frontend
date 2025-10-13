@@ -60,9 +60,12 @@
         <!-- Formulario principal -->
         <div class="form-container">
             <form class="request-form" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
-        <!-- Información de la Materia -->
-        <div class="form-section">
-            <h2><i class="ri-book-2-line"></i> Agregar Materias</h2>
+        
+        <!-- PASO 1: Agregar Materias -->
+        <div class="form-section add-subject-section">
+            <div class="section-header">
+                <h2><i class="ri-add-circle-line"></i> Paso 1: Agregar Materias</h2>
+            </div>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="classCode">Materia <span class="required">*</span></label>
@@ -188,9 +191,11 @@
             </div>
         </div>
 
-        <!-- Lista de Materias Seleccionadas -->
-        <div class="form-section" *ngIf="selectedSubjects.length > 0">
-            <h2><i class="ri-file-list-3-line"></i> Materias Seleccionadas ({{selectedSubjects.length}})</h2>
+        <!-- PASO 2: Lista de Materias Seleccionadas -->
+        <div class="form-section selected-subjects-section" *ngIf="selectedSubjects.length > 0">
+            <div class="section-header">
+                <h2><i class="ri-file-list-3-line"></i> Paso 2: Materias Agregadas ({{selectedSubjects.length}})</h2>
+            </div>
             <div class="selected-subjects-list">
                 <div class="subject-card" *ngFor="let item of selectedSubjects; let i = index">
                     <div class="subject-card-header">
@@ -216,15 +221,35 @@
                             <span class="info-label">Horario:</span>
                             <span class="info-value">{{item.schedule.formatted}}</span>
                         </div>
+                        <div class="info-row" *ngIf="item.campus">
+                            <i class="ri-building-line"></i>
+                            <span class="info-label">Campus:</span>
+                            <span class="info-value">{{getCampusName(item.campus)}}</span>
+                        </div>
+                        <div class="info-row" *ngIf="item.modality">
+                            <i class="ri-global-line"></i>
+                            <span class="info-label">Modalidad:</span>
+                            <span class="info-value">{{getModalityName(item.modality)}}</span>
+                        </div>
+                        <div class="info-row" *ngIf="item.period">
+                            <i class="ri-calendar-event-line"></i>
+                            <span class="info-label">Período:</span>
+                            <span class="info-value">{{getPeriodName(item.period)}}</span>
+                        </div>
+                        <div class="info-row" *ngIf="item.observations">
+                            <i class="ri-message-3-line"></i>
+                            <span class="info-label">Observaciones:</span>
+                            <span class="info-value">{{item.observations}}</span>
+                        </div>
                         <div class="schedule-action">
                             <button 
                                 type="button" 
-                                class="btn-schedule" 
-                                (click)="openScheduleModal(i)"
-                                [class.has-schedule]="item.schedule"
+                                class="btn-configure" 
+                                (click)="openSubjectModal(i)"
+                                [class.configured]="item.schedule && item.campus && item.modality && item.period"
                             >
-                                <i [class]="item.schedule ? 'ri-edit-line' : 'ri-calendar-line'"></i>
-                                {{item.schedule ? 'Editar Horario' : 'Asignar Horario'}}
+                                <i [class]="(item.schedule && item.campus) ? 'ri-edit-line' : 'ri-settings-3-line'"></i>
+                                {{(item.schedule && item.campus) ? 'Editar Configuración' : 'Configurar Materia'}}
                             </button>
                         </div>
                     </div>
@@ -232,25 +257,25 @@
             </div>
         </div>
 
-        <!-- Modal de Horario -->
-        <div class="schedule-modal-overlay" *ngIf="editingScheduleIndex >= 0" (click)="closeScheduleModal()">
+        <!-- Modal de Configuración de Materia -->
+        <div class="schedule-modal-overlay" *ngIf="editingSubjectIndex >= 0" (click)="closeSubjectModal()">
             <div class="schedule-modal" (click)="$event.stopPropagation()">
                 <div class="modal-drag-indicator">
                     <div class="drag-handle"></div>
                 </div>
                 <div class="modal-header">
                     <h3>
-                        <i class="ri-calendar-check-line"></i>
-                        Configurar Horario
+                        <i class="ri-settings-3-line"></i>
+                        Configurar Materia
                     </h3>
-                    <button type="button" class="btn-close-modal" (click)="closeScheduleModal()">
+                    <button type="button" class="btn-close-modal" (click)="closeSubjectModal()">
                         <i class="ri-close-line"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="modal-subject-info" *ngIf="selectedSubjects[editingScheduleIndex]">
-                        <h4>{{selectedSubjects[editingScheduleIndex].subject.mat_nombre}}</h4>
-                        <p>{{selectedSubjects[editingScheduleIndex].subject.mat_codigo}}</p>
+                    <div class="modal-subject-info" *ngIf="selectedSubjects[editingSubjectIndex]">
+                        <h4>{{selectedSubjects[editingSubjectIndex].subject.mat_nombre}}</h4>
+                        <p>{{selectedSubjects[editingSubjectIndex].subject.mat_codigo}}</p>
                     </div>
 
                     <div class="schedule-selector">
@@ -315,93 +340,81 @@
                                 <span class="summary-value">{{getTempFormattedSchedule()}}</span>
                             </div>
                         </div>
+
+                        <!-- Campos adicionales -->
+                        <div class="additional-fields">
+                            <div class="field-divider">
+                                <span>Información Adicional</span>
+                            </div>
+
+                            <div class="modal-form-grid">
+                                <div class="modal-form-group">
+                                    <label for="tempCampus">Campus <span class="required">*</span></label>
+                                    <select id="tempCampus" [(ngModel)]="tempCampus" [ngModelOptions]="{standalone: true}">
+                                        <option value="">Seleccione un campus</option>
+                                        <option *ngFor="let campus of availableCampus" [value]="campus.cam_codigo">
+                                            {{campus.cam_nombre}} - {{campus.cam_ciudad}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="modal-form-group">
+                                    <label for="tempModality">Modalidad <span class="required">*</span></label>
+                                    <select id="tempModality" [(ngModel)]="tempModality" [ngModelOptions]="{standalone: true}">
+                                        <option value="">Seleccione una modalidad</option>
+                                        <option *ngFor="let modality of availableModalities" [value]="modality.mod_codigo">
+                                            {{modality.mod_nombre}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="modal-form-group">
+                                    <label for="tempPeriod">Período <span class="required">*</span></label>
+                                    <select id="tempPeriod" [(ngModel)]="tempPeriod" [ngModelOptions]="{standalone: true}">
+                                        <option value="">Seleccione un período</option>
+                                        <option *ngFor="let period of periods" [value]="period.value">
+                                            {{period.label}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="modal-form-group full-width">
+                                    <label for="tempObservations">Observaciones</label>
+                                    <textarea 
+                                        id="tempObservations" 
+                                        [(ngModel)]="tempObservations" 
+                                        [ngModelOptions]="{standalone: true}"
+                                        rows="3"
+                                        placeholder="Comentarios adicionales para esta materia..."
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-cancel" (click)="closeScheduleModal()">
+                    <button type="button" class="btn btn-cancel" (click)="closeSubjectModal()">
                         Cancelar
                     </button>
                     <button 
                         type="button" 
                         class="btn btn-save" 
-                        (click)="saveScheduleForSubject()"
-                        [disabled]="!tempDayPattern || !tempStartTime || !tempEndTime"
+                        (click)="saveSubjectData()"
+                        [disabled]="!tempDayPattern || !tempStartTime || !tempEndTime || !tempCampus || !tempModality || !tempPeriod"
                     >
                         <i class="ri-check-line"></i>
-                        Guardar Horario
+                        Guardar Configuración
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Información del Campus y Modalidad -->
-        <div class="form-section">
-            <h2><i class="ri-building-line"></i> Campus y Modalidad</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="campus">Campus <span class="required">*</span></label>
-                    <select id="campus" formControlName="campus" [disabled]="isLoadingCampus">
-                        <option value="">{{ isLoadingCampus ? 'Cargando campus...' : 'Seleccione un campus' }}</option>
-                        <option *ngFor="let campus of availableCampus" [value]="campus.cam_codigo">
-                            {{campus.cam_nombre}} - {{campus.cam_ciudad}}
-                        </option>
-                    </select>
-                    <small class="error" *ngIf="requestForm.get('campus')?.errors?.['required'] && requestForm.get('campus')?.touched">
-                        El campus es requerido
-                    </small>
-                </div>
-
-                <div class="form-group">
-                    <label for="modality">Modalidad <span class="required">*</span></label>
-                    <select id="modality" formControlName="modality" [disabled]="isLoadingModality">
-                        <option value="">{{ isLoadingModality ? 'Cargando modalidades...' : 'Seleccione una modalidad' }}</option>
-                        <option *ngFor="let modality of availableModalities" [value]="modality.mod_codigo">
-                            {{modality.mod_nombre}}
-                        </option>
-                    </select>
-                    <small class="error" *ngIf="requestForm.get('modality')?.errors?.['required'] && requestForm.get('modality')?.touched">
-                        La modalidad es requerida
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Periodo -->
-        <div class="form-section">
-            <h2><i class="ri-time-line"></i> Periodo Académico</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="period">Periodo <span class="required">*</span></label>
-                    <select id="period" formControlName="period">
-                        <option value="">Seleccione un periodo</option>
-                        <option *ngFor="let period of periods" [value]="period.value">
-                            {{period.label}}
-                        </option>
-                    </select>
-                    <small class="error" *ngIf="requestForm.get('period')?.errors?.['required'] && requestForm.get('period')?.touched">
-                        El periodo es requerido
-                    </small>
-                </div>
-            </div>
-            <div class="info-note">
-                <i class="ri-information-line"></i>
-                <p>El horario se configura individualmente para cada materia en la lista de materias seleccionadas.</p>
-            </div>
-        </div>
-
-        <!-- Observaciones -->
-        <div class="form-section">
-            <h2><i class="ri-information-line"></i> Observaciones</h2>
-            <div class="form-group">
-                <label for="observations">Observaciones <span class="required">*</span></label>
-                <textarea id="observations" formControlName="observations" rows="4"
-                    placeholder="Ingrese cualquier observación o comentario adicional sobre la solicitud..."></textarea>
-                <small class="error" *ngIf="requestForm.get('observations')?.errors?.['required'] && requestForm.get('observations')?.touched">
-                    Las observaciones son requeridas
-                </small>
-                <small class="error" *ngIf="requestForm.get('observations')?.errors?.['minlength'] && requestForm.get('observations')?.touched">
-                    Las observaciones deben tener al menos 10 caracteres
-                </small>
+        <!-- Nota informativa -->
+        <div class="info-banner" *ngIf="selectedSubjects.length > 0">
+            <i class="ri-information-line"></i>
+            <div class="info-content">
+                <h4>Configuración Individual</h4>
+                <p>Cada materia debe tener configurado su horario, campus, modalidad y período. Haz clic en "Configurar Materia" para completar la información.</p>
             </div>
         </div>
 

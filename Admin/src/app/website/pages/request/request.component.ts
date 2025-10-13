@@ -20,6 +20,10 @@ interface Prerequisite {
 interface SelectedSubjectRequest {
   subject: Subject;
   teacher: Teachers;
+  campus?: string;
+  modality?: string;
+  period?: string;
+  observations?: string;
   schedule?: {
     dayPattern: string;
     startTime: string;
@@ -120,11 +124,15 @@ export class RequestComponent implements OnInit {
   selectedStartTime: string = '';
   selectedEndTime: string = '';
   
-  // Para editar horario de una materia específica
-  editingScheduleIndex: number = -1;
+  // Para editar una materia específica (todos los campos)
+  editingSubjectIndex: number = -1;
   tempDayPattern: any = null;
   tempStartTime: string = '';
   tempEndTime: string = '';
+  tempCampus: string = '';
+  tempModality: string = '';
+  tempPeriod: string = '';
+  tempObservations: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -136,12 +144,7 @@ export class RequestComponent implements OnInit {
   ) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
-      teacher: ['', Validators.required],
-      modality: ['', Validators.required],
-      campus: ['', Validators.required],
-      period: ['', Validators.required],
-      schedule: ['', Validators.required],
-      observations: ['', [Validators.required, Validators.minLength(10)]]
+      teacher: ['', Validators.required]
     });
   }
 
@@ -398,13 +401,18 @@ export class RequestComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.requestForm.valid) {
-      alert('Por favor complete todos los campos requeridos');
+    if (this.selectedSubjects.length === 0) {
+      alert('Por favor agregue al menos una materia a su solicitud');
       return;
     }
 
-    if (this.selectedSubjects.length === 0) {
-      alert('Por favor agregue al menos una materia a su solicitud');
+    // Validar que todas las materias tengan configuración completa
+    const incompleteSubjects = this.selectedSubjects.filter(s => 
+      !s.schedule || !s.campus || !s.modality || !s.period
+    );
+
+    if (incompleteSubjects.length > 0) {
+      alert(`Hay ${incompleteSubjects.length} materia(s) sin configurar. Por favor completa la configuración de todas las materias.`);
       return;
     }
 
@@ -414,13 +422,13 @@ export class RequestComponent implements OnInit {
         subjectCode: s.subject.mat_codigo,
         subjectName: s.subject.mat_nombre,
         teacherCode: s.teacher.doc_codigo,
-        teacherName: s.teacher.doc_nombre
-      })),
-      campus: this.requestForm.get('campus')?.value,
-      modality: this.requestForm.get('modality')?.value,
-      period: this.requestForm.get('period')?.value,
-      schedule: this.requestForm.get('schedule')?.value,
-      observations: this.requestForm.get('observations')?.value
+        teacherName: s.teacher.doc_nombre,
+        schedule: s.schedule,
+        campus: s.campus,
+        modality: s.modality,
+        period: s.period,
+        observations: s.observations
+      }))
     };
 
     console.log('Solicitud enviada:', requestData);
@@ -435,33 +443,41 @@ export class RequestComponent implements OnInit {
   }
 
   /**
-   * Abre el modal de horario para una materia
+   * Abre el modal para editar todos los datos de una materia
    */
-  openScheduleModal(index: number) {
-    this.editingScheduleIndex = index;
+  openSubjectModal(index: number) {
+    this.editingSubjectIndex = index;
     const item = this.selectedSubjects[index];
     
+    // Cargar todos los datos existentes
     if (item.schedule) {
-      // Cargar horario existente
       this.tempDayPattern = this.dayPatterns.find(p => p.value === item.schedule!.dayPattern);
       this.tempStartTime = item.schedule.startTime;
       this.tempEndTime = item.schedule.endTime;
     } else {
-      // Limpiar para nuevo horario
       this.tempDayPattern = null;
       this.tempStartTime = '';
       this.tempEndTime = '';
     }
+    
+    this.tempCampus = item.campus || '';
+    this.tempModality = item.modality || '';
+    this.tempPeriod = item.period || '';
+    this.tempObservations = item.observations || '';
   }
 
   /**
-   * Cierra el modal de horario
+   * Cierra el modal de edición de materia
    */
-  closeScheduleModal() {
-    this.editingScheduleIndex = -1;
+  closeSubjectModal() {
+    this.editingSubjectIndex = -1;
     this.tempDayPattern = null;
     this.tempStartTime = '';
     this.tempEndTime = '';
+    this.tempCampus = '';
+    this.tempModality = '';
+    this.tempPeriod = '';
+    this.tempObservations = '';
   }
 
   /**
@@ -504,24 +520,33 @@ export class RequestComponent implements OnInit {
   }
 
   /**
-   * Guarda el horario para la materia
+   * Guarda todos los datos de la materia
    */
-  saveScheduleForSubject() {
+  saveSubjectData() {
     if (!this.tempDayPattern || !this.tempStartTime || !this.tempEndTime) {
       alert('Por favor completa la selección del horario');
       return;
     }
 
-    if (this.editingScheduleIndex >= 0) {
-      this.selectedSubjects[this.editingScheduleIndex].schedule = {
+    if (!this.tempCampus || !this.tempModality || !this.tempPeriod) {
+      alert('Por favor completa todos los campos requeridos');
+      return;
+    }
+
+    if (this.editingSubjectIndex >= 0) {
+      this.selectedSubjects[this.editingSubjectIndex].schedule = {
         dayPattern: this.tempDayPattern.value,
         startTime: this.tempStartTime,
         endTime: this.tempEndTime,
         formatted: `${this.tempDayPattern.label}: ${this.formatTime(this.tempStartTime)} - ${this.formatTime(this.tempEndTime)}`
       };
+      this.selectedSubjects[this.editingSubjectIndex].campus = this.tempCampus;
+      this.selectedSubjects[this.editingSubjectIndex].modality = this.tempModality;
+      this.selectedSubjects[this.editingSubjectIndex].period = this.tempPeriod;
+      this.selectedSubjects[this.editingSubjectIndex].observations = this.tempObservations;
     }
 
-    this.closeScheduleModal();
+    this.closeSubjectModal();
   }
 
   /**
@@ -543,6 +568,30 @@ export class RequestComponent implements OnInit {
     const period = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
     return `${displayHours}:${String(minutes).padStart(2, '0')} ${period}`;
+  }
+
+  /**
+   * Obtiene el nombre del campus por código
+   */
+  getCampusName(code: string): string {
+    const campus = this.availableCampus.find(c => c.cam_codigo === code);
+    return campus ? `${campus.cam_nombre} - ${campus.cam_ciudad}` : code;
+  }
+
+  /**
+   * Obtiene el nombre de la modalidad por código
+   */
+  getModalityName(code: string): string {
+    const modality = this.availableModalities.find(m => m.mod_codigo === code);
+    return modality ? modality.mod_nombre : code;
+  }
+
+  /**
+   * Obtiene el nombre del período por código
+   */
+  getPeriodName(code: string): string {
+    const period = this.periods.find(p => p.value === code);
+    return period ? period.label : code;
   }
 
   /**
