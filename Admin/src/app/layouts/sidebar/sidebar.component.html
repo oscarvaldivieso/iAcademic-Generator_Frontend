@@ -29,67 +29,6 @@
             <div id="two-column-menu">
             </div>
             <ul class="navbar-nav" id="navbar-nav">
-              <!--tablas generales--> 
-              <li class="nav-item">
-                <a href="javascript:void(0);" class="nav-link menu-link" data-bs-toggle="collapse" data-menu-id="general-menu" [ngClass]="{'show': generalOpen}" aria-expanded="false" (click)="generalOpen = !generalOpen">
-                  <i class="ri-apps-2-line"></i>
-                  <span> General </span>
-                </a> 
-                <div class="collapse menu-dropdown" [ngClass]="{'show': generalOpen}" id="general-menu">
-                  <ul class="nav nav-sm flex-column">
-                    <li class="nav-item">
-                        <a [routerLink]="'/uni/modalities/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Modalidades  </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                     <a routerLink="/uni/careers/list" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Carreras </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a [routerLink]="'/uni/periods/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Periodos </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a [routerLink]="'/uni/campus/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Campus </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a [routerLink]="'/exp/students/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Estudiantes </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-
-                        <a [routerLink]="'/aca/teachers/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Docentes </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a [routerLink]="'/aca/subjects/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Materias </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a [routerLink]="'/uni/classrooms/list'" class="nav-link">
-                        <i class="ri-group-line"></i>
-                        <span> Aulas </span>
-                        </a>
-                    </li>
-                    <!-- Agrega más ítems aquí -->
-                  </ul>
-                </div>
-              </li>
               <!-- Fin Dropdown General -->
                 @for(item of menuItems; track $index){
                 @if(item.isTitle){
