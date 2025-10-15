@@ -8,43 +8,13 @@ const routes: Routes = [
       import('./dashboards/dashboards.module').then((m) => m.DashboardsModule),
   },
   {
-    path: 'apps',
-    loadChildren: () => import('./apps/apps.module').then((m) => m.AppsModule),
-  },
-  {
-    path: 'learning',
-    loadChildren: () =>
-      import('./learning/learning.module').then((m) => m.LearningModule),
-  },
-  {
     path: 'ui',
     loadChildren: () => import('./ui/ui.module').then((m) => m.UiModule),
-  },
-  {
-    path: 'invoices',
-    loadChildren: () =>
-      import('./invoices/invoices.module').then((m) => m.InvoicesModule),
   },
   {
     path: 'advance-ui',
     loadChildren: () =>
       import('./advanceui/advanceui.module').then((m) => m.AdvanceuiModule),
-  },
-  {
-    path: 'maps',
-    loadChildren: () => import('./maps/maps.module').then((m) => m.MapsModule),
-  },
-  {
-    path: 'tickets',
-    loadChildren: () =>
-      import('./tickets/tickets.module').then((m) => m.TicketsModule),
-  },
-  {
-    path: 'real-estate',
-    loadChildren: () =>
-      import('./real-estate/real-estate.module').then(
-        (m) => m.RealEstateModule
-      ),
   },
   {
     path: 'icons',
