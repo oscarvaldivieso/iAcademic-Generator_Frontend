@@ -99,7 +99,7 @@ export class EditComponent implements OnInit {
       
       const periodActualizar = {
         per_codigo: this.period.per_codigo,
-        per_modulo: this.period.per_trimestre,
+        per_trimestre: this.period.per_trimestre,
         per_anio: this.period.per_anio,
         per_inicio: fechaInicio,
         per_fin: fechaFin,

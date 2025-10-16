@@ -185,7 +185,7 @@ export class ListComponent implements OnInit {
     
     this.mostrarOverlayCarga = true;
     
-    const url = `${environment.apiBaseUrl}/Classrooms/delete?aucCodigo=${this.aulaAEliminar.auc_codigo}`;
+    const url = `${environment.apiBaseUrl}/Classrooms/delete?auCode=${this.aulaAEliminar.auc_codigo}`;
     
     this.http.delete<ApiResponse<any>>(url, {
       headers: new HttpHeaders({
@@ -199,7 +199,7 @@ export class ListComponent implements OnInit {
         
         if (response && response.success) {
           console.log('Aula eliminada exitosamente');
-          this.mostrarMensaje('success', `Aula "${this.aulaAEliminar!.cam_codigo}" eliminada exitosamente`);
+          this.mostrarMensaje('success', `Aula "${this.aulaAEliminar!.auc_codigo}" eliminada exitosamente`);
           // Forzar recarga de datos
           this.cargarDatos(false);
           this.cancelarEliminar();

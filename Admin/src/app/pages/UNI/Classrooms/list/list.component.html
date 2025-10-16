@@ -47,11 +47,11 @@
           <div class="collapse" [ngClass]="{ 'show': showEditForm && aulaEditando }" id="editFormCollapse">
             <div class="card card-body mb-4 shadow-sm" style="min-height: 300px; padding: 2rem; border-radius: 12px;">
               <div class="container-fluid flex-grow-1">
-                <!-- <app-edit *ngIf="aulaEditando"
+                <app-edit *ngIf="aulaEditando"
                   [classroomData]="aulaEditando"
                   (onSave)="actualizarAula($event)"
                   (onCancel)="cerrarFormularioEdicion()">
-                </app-edit> -->
+                </app-edit>
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@
           <button type="button" class="btn-close" (click)="cancelarEliminar()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>¿Estás seguro de que deseas eliminar el aula <strong>{{aulaAEliminar?.cam_codigo}}</strong>?</p>
+          <p>¿Estás seguro de que deseas eliminar el aula <strong>{{aulaAEliminar?.auc_codigo}}</strong>?</p>
           <p class="text-muted mb-0">Esta acción no se puede deshacer.</p>
         </div>
         <div class="modal-footer">

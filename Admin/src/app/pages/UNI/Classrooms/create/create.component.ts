@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -13,32 +13,11 @@ import { Campus } from 'src/app/Modelos/uni/campus.model';
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<Classroom>();
 
-  ngOnInit(): void {
-    this.getCampus();
-  }
-
-  getCampus(): void {
-  this.http.get<any>(`${environment.apiBaseUrl}/Campus/list`, {
-    headers: { 
-      'XApiKey': environment.apiKey
-    }
-  }).subscribe({
-    next: (response) => {
-      if (response.success) {
-        this.campusList = response.data;
-      }
-    },
-    error: (error) => {
-      console.error('Error al cargar campus:', error);
-    }
-  });
-}
-
-  campusList: Campus[]=[];
+  campusList: Campus[] = [];
 
   mostrarErrores = false;
   mostrarAlertaExito = false;
@@ -61,8 +40,34 @@ export class CreateComponent {
     code_Status: 0,
     message_Status: ''
   };
-  
-  cancelar(): void {
+
+  ngOnInit(): void {
+    this.getCampus();
+    // Limpiar alertas al inicializar el componente
+    this.limpiarAlertas();
+  }
+
+  getCampus(): void {
+    this.http.get<any>(`${environment.apiBaseUrl}/Campus/list`, {
+      headers: { 
+        'XApiKey': environment.apiKey
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.campusList = response.data;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar campus:', error);
+      }
+    });
+  }
+
+  /**
+   * Método para limpiar todas las alertas y errores
+   */
+  private limpiarAlertas(): void {
     this.mostrarErrores = false;
     this.mostrarAlertaExito = false;
     this.mensajeExito = '';
@@ -70,27 +75,24 @@ export class CreateComponent {
     this.mensajeError = '';
     this.mostrarAlertaWarning = false;
     this.mensajeWarning = '';
-    this.classroom = {
-      auc_codigo: '',
-      cam_codigo: '',
-      active: true,
-      created_by: '',
-      created_at: new Date(),
-      updated_by: '',
-      updated_at: null,
-      code_Status: 0,
-      message_Status: ''
-    };
+  }
+
+  /**
+   * Método para resetear el formulario completamente
+   */
+  private resetearFormulario(): void {
+    this.limpiarAlertas();
+    this.classroom = new Classroom();
+  }
+  
+  cancelar(): void {
+    // Limpiar todo antes de cerrar
+    this.resetearFormulario();
     this.onCancel.emit();
   }
 
   cerrarAlerta(): void {
-    this.mostrarAlertaExito = false;
-    this.mensajeExito = '';
-    this.mostrarAlertaError = false;
-    this.mensajeError = '';
-    this.mostrarAlertaWarning = false;
-    this.mensajeWarning = '';
+    this.limpiarAlertas();
   }
   
   guardar(): void {
@@ -98,22 +100,21 @@ export class CreateComponent {
     
     if (this.classroom.auc_codigo?.trim() && this.classroom.cam_codigo?.trim()) {
       // Limpiar alertas previas
-      this.mostrarAlertaWarning = false;
-      this.mostrarAlertaError = false;
+      this.limpiarAlertas();
       
       const classroomSave = {
         auc_codigo: this.classroom.auc_codigo.trim(),
         cam_codigo: this.classroom.cam_codigo.trim(),
-        active: true, // Siempre se crea como activo
+        active: true,
         created_by: 'admin', // TODO: Reemplazar con el usuario logueado
         created_at: new Date(),
         updated_by: '',
         updated_at: null
       };
 
-      console.log('Guardando modalidad:', classroomSave);
+      console.log('Guardando aula:', classroomSave);
       
-      this.http.post<any>(`${environment.apiBaseUrl}/Classroom/create`, classroomSave, {
+      this.http.post<any>(`${environment.apiBaseUrl}/Classrooms/Create`, classroomSave, {
         headers: { 
           'XApiKey': environment.apiKey,
           'Content-Type': 'application/json',
@@ -121,23 +122,25 @@ export class CreateComponent {
         }
       }).subscribe({
         next: (response) => {
-          console.log('Modalidad guardada exitosamente:', response);
+          console.log('Aula guardada exitosamente:', response);
           if (response.success) {
-            // La actualización fue exitosa
             this.mostrarAlertaExito = true;
             this.mensajeExito = response.data.messageStatus;
             
-            // Actualizar el modelo local con los datos de respuesta
             const classroomCreated: Classroom = {
               ...this.classroom,
               code_Status: response.data.codeStatus,
               message_Status: response.data.messageStatus
             };
             
-            // Emitir la modalidad actualizada al componente padre
+            // Emitir la aula creada al componente padre
             this.onSave.emit(classroomCreated);
+            
+            // Esperar un momento para que se vea el mensaje y luego limpiar
+            setTimeout(() => {
+              this.cancelar();
+            }, 2000);
           } else {
-            // Manejar caso de error en la respuesta
             this.mostrarAlertaError = true;
             this.mensajeError = response.message || 'Error al crear el aula.';
           }
@@ -146,12 +149,10 @@ export class CreateComponent {
           console.error('Error al guardar el aula:', error);
           this.mostrarAlertaError = true;
           this.mensajeError = 'Error al guardar el aula. Por favor, intente nuevamente.';
-          this.mostrarAlertaExito = false;
           
           // Ocultar la alerta de error después de 5 segundos
           setTimeout(() => {
-            this.mostrarAlertaError = false;
-            this.mensajeError = '';
+            this.limpiarAlertas();
           }, 5000);
         }
       });
@@ -159,13 +160,10 @@ export class CreateComponent {
       // Mostrar alerta de warning para campos vacíos
       this.mostrarAlertaWarning = true;
       this.mensajeWarning = 'Por favor complete todos los campos requeridos antes de guardar.';
-      this.mostrarAlertaError = false;
-      this.mostrarAlertaExito = false;
       
       // Ocultar la alerta de warning después de 4 segundos
       setTimeout(() => {
-        this.mostrarAlertaWarning = false;
-        this.mensajeWarning = '';
+        this.limpiarAlertas();
       }, 4000);
     }
   }

@@ -115,7 +115,7 @@ export class CreateComponent {
       
       const periodGuardar = {
         per_codigo: this.period.per_codigo.trim(),
-        per_modulo: this.period.per_trimestre.trim(),
+        per_trimestre: this.period.per_trimestre.trim(),
         per_anio: this.period.per_anio,
         per_inicio: fechaInicio,
         per_fin: fechaFin,
