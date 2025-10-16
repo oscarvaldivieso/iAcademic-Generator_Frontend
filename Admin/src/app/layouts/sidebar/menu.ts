@@ -14,13 +14,13 @@ export const MENU: MenuItem[] = [
         parentId: 8,
         subItems: [
             {
-                id: 13,
+                id: 31,
                 label: 'MENUITEMS.USERS.LIST.USERS',
                 link: 'aca/users/list',
                 parentId: 30
             },
             {
-                id: 13,
+                id: 32,
                 label: 'MENUITEMS.USERS.LIST.ROLES',
                 link: 'aca/roles/list',
                 parentId: 30
@@ -28,53 +28,59 @@ export const MENU: MenuItem[] = [
         ]
     },
     {
-        id: 12,
+        id: 40,
         label: 'MENUITEMS.CATALOG.TEXT',
         icon: 'ph-student',
         parentId: 8,
         subItems: [
             {
-                id: 13,
+                id: 41,
                 label: 'MENUITEMS.CATALOG.LIST.CAMPUS',
                 link: '/uni/campus/list',
-                parentId: 12
+                parentId: 40
             },
             {
-                id: 13,
+                id: 42,
                 label: 'MENUITEMS.CATALOG.LIST.CAREERS',
                 link: '/uni/careers/list',
-                parentId: 12
+                parentId: 40
             },
             {
-                id: 14,
+                id: 43,
                 label: 'MENUITEMS.CATALOG.LIST.SUBJECTS',
                 link: '/aca/subjects/list',
-                parentId: 12
+                parentId: 40
             },
             {
-                id: 15,
+                id: 44,
                 label: 'MENUITEMS.CATALOG.LIST.MODALITIES',
                 link: '/uni/modalities/list',
-                parentId: 12
+                parentId: 40
             },
             {
-                id: 16,
+                id: 45,
                 label: 'MENUITEMS.CATALOG.LIST.PERIODS',
                 link: '/uni/periods/list',
-                parentId: 12
+                parentId: 40
             },
             {
-                id: 17,
+                id: 46,
                 label: 'MENUITEMS.CATALOG.LIST.SECTIONS',
                 link: '/uni/sections/list',
-                parentId: 12
+                parentId: 40
             },
             {
-                id: 18,
+                id: 47,
                 label: 'MENUITEMS.CATALOG.LIST.CLASSROOMS',
                 link: '/uni/classrooms/list',
-                parentId: 12
+                parentId: 40
             },
+            {
+                id: 48,
+                label: 'MENUITEMS.CATALOG.LIST.AREAS',
+                link: '/aca/areas/list',
+                parentId: 40
+            }
         ]
     },
     {
@@ -84,19 +90,19 @@ export const MENU: MenuItem[] = [
         parentId: 8,
         subItems: [
             {
-                id: 13,
+                id: 21,
                 label: 'MENUITEMS.PEOPLE.LIST.STUDENTS',
                 link: '/exp/students/list',
                 parentId: 20
             },
             {
-                id: 13,
+                id: 22,
                 label: 'MENUITEMS.PEOPLE.LIST.TEACHERS',
-                link: '/exp/teachers/list',
+                link: '/aca/teachers/list',
                 parentId: 20
             },
             {
-                id: 14,
+                id: 23,
                 label: 'MENUITEMS.PEOPLE.LIST.CONTACTS',
                 link: '/exp/contacts/list',
                 parentId: 20

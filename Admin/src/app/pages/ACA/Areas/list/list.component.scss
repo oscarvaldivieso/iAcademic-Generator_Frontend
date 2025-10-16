@@ -1,12 +1,12 @@
 /* Card Container */
-.subject-card-container {
+.area-card-container {
     position: relative;
     height: 100%;
     perspective: 1000px;
   }
   
   /* Card */
-  .subject-card {
+  .area-card {
     position: relative;
     background: #ffffff;
     --primary-color: #141a2f;
@@ -15,7 +15,7 @@
     --secondary-light: rgba(255, 77, 79, 0.1);
     border-radius: 12px;
     padding: 24px;
-    height: 220px;
+    height: 180px;
     border: 1px solid #f1f1f1;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -24,6 +24,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     transform-style: preserve-3d;
   }
+  
   
   /* Action Buttons - Always Visible */
   .action-buttons {
@@ -38,7 +39,7 @@
     z-index: 2;
   }
   
-  .subject-card:hover .action-buttons {
+  .area-card:hover .action-buttons {
     opacity: 1;
     transform: translateY(0);
   }
@@ -97,9 +98,14 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     position: relative;
     z-index: 1;
+  }
+  
+  /* Code Section */
+  .code-section {
+    display: flex;
+    justify-content: flex-start;
   }
   
   /* Code Chip */
@@ -107,11 +113,10 @@
     display: inline-flex;
     align-items: center;
     background: var(--primary-light);
-    border-radius: 20px;
-    padding: 4px 12px 4px 6px;
-    margin-bottom: 8px;
+    border-radius: 10px;
+    padding: 4px 8px;
     transition: all 0.3s ease;
-    border: 1px solid rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(20, 26, 47, 0.15);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
   }
   
@@ -127,24 +132,15 @@
     color: var(--primary-color);
     letter-spacing: 0.3px;
     position: relative;
-    padding-right: 4px;
   }
   
-  /* Badges Row */
-  .badges-row {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 8px;
+  /* Name Section */
+  .name-section {
+    margin-top: 16px;
   }
   
-  
-  /* Subject Section */
-  .subject-section {
-    margin-bottom: 12px;
-  }
-  
-  .subject-name {
-    font-size: 15px;
+  .area-name {
+    font-size: 18px;
     color: #0f172a;
     font-weight: 700;
     line-height: 1.3;
@@ -155,55 +151,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     position: relative;
-    padding-bottom: 8px;
     background: linear-gradient(90deg, #0f172a, #334155);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
-  /* Info Section */
-  .info-section {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  
-  .info-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  
-  .info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 4px;
-  }
-  
-  .info-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
-  }
-  
-  .info-value {
-    font-size: 13px;
-    font-weight: 600;
-    color: #334155;
-    background: rgba(71, 85, 105, 0.05);
-    padding: 4px 8px;
-    border-radius: 6px;
-    text-align: right;
-  }
-  
   /* Decorative Elements */
-  .subject-card::before {
+  .area-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -216,7 +171,7 @@
     z-index: 0;
   }
   
-  .subject-card::after {
+  .area-card::after {
     content: '';
     position: absolute;
     bottom: -50px;
@@ -229,7 +184,11 @@
     z-index: 0;
   }
   
-  .subject-card:hover::after {
+  .area-card:hover::before {
+    transform: scale(1.1);
+  }
+  
+  .area-card:hover::after {
     transform: scale(1.2);
   }
   
@@ -267,28 +226,24 @@
     z-index: 2;
   }
   
+  .empty-state-icon:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  }
+  
   /* Responsive */
   @media (max-width: 768px) {
-    .subject-card {
+    .area-card {
       padding: 20px;
-      height: 200px;
+      height: 160px;
     }
     
-    .subject-name {
+    .area-name {
       font-size: 16px;
     }
     
     .code-value {
-      font-size: 14px;
-    }
-    
-    .info-label {
-      font-size: 10px;
-    }
-    
-    .info-value {
-      font-size: 12px;
-      padding: 3px 6px;
+      font-size: 11px;
     }
     
     .action-btn {
@@ -307,16 +262,11 @@
       height: 80px;
       font-size: 2.2rem;
     }
-    
-    .badge-core {
-      font-size: 9px;
-      padding: 2px 6px;
-    }
   }
   
   @media (max-width: 576px) {
-    .subject-card {
-      height: 180px;
+    .area-card {
+      height: 150px;
       padding: 16px;
     }
     
@@ -333,7 +283,7 @@
   }
   
   /* Card Styles */
-  .subject-card {
+  .area-card {
     transition: all 0.2s ease;
   }
   
@@ -565,8 +515,8 @@
   }
   
   /* Asegurar que nada más interfiera */
-  .subject-card-container,
-  .subject-card,
+  .area-card-container,
+  .area-card,
   .action-buttons,
   .action-btn {
     z-index: auto !important;
@@ -575,7 +525,7 @@
   /* Override de cualquier z-index alto que pueda interferir */
   .card,
   .card-body,
-  .subjects-container {
+  .areas-container {
     position: relative !important;
     z-index: auto !important;
   }
