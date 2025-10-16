@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment.prod';
 import { TableModule } from 'src/app/pages/table/table.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { Teachers } from 'src/app/Modelos/aca/teacher.model';
+import { CreateComponent } from '../create/create.component';
+import { EditComponent } from '../edit/edit.component';
 import { BreadcrumbsComponent } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
 import { ReactiveTableService } from 'src/app/shared/reactive-table.service';
 import { SkeletonCardComponent } from 'src/app/shared/skeleton-card/skeleton-card.component';
@@ -29,6 +31,8 @@ interface ApiResponse<T> {
     BreadcrumbsComponent,
     TableModule,
     PaginationModule,
+    CreateComponent,
+    EditComponent,
     SkeletonCardComponent
   ],
   templateUrl: './list.component.html',
@@ -76,6 +80,9 @@ export class ListComponent implements OnInit {
     ];
   }
 
+  /**
+   * Sistema de mensajes mejorado con tipos adicionales
+   */
   private mostrarMensaje(tipo: 'success' | 'error' | 'warning' | 'info', mensaje: string): void {
     this.cerrarAlerta();
     
@@ -103,6 +110,7 @@ export class ListComponent implements OnInit {
     }
   }
 
+  // Métodos para los botones de acción principales
   crear(): void {
     this.showCreateForm = !this.showCreateForm;
     this.showEditForm = false;
@@ -138,6 +146,23 @@ export class ListComponent implements OnInit {
     this.docenteDetalle = null;
   }
 
+  guardarDocente(docente: Teachers): void {
+    console.log('Docente guardado exitosamente:', docente);
+    this.mostrarMensaje('success', 'Docente creado exitosamente');
+    this.cargarDatos(false);
+    this.cerrarFormulario();
+  }
+
+  actualizarDocente(docente: Teachers): void {
+    console.log('Docente actualizado exitosamente:', docente);
+    // Mostrar mensaje de éxito
+    this.mostrarMensaje('success', 'Docente actualizado exitosamente');
+    // Recargamos los datos para actualizar la tabla con los últimos cambios
+    this.cargarDatos(false);
+    // Cerramos el formulario de edición
+    this.cerrarFormularioEdicion();
+  }
+
   confirmarEliminar(docente: Teachers): void {
     this.docenteAEliminar = docente;
     this.mostrarConfirmacionEliminar = true;
@@ -151,9 +176,11 @@ export class ListComponent implements OnInit {
   eliminar(): void {
     if (!this.docenteAEliminar) return;
     
+    console.log('Eliminando docente:', this.docenteAEliminar);
+    
     this.mostrarOverlayCarga = true;
     
-    const url = `${environment.apiBaseUrl}/Teachers/delete?docCodigo=${this.docenteAEliminar.doc_codigo}`;
+    const url = `${environment.apiBaseUrl}/Teachers/delete?id=${this.docenteAEliminar.doc_codigo}`;
     
     this.http.delete<ApiResponse<any>>(url, {
       headers: new HttpHeaders({
@@ -166,19 +193,27 @@ export class ListComponent implements OnInit {
         this.mostrarOverlayCarga = false;
         
         if (response && response.success) {
+          console.log('Docente eliminado exitosamente');
           this.mostrarMensaje('success', `Docente "${this.docenteAEliminar!.doc_nombre}" eliminado exitosamente`);
+          // Forzar recarga de datos
           this.cargarDatos(false);
           this.cancelarEliminar();
         } else {
+          // Manejar diferentes códigos de estado si es necesario
           const errorMessage = response?.data?.message_Status || response?.message || 'Error al eliminar el docente.';
+          console.error('Error al eliminar:', errorMessage);
           this.mostrarMensaje('error', errorMessage);
           this.cancelarEliminar();
         }
       },
       error: (error) => {
+        console.error('Error en la solicitud de eliminación:', error);
         this.mostrarOverlayCarga = false;
         this.mostrarMensaje('error', 'Error de conexión al eliminar el docente.');
         this.cancelarEliminar();
+      },
+      complete: () => {
+        // Código de finalización si es necesario
       }
     });
   }
@@ -189,9 +224,10 @@ export class ListComponent implements OnInit {
     this.mostrarAlertaWarning = false;
   }
 
+  // Método para cargar datos de docentes
   private cargarDatos(state: boolean): void {
     this.mostrarOverlayCarga = state;
-    this.isLoading = true;
+    this.isLoading = true; // Mostrar skeletons
     
     const url = `${environment.apiBaseUrl}/Teachers/list`;
     
@@ -204,20 +240,27 @@ export class ListComponent implements OnInit {
       withCredentials: true
     }).subscribe({
       next: (response) => {
+        console.log('Respuesta completa de la API:', response);
+        
         if (response.success && response.data) {
+          console.log('Datos de docentes:', response.data);
           setTimeout(() => {
             this.table.setData(response.data);
             this.table.setPage(1);
             this.mostrarOverlayCarga = false;
-            this.isLoading = false;
+            this.isLoading = false; // Ocultar skeletons cuando los datos estén listos
           }, 500);
         } else {
+          console.error('Respuesta de API no exitosa:', response);
           this.mostrarMensaje('error', response.message || 'Error al cargar los docentes.');
           this.mostrarOverlayCarga = false;
           this.isLoading = false;
         }
       },
       error: (error) => {
+        console.error('Error al cargar los docentes:', error);
+        
+        // Mensaje más específico según el tipo de error
         let mensaje = 'Error al cargar los docentes. Por favor, intente de nuevo.';
         if (error.status === 401) {
           mensaje = 'Error de autorización. Verifique la API Key.';
