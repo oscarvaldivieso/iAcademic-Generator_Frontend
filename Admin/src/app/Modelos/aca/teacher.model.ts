@@ -1,6 +1,7 @@
 export class Teachers {
     doc_codigo: string = '';           // Código del estudiante (número de cuenta)
     doc_nombre: string = ''; 
+    gru_codigo: string = '';
     active: boolean = true;            // Estado activo/inactivo
     created_by: string = '';           // Usuario que creó el registro
     updated_by: string = '';           // Usuario que actualizó el registro
