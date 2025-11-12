@@ -10,6 +10,8 @@ import { Campus } from '../../../Modelos/uni/campus.model';
 import { Teachers } from '../../../Modelos/aca/teacher.model';
 import { Subject } from '../../../Modelos/uni/subject.model';
 import { Modality } from '../../../Modelos/uni/modalities.model';
+import { ScheduleService } from '../../../core/services/schedule.service';
+import { Schedule } from '../../../Modelos/uni/schedule.model';
 
 interface Prerequisite {
   code: string;
@@ -25,6 +27,7 @@ interface SelectedSubjectRequest {
   period?: string;
   observations?: string;
   schedule?: {
+    scheduleCode?: number;
     dayPattern: string;
     startTime: string;
     endTime: string;
@@ -41,7 +44,7 @@ interface SelectedSubjectRequest {
     FormsModule
   ],
   templateUrl: './request.component.html',
-  styleUrl: './request.component.scss'
+  styleUrls: ['./request.component.scss']
 })
 export class RequestComponent implements OnInit {
   requestForm: FormGroup;
@@ -133,6 +136,10 @@ export class RequestComponent implements OnInit {
   tempModality: string = '';
   tempPeriod: string = '';
   tempObservations: string = '';
+  // Nuevo: selección de horario desde API
+  availableSchedules: Schedule[] = [];
+  isLoadingSchedules: boolean = false;
+  tempScheduleCode: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -140,11 +147,32 @@ export class RequestComponent implements OnInit {
     private campusService: CampusService,
     private teacherService: TeacherService,
     private subjectService: SubjectService,
-    private modalityService: ModalityService
+    private modalityService: ModalityService,
+    private scheduleService: ScheduleService
   ) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
       teacher: ['', Validators.required]
+    });
+  }
+
+  /**
+   * Carga la lista de horarios desde el API
+   */
+  loadSchedulesList() {
+    this.isLoadingSchedules = true;
+    this.scheduleService.getSchedulesList().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Filtrar solo horarios activos
+          this.availableSchedules = response.data.filter(s => s.active);
+        }
+        this.isLoadingSchedules = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar la lista de horarios:', error);
+        this.isLoadingSchedules = false;
+      }
     });
   }
 
@@ -153,6 +181,7 @@ export class RequestComponent implements OnInit {
     this.loadTeachersList();
     this.loadSubjectsList();
     this.loadModalitiesList();
+    this.loadSchedulesList();
   }
 
   /**
@@ -423,6 +452,9 @@ export class RequestComponent implements OnInit {
         subjectName: s.subject.mat_nombre,
         teacherCode: s.teacher.doc_codigo,
         teacherName: s.teacher.doc_nombre,
+        // Enviar el código de horario requerido por el backend
+        hor_codigo: s.schedule?.scheduleCode ?? null,
+        // Mantener detalle local del horario para visualización (opcional)
         schedule: s.schedule,
         campus: s.campus,
         modality: s.modality,
@@ -454,10 +486,12 @@ export class RequestComponent implements OnInit {
       this.tempDayPattern = this.dayPatterns.find(p => p.value === item.schedule!.dayPattern);
       this.tempStartTime = item.schedule.startTime;
       this.tempEndTime = item.schedule.endTime;
+      this.tempScheduleCode = item.schedule.scheduleCode ?? null;
     } else {
       this.tempDayPattern = null;
       this.tempStartTime = '';
       this.tempEndTime = '';
+      this.tempScheduleCode = null;
     }
     
     this.tempCampus = item.campus || '';
@@ -478,6 +512,7 @@ export class RequestComponent implements OnInit {
     this.tempModality = '';
     this.tempPeriod = '';
     this.tempObservations = '';
+    this.tempScheduleCode = null;
   }
 
   /**
@@ -523,8 +558,8 @@ export class RequestComponent implements OnInit {
    * Guarda todos los datos de la materia
    */
   saveSubjectData() {
-    if (!this.tempDayPattern || !this.tempStartTime || !this.tempEndTime) {
-      alert('Por favor completa la selección del horario');
+    if (!this.tempScheduleCode) {
+      alert('Por favor selecciona un horario');
       return;
     }
 
@@ -534,11 +569,18 @@ export class RequestComponent implements OnInit {
     }
 
     if (this.editingSubjectIndex >= 0) {
+      const schedule = this.availableSchedules.find(s => s.hor_codigo === this.tempScheduleCode!);
+      if (!schedule) {
+        alert('Horario seleccionado no válido');
+        return;
+      }
+
       this.selectedSubjects[this.editingSubjectIndex].schedule = {
-        dayPattern: this.tempDayPattern.value,
-        startTime: this.tempStartTime,
-        endTime: this.tempEndTime,
-        formatted: `${this.tempDayPattern.label}: ${this.formatTime(this.tempStartTime)} - ${this.formatTime(this.tempEndTime)}`
+        scheduleCode: schedule.hor_codigo,
+        dayPattern: schedule.hor_dia_semana_nombre,
+        startTime: schedule.hor_hora_inicio,
+        endTime: schedule.hor_hora_fin,
+        formatted: `${schedule.hor_dia_semana_nombre}: ${this.formatTime(schedule.hor_hora_inicio)} - ${this.formatTime(schedule.hor_hora_fin)}`
       };
       this.selectedSubjects[this.editingSubjectIndex].campus = this.tempCampus;
       this.selectedSubjects[this.editingSubjectIndex].modality = this.tempModality;
@@ -553,11 +595,17 @@ export class RequestComponent implements OnInit {
    * Obtiene el texto formateado del horario temporal
    */
   getTempFormattedSchedule(): string {
-    if (!this.tempDayPattern || !this.tempStartTime || !this.tempEndTime) {
-      return '';
+    if (this.tempScheduleCode) {
+      const schedule = this.availableSchedules.find(s => s.hor_codigo === this.tempScheduleCode!);
+      if (!schedule) return '';
+      return `${schedule.hor_dia_semana_nombre}: ${this.formatTime(schedule.hor_hora_inicio)} - ${this.formatTime(schedule.hor_hora_fin)}`;
     }
-    
-    return `${this.tempDayPattern.label}: ${this.formatTime(this.tempStartTime)} - ${this.formatTime(this.tempEndTime)}`;
+
+    if (this.tempDayPattern && this.tempStartTime && this.tempEndTime) {
+      return `${this.tempDayPattern.label}: ${this.formatTime(this.tempStartTime)} - ${this.formatTime(this.tempEndTime)}`;
+    }
+
+    return '';
   }
 
   /**

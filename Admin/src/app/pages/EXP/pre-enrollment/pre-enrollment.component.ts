@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './pre-enrollment.component.html',
-  styleUrl: './pre-enrollment.component.scss'
+  styleUrls: ['./pre-enrollment.component.scss']
 })
 export class PreEnrollmentComponent {
 

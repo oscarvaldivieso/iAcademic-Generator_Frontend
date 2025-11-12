@@ -1,1 +1,235 @@
-<p>pre-enrollment works!</p>
+<div class="offer-admin">
+  <header class="offer-admin__header">
+    <div class="offer-admin__title">
+      <h1>Generar oferta académica</h1>
+      <p class="offer-admin__subtitle">Cargue un archivo Excel, configure parámetros, previsualice y publique la oferta</p>
+    </div>
+    <div class="offer-admin__actions">
+      <button class="btn btn--ghost" disabled>Guardar borrador</button>
+      <button class="btn btn--primary" disabled>Publicar oferta</button>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card__header">
+      <div class="step">
+        <div class="step__index">1</div>
+        <div class="step__info">
+          <h2>Subir archivo Excel</h2>
+          <span>Plantilla de insumos académicos</span>
+        </div>
+      </div>
+      <a class="link" href="javascript:void(0)">Descargar plantilla</a>
+    </div>
+    <div class="card__body">
+      <div class="uploader" tabindex="0">
+        <div class="uploader__icon">📄</div>
+        <div class="uploader__text">
+          <strong>Arrastra y suelta tu archivo .xlsx aquí</strong>
+          <span>o</span>
+          <button class="btn btn--ghost" disabled>Seleccionar archivo</button>
+          <div class="uploader__hint">Máx. 20MB • Extensiones permitidas: xlsx, xls</div>
+        </div>
+      </div>
+
+      <div class="file-list">
+        <div class="file-item">
+          <div class="file-item__icon">📦</div>
+          <div class="file-item__info">
+            <div class="file-item__name">insumos_oferta.xlsx</div>
+            <div class="file-item__meta">2.1 MB • Cargado</div>
+          </div>
+          <div class="file-item__actions">
+            <button class="btn btn--ghost" disabled>Reemplazar</button>
+            <button class="btn btn--ghost danger" disabled>Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="inline-actions">
+        <button class="btn btn--primary" disabled>Generar oferta con ML</button>
+        <button class="btn btn--ghost" disabled>Validar estructura</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__header">
+      <div class="step">
+        <div class="step__index">2</div>
+        <div class="step__info">
+          <h2>Configuración de generación</h2>
+          <span>Parámetros y contexto</span>
+        </div>
+      </div>
+    </div>
+    <div class="card__body grid">
+      <div class="field">
+        <label>Periodo</label>
+        <div class="field__row">
+          <select disabled>
+            <option>2026</option>
+          </select>
+          <select disabled>
+            <option>Semestre 1</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Campus</label>
+        <select disabled>
+          <option>Principal</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Facultad</label>
+        <select disabled>
+          <option>Ingeniería</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Departamento</label>
+        <select disabled>
+          <option>Sistemas</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Umbral de demanda</label>
+        <input type="range" min="0" max="100" value="65" disabled />
+        <div class="help">Porcentaje mínimo para abrir grupo</div>
+      </div>
+
+      <div class="field">
+        <label>Restricciones</label>
+        <div class="chips">
+          <span class="chip">Sin traslapes</span>
+          <span class="chip">Capacidad por salón</span>
+          <span class="chip">Carga docente</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__header">
+      <div class="step">
+        <div class="step__index">3</div>
+        <div class="step__info">
+          <h2>Previsualización</h2>
+          <span>Revise y ajuste antes de publicar</span>
+        </div>
+      </div>
+      <div class="toolbar">
+        <input class="toolbar__search" type="text" placeholder="Buscar curso, NRC o profesor" disabled />
+        <select disabled>
+          <option>Todos los programas</option>
+        </select>
+        <select disabled>
+          <option>Todos los estados</option>
+        </select>
+        <button class="btn btn--ghost" disabled>Exportar</button>
+      </div>
+    </div>
+    <div class="card__body">
+      <div class="table">
+        <div class="table__head">
+          <div>Programa</div>
+          <div>Curso</div>
+          <div>Grupo</div>
+          <div>Profesor</div>
+          <div>Horario</div>
+          <div>Cupo</div>
+          <div>Estado</div>
+          <div></div>
+        </div>
+        <div class="table__row">
+          <div>Ing. Sistemas</div>
+          <div>Algoritmos</div>
+          <div>01</div>
+          <div>Por asignar</div>
+          <div>Lu-Mi 08:00-10:00</div>
+          <div>35</div>
+          <div><span class="badge">Propuesto</span></div>
+          <div class="row-actions">
+            <button class="icon-btn" disabled>✏️</button>
+            <button class="icon-btn" disabled>🗑️</button>
+          </div>
+        </div>
+        <div class="table__row">
+          <div>Ing. Sistemas</div>
+          <div>Bases de Datos</div>
+          <div>02</div>
+          <div>Dra. Gómez</div>
+          <div>Ma-Ju 10:00-12:00</div>
+          <div>30</div>
+          <div><span class="badge badge--success">Listo</span></div>
+          <div class="row-actions">
+            <button class="icon-btn" disabled>✏️</button>
+            <button class="icon-btn" disabled>🗑️</button>
+          </div>
+        </div>
+        <div class="table__row is-skeleton">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+      <div class="pagination">
+        <button class="btn btn--ghost" disabled>Anterior</button>
+        <div class="pagination__info">Página 1 de 10</div>
+        <button class="btn btn--ghost" disabled>Siguiente</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__header">
+      <div class="step">
+        <div class="step__index">4</div>
+        <div class="step__info">
+          <h2>Publicación</h2>
+          <span>Activar visibilidad para estudiantes</span>
+        </div>
+      </div>
+    </div>
+    <div class="card__body grid grid--two">
+      <div class="field">
+        <label>Estado de publicación</label>
+        <div class="toggle" aria-checked="false" role="switch" tabindex="0">Deshabilitada</div>
+        <div class="help">Al publicar, los estudiantes podrán visualizar la oferta</div>
+      </div>
+      <div class="field">
+        <label>Programar publicación</label>
+        <div class="field__row">
+          <input type="date" disabled />
+          <input type="time" disabled />
+        </div>
+      </div>
+
+      <div class="inline-actions">
+        <button class="btn btn--ghost" disabled>Vista previa estudiante</button>
+        <button class="btn btn--primary" disabled>Publicar ahora</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="offer-admin__footer">
+    <div class="status">
+      <span class="dot"></span>
+      <span>Borrador no publicado</span>
+    </div>
+    <div class="footer__actions">
+      <button class="btn btn--ghost" disabled>Descartar cambios</button>
+      <button class="btn btn--primary" disabled>Guardar cambios</button>
+    </div>
+  </footer>
+</div>

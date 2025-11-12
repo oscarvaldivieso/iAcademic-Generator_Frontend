@@ -331,13 +331,28 @@
                             </div>
                         </div>
 
-                        <div class="schedule-summary" *ngIf="tempDayPattern && tempStartTime && tempEndTime">
+                        <div class="schedule-summary" *ngIf="tempScheduleCode || (tempDayPattern && tempStartTime && tempEndTime)">
                             <div class="summary-icon">
                                 <i class="ri-time-line"></i>
                             </div>
                             <div class="summary-text">
                                 <span class="summary-label">Horario seleccionado:</span>
                                 <span class="summary-value">{{getTempFormattedSchedule()}}</span>
+                            </div>
+                        </div>
+
+                        <!-- Selección de horario desde API -->
+                        <div class="schedule-step">
+                            <span class="step-label">3. Selecciona un horario del catálogo</span>
+                            <div class="modal-form-group full-width">
+                                <label for="tempSchedule">Horario (desde API) <span class="required">*</span></label>
+                                <select id="tempSchedule" [(ngModel)]="tempScheduleCode" [ngModelOptions]="{standalone: true}">
+                                    <option [ngValue]="null">Seleccione un horario</option>
+                                    <option *ngFor="let sch of availableSchedules" [ngValue]="sch.hor_codigo">
+                                        {{sch.hor_dia_semana_nombre}}: {{formatTime(sch.hor_hora_inicio)}} - {{formatTime(sch.hor_hora_fin)}}
+                                    </option>
+                                </select>
+                                <small class="hint" *ngIf="isLoadingSchedules">Cargando horarios...</small>
                             </div>
                         </div>
 
@@ -400,7 +415,7 @@
                         type="button" 
                         class="btn btn-save" 
                         (click)="saveSubjectData()"
-                        [disabled]="!tempDayPattern || !tempStartTime || !tempEndTime || !tempCampus || !tempModality || !tempPeriod"
+                        [disabled]="!tempScheduleCode || !tempCampus || !tempModality || !tempPeriod"
                     >
                         <i class="ri-check-line"></i>
                         Guardar Configuración

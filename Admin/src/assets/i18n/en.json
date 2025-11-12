@@ -45,7 +45,8 @@
       }
     },
     "OFFER": {
-      "TEXT": "Oferta Académica"
+      "TEXT": "Oferta Académica",
+      "LABEL": "Generar oferta"
     },
     
     "PAGES": {
