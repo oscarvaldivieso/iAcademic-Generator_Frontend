@@ -7,6 +7,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./Students/students.module').then(m => m.StudentsModule)
   },
+  {
+    path: 'pre-enrollment',
+    loadComponent: () => import('./pre-enrollment/pre-enrollment.component').then(m => m.PreEnrollmentComponent),
+    data: {
+      title: 'Prematricula',
+    }
+  },
+
 ];
 
 @NgModule({
