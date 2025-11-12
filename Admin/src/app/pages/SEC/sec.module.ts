@@ -22,4 +22,5 @@ import { EditComponent } from './Users/edit/edit.component';
     EditComponent
   ]
 })
+
 export class SecModule { }

@@ -16,13 +16,13 @@ export const MENU: MenuItem[] = [
             {
                 id: 31,
                 label: 'MENUITEMS.USERS.LIST.USERS',
-                link: 'aca/users/list',
+                link: 'sec/users/list',
                 parentId: 30
             },
             {
                 id: 32,
                 label: 'MENUITEMS.USERS.LIST.ROLES',
-                link: 'aca/roles/list',
+                link: 'sec/roles/list',
                 parentId: 30
             },
         ]
