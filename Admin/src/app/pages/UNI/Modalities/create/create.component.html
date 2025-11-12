@@ -1,0 +1,85 @@
+<div class="d-flex flex-column" style="height: 100%; min-height: 250px;">
+  <!-- Título del componente -->
+  <h5 class="card-title mb-4">Crear Nueva Modalidad</h5>
+  
+  <!-- Contenedor de alertas flotantes -->
+  <div class="alert-container">
+    <!-- Alerta de éxito -->
+    <div *ngIf="mostrarAlertaExito" class="alert alert-success alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-check-double-line me-3 align-middle fs-lg"></i>
+      <strong>¡Éxito!</strong> {{ mensajeExito }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+    
+    <!-- Alerta de advertencia -->
+    <div *ngIf="mostrarAlertaWarning" class="alert alert-warning alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-alert-line me-3 align-middle fs-lg"></i>
+      <strong>¡Atención!</strong> {{ mensajeWarning }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+    
+    <!-- Alerta de error -->
+    <div *ngIf="mostrarAlertaError" class="alert alert-danger alert-border-left alert-dismissible fade show floating-alert" role="alert">
+      <i class="ri-error-warning-line me-3 align-middle fs-lg"></i>
+      <strong>¡Error!</strong> {{ mensajeError }}
+      <button type="button" class="btn-close" (click)="cerrarAlerta()" aria-label="Close"></button>
+    </div>
+  </div>
+  
+  <div class="flex-grow-1">
+    <div class="row">
+      <!-- Código de la Modalidad -->
+      <div class="col-md-6 mb-3">
+        <label for="codigoModalidad" class="form-label">Código de la Modalidad <span class="text-danger">*</span></label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [class.is-invalid]="!modality.mod_codigo?.trim() && mostrarErrores"
+          id="codigoModalidad"
+          [(ngModel)]="modality.mod_codigo"
+          name="mod_codigo"
+          placeholder="Ej: TD"
+          maxlength="10"
+          required>
+        <div class="invalid-feedback" *ngIf="!modality.mod_codigo?.trim() && mostrarErrores">
+          El código de la modalidad es requerido
+        </div>
+      </div>
+
+      <!-- Nombre de la Modalidad -->
+      <div class="col-md-6 mb-3">
+        <label for="nombreModalidad" class="form-label">Nombre de la Modalidad <span class="text-danger">*</span></label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [class.is-invalid]="!modality.mod_nombre?.trim() && mostrarErrores"
+          id="nombreModalidad"
+          name="mod_nombre"
+          [(ngModel)]="modality.mod_nombre"
+          placeholder="Ingrese el nombre de la modalidad"
+          required>
+        <div class="invalid-feedback" *ngIf="!modality.mod_nombre?.trim() && mostrarErrores">
+          El nombre de la modalidad es requerido
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <div class="mt-auto pt-3">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-light" (click)="cancelar()">
+            <span class="btn-text">Cancelar</span>
+            <span class="btn-icon"><i class="ri-close-circle-line"></i></span>
+          </button>
+          <button type="button" class="btn btn-primary" (click)="guardar()">
+            <span class="btn-text">Guardar</span>
+            <span class="btn-icon"><i class="ri-save-line"></i></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

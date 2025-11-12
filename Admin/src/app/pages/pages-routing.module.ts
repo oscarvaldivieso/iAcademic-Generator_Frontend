@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CrudComponent } from '../Personas/crudcomponent.component';
 
 const routes: Routes = [
   {
@@ -9,48 +8,13 @@ const routes: Routes = [
       import('./dashboards/dashboards.module').then((m) => m.DashboardsModule),
   },
   {
-    path: 'apps',
-    loadChildren: () => import('./apps/apps.module').then((m) => m.AppsModule),
-  },
-  {
-    path: 'ecommerce',
-    loadChildren: () =>
-      import('./ecommerce/ecommerce.module').then((m) => m.EcommerceModule),
-  },
-  {
-    path: 'learning',
-    loadChildren: () =>
-      import('./learning/learning.module').then((m) => m.LearningModule),
-  },
-  {
     path: 'ui',
     loadChildren: () => import('./ui/ui.module').then((m) => m.UiModule),
-  },
-  {
-    path: 'invoices',
-    loadChildren: () =>
-      import('./invoices/invoices.module').then((m) => m.InvoicesModule),
   },
   {
     path: 'advance-ui',
     loadChildren: () =>
       import('./advanceui/advanceui.module').then((m) => m.AdvanceuiModule),
-  },
-  {
-    path: 'maps',
-    loadChildren: () => import('./maps/maps.module').then((m) => m.MapsModule),
-  },
-  {
-    path: 'tickets',
-    loadChildren: () =>
-      import('./tickets/tickets.module').then((m) => m.TicketsModule),
-  },
-  {
-    path: 'real-estate',
-    loadChildren: () =>
-      import('./real-estate/real-estate.module').then(
-        (m) => m.RealEstateModule
-      ),
   },
   {
     path: 'icons',
@@ -82,12 +46,21 @@ const routes: Routes = [
     loadChildren: () =>
       import('./extrapages/extrapages.module').then((m) => m.ExtrapagesModule),
   },
-  { path: 'General/Personas', component: CrudComponent },
   {
-    path: 'general',
+    path: 'uni',
     loadChildren: () =>
-      import('./general/general.module').then((m) => m.GeneralModule),
+      import('./UNI/UNI.module').then((m) => m.UNIModule),
   },
+  {
+    path: 'exp',
+    loadChildren: () =>
+      import('./EXP/exp.module').then((m) => m.ExpModule),
+  },
+  {
+    path: 'aca',
+    loadChildren: () =>
+      import('./ACA/aca.module').then((m) => m.AcaModule),
+  }
 ];
 
 @NgModule({

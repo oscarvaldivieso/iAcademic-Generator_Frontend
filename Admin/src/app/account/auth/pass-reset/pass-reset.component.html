@@ -152,11 +152,11 @@
 
             <div class="form-footer">
               <div class="btn-container">
-                <button type="button" class="btn-secondary" (click)="goToStep('request')">
+                <button type="button" class="btn-login" (click)="goToStep('request')">
                   <i class="ri-arrow-left-line btn-icon"></i>
                   <span class="btn-text">Atrás</span>
                 </button>
-                <button type="submit" class="btn-primary" [disabled]="verifyCodeForm.invalid || isLoading">
+                <button type="submit" class="btn-login" [disabled]="verifyCodeForm.invalid || isLoading">
                   <span class="btn-text" *ngIf="!isLoading">Verificar</span>
                   <span class="btn-text" *ngIf="isLoading">Verificando...</span>
                   <i class="ri-check-line btn-icon" *ngIf="!isLoading"></i>

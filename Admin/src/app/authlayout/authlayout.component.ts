@@ -15,7 +15,7 @@ export class AuthlayoutComponent {
     if (this.theme) {
       document.documentElement.setAttribute('data-theme', this.theme);
     } else {
-      document.documentElement.setAttribute('data-theme', 'default');
+      document.documentElement.setAttribute('data-theme', 'modern');
     }
     document.documentElement.setAttribute('data-layout', 'vertical');
     document.documentElement.setAttribute('data-sidebar', 'dark');
@@ -24,7 +24,7 @@ export class AuthlayoutComponent {
     document.documentElement.setAttribute('data-sidebar-image', 'none');
     document.documentElement.setAttribute('data-layout-position', 'fixed');
     document.documentElement.setAttribute('data-layout-style', 'default');
-    document.documentElement.setAttribute('data-topbar', 'light');
+    document.documentElement.setAttribute('data-topbar', 'dark');
     document.documentElement.setAttribute('data-preloader', 'disable');
 
     window.addEventListener('resize', function () {

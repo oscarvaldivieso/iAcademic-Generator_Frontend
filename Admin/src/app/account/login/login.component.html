@@ -20,7 +20,12 @@
               id="username" 
               placeholder="Ingresa tu usuario" 
               class="glass-input"
+              [class.is-invalid]="submitted && f['email'].errors"
             />
+          </div>
+          <div class="validation-message" *ngIf="(submitted || f['email'].touched) && f['email'].errors">
+            <small class="text-danger" *ngIf="f['email'].errors?.['required']">El usuario es requerido</small>
+            <small class="text-danger" *ngIf="f['email'].errors?.['minlength']">El usuario debe tener al menos 3 caracteres</small>
           </div>
         </div>
 
@@ -38,18 +43,29 @@
               id="password-input" 
               placeholder="Ingresa tu contraseña"
               class="glass-input"
+              [class.is-invalid]="submitted && f['password'].errors"
             />
             <button type="button" class="toggle-password" (click)="toggleFieldTextType()">
               <i class="ri-eye-line" *ngIf="!fieldTextType"></i>
               <i class="ri-eye-off-line" *ngIf="fieldTextType"></i>
             </button>
           </div>
+          <div class="validation-message" *ngIf="(submitted || f['password'].touched) && f['password'].errors">
+            <small class="text-danger" *ngIf="f['password'].errors?.['required']">La contraseña es requerida</small>
+            <small class="text-danger" *ngIf="f['password'].errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</small>
+          </div>
+        </div>
+
+        <!-- Mensajes de error -->
+        <div class="error-message" *ngIf="error" style="color: #f7a3ae; text-align: center;">
+          {{ error }}
         </div>
 
         <!-- Botón de ingreso -->
-        <button type="submit" class="btn-login">
-          <span class="btn-text">Ingresar</span>
-          <i class="ri-login-box-line btn-icon"></i>
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid || submitted">
+          <span class="btn-text">{{ submitted ? 'Iniciando sesión...' : 'Ingresar' }}</span>
+          <i class="ri-login-box-line btn-icon" *ngIf="!submitted"></i>
+          <i class="ri-loader-4-line animate-spin" *ngIf="submitted"></i>
         </button>
       </form>
 

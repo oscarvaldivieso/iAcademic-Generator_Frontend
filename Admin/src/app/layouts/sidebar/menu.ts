@@ -2,479 +2,111 @@ import { MenuItem } from "./menu.model";
 
 export const MENU: MenuItem[] = [
     {
-        id: 1,
-        label: 'MENUITEMS.MENU.TEXT',
-        isTitle: true
-    },
-    {
-        id: 2,
+        id: 124,
         label: 'MENUITEMS.DASHBOARD.TEXT',
-        icon: 'ph-gauge',
-        subItems: [
-            {
-                id: 3,
-                label: 'MENUITEMS.DASHBOARD.LIST.ANALYTICS',
-                link: '/analytics',
-                parentId: 2
-            },
-            {
-                id: 4,
-                label: 'MENUITEMS.DASHBOARD.LIST.CRM',
-                link: '/crm',
-                parentId: 2
-            },
-            {
-                id: 5,
-                label: 'MENUITEMS.DASHBOARD.LIST.ECOMMERCE',
-                link: '/',
-                parentId: 2
-            },
-            {
-                id: 6,
-                label: 'MENUITEMS.DASHBOARD.LIST.LEARNING',
-                link: '/learning',
-                parentId: 2
-            },
-            {
-                id: 7,
-                label: 'MENUITEMS.DASHBOARD.LIST.REALESTATE',
-                link: '/real-estate',
-                parentId: 2
-            }
-        ]
+        icon: "ph-gauge",
+        link: '/'
     },
     {
-        id: 8,
-        label: 'MENUITEMS.APPS.TEXT',
-        isTitle: true
-    },
-    {
-        id: 9,
-        label: 'MENUITEMS.APPS.LIST.CALENDAR',
-        icon: 'ph-calendar',
-        link: '/apps/calendar',
-        parentId: 8
-    },
-    {
-        id: 10,
-        label: 'MENUITEMS.APPS.LIST.CHAT',
-        icon: 'ph-chats',
-        link: '/apps/chat',
-        parentId: 8
-    },
-    {
-        id: 11,
-        label: 'MENUITEMS.APPS.LIST.EMAIL',
-        icon: 'ph-envelope',
-        link: '/apps/email',
-        parentId: 8,
-    },
-    {
-        id: 12,
-        label: 'MENUITEMS.APPS.LIST.ECOMMERCE',
-        icon: 'ph-storefront',
+        id: 30,
+        label: 'MENUITEMS.USERS.TEXT',
+        icon: 'ph-identification-badge',
         parentId: 8,
         subItems: [
-            {
-                id: 13,
-                label: 'MENUITEMS.APPS.LIST.PRODUCTS',
-                link: '/ecommerce/products',
-                parentId: 12
-            },
-            {
-                id: 13,
-                label: 'MENUITEMS.APPS.LIST.PRODUCTGRID',
-                link: '/ecommerce/products-grid',
-                parentId: 12
-            },
-            {
-                id: 14,
-                label: 'MENUITEMS.APPS.LIST.PRODUCTDETAILS',
-                link: '/ecommerce/product-details',
-                parentId: 12
-            },
-            {
-                id: 15,
-                label: 'MENUITEMS.APPS.LIST.CREATEPRODUCT',
-                link: '/ecommerce/add-product',
-                parentId: 12
-            },
-            {
-                id: 16,
-                label: 'MENUITEMS.APPS.LIST.ORDERS',
-                link: '/ecommerce/orders',
-                parentId: 12
-            },
-            {
-                id: 17,
-                label: 'MENUITEMS.APPS.LIST.ORDEROVERVIEW',
-                link: '/ecommerce/order-overview',
-                parentId: 12
-            },
-            {
-                id: 18,
-                label: 'MENUITEMS.APPS.LIST.CUSTOMERS',
-                link: '/ecommerce/customers',
-                parentId: 12
-            },
-            {
-                id: 19,
-                label: 'MENUITEMS.APPS.LIST.SHOPPINGCART',
-                link: '/ecommerce/cart',
-                parentId: 12
-            },
-            {
-                id: 20,
-                label: 'MENUITEMS.APPS.LIST.CHECKOUT',
-                link: '/ecommerce/checkout',
-                parentId: 12
-            },
-            {
-                id: 21,
-                label: 'MENUITEMS.APPS.LIST.SELLERS',
-                link: '/ecommerce/sellers',
-                parentId: 12
-            },
-            {
-                id: 22,
-                label: 'MENUITEMS.APPS.LIST.SELLEROVERVIEW',
-                link: '/ecommerce/seller-overview',
-                parentId: 12
-            }
-        ]
-    },
-    {
-        id: 23,
-        label: 'MENUITEMS.APPS.LIST.FILEMANAGER',
-        icon: 'ph-folder-open',
-        link: '/apps/file-manager',
-        parentId: 8,
-    },
-    {
-        id: 24,
-        label: 'MENUITEMS.APPS.LIST.LEARNING',
-        icon: 'ph-graduation-cap',
-        parentId: 8,
-        subItems: [
-            {
-                id: 25,
-                label: 'MENUITEMS.APPS.LIST.COURSES',
-                parentId: 24,
-                isCollapsed: true,
-                subItems: [
-                    {
-                        id: 26,
-                        label: 'MENUITEMS.APPS.LIST.LISTVIEW',
-                        link: '/learning/list',
-                        parentId: 25
-                    },
-                    {
-                        id: 27,
-                        label: 'MENUITEMS.APPS.LIST.GRIDVIEW',
-                        link: '/learning/grid',
-                        parentId: 25
-                    },
-                    {
-                        id: 28,
-                        label: 'MENUITEMS.APPS.LIST.CATEGORY',
-                        link: '/learning/category',
-                        parentId: 25
-                    },
-                    {
-                        id: 29,
-                        label: 'MENUITEMS.APPS.LIST.OVERVIEW',
-                        link: '/learning/overview',
-                        parentId: 25
-                    },
-                    {
-                        id: 30,
-                        label: 'MENUITEMS.APPS.LIST.CREATECOURSE',
-                        link: '/learning/create',
-                        parentId: 25
-                    },
-                ]
-            },
             {
                 id: 31,
-                label: 'MENUITEMS.APPS.LIST.STUDENTS',
-                parentId: 24,
-                isCollapsed: true,
-                subItems: [
-                    {
-                        id: 32,
-                        label: 'MENUITEMS.APPS.LIST.MYSUBSCRIPTIONS',
-                        link: '/learning/subscriptions',
-                        parentId: 31
-                    },
-                    {
-                        id: 33,
-                        label: 'MENUITEMS.APPS.LIST.MYCOURSES',
-                        link: '/learning/cources',
-                        parentId: 31
-                    }
-                ]
+                label: 'MENUITEMS.USERS.LIST.USERS',
+                link: 'aca/users/list',
+                parentId: 30
             },
             {
-                id: 34,
-                label: 'MENUITEMS.APPS.LIST.INSTRUCTORS',
-                parentId: 24,
-                isCollapsed: true,
-                subItems: [
-                    {
-                        id: 35,
-                        label: 'MENUITEMS.APPS.LIST.LISTVIEW',
-                        link: '/learning/instructors-list',
-                        parentId: 34
-                    },
-                    {
-                        id: 36,
-                        label: 'MENUITEMS.APPS.LIST.GRIDVIEW',
-                        link: '/learning/instructors-grid',
-                        parentId: 34
-                    },
-                    {
-                        id: 37,
-                        label: 'MENUITEMS.APPS.LIST.OVERVIEW',
-                        link: '/learning/instructors-overview',
-                        parentId: 34
-                    },
-                    {
-                        id: 38,
-                        label: 'MENUITEMS.APPS.LIST.CREATEINSTRUCTOR',
-                        link: '/learning/instructors-create',
-                        parentId: 34
-                    }
-                ]
+                id: 32,
+                label: 'MENUITEMS.USERS.LIST.ROLES',
+                link: 'aca/roles/list',
+                parentId: 30
             },
-
         ]
     },
     {
-        id: 39,
-        label: 'MENUITEMS.APPS.LIST.INVOICES',
-        icon: 'ph-file-text',
+        id: 40,
+        label: 'MENUITEMS.CATALOG.TEXT',
+        icon: 'ph-student',
         parentId: 8,
         subItems: [
             {
-                id: 40,
-                label: 'MENUITEMS.APPS.LIST.LISTVIEW',
-                link: '/invoices/list',
-                parentId: 39
-            },
-            {
                 id: 41,
-                label: 'MENUITEMS.APPS.LIST.OVERVIEW',
-                link: '/invoices/overview',
-                parentId: 39
+                label: 'MENUITEMS.CATALOG.LIST.CAMPUS',
+                link: '/uni/campus/list',
+                parentId: 40
             },
             {
                 id: 42,
-                label: 'MENUITEMS.APPS.LIST.CREATEINVOICE',
-                link: '/invoices/create',
-                parentId: 39
-            }
-        ]
-    },
-    {
-        id: 43,
-        label: 'MENUITEMS.APPS.LIST.SUPPORTTICKETS',
-        icon: 'ph-ticket',
-        parentId: 8,
-        subItems: [
+                label: 'MENUITEMS.CATALOG.LIST.CAREERS',
+                link: '/uni/careers/list',
+                parentId: 40
+            },
+            {
+                id: 43,
+                label: 'MENUITEMS.CATALOG.LIST.SUBJECTS',
+                link: '/aca/subjects/list',
+                parentId: 40
+            },
             {
                 id: 44,
-                label: 'MENUITEMS.APPS.LIST.LISTVIEW',
-                link: '/tickets/list',
-                parentId: 43
+                label: 'MENUITEMS.CATALOG.LIST.MODALITIES',
+                link: '/uni/modalities/list',
+                parentId: 40
             },
             {
                 id: 45,
-                label: 'MENUITEMS.APPS.LIST.OVERVIEW',
-                link: '/tickets/overview',
-                parentId: 43
+                label: 'MENUITEMS.CATALOG.LIST.PERIODS',
+                link: '/uni/periods/list',
+                parentId: 40
+            },
+            {
+                id: 46,
+                label: 'MENUITEMS.CATALOG.LIST.SECTIONS',
+                link: '/uni/sections/list',
+                parentId: 40
+            },
+            {
+                id: 47,
+                label: 'MENUITEMS.CATALOG.LIST.CLASSROOMS',
+                link: '/uni/classrooms/list',
+                parentId: 40
+            },
+            {
+                id: 48,
+                label: 'MENUITEMS.CATALOG.LIST.AREAS',
+                link: '/aca/areas/list',
+                parentId: 40
             }
         ]
     },
     {
-        id: 46,
-        label: 'MENUITEMS.APPS.LIST.REALESTATE',
-        icon: 'ph-buildings',
+        id: 20,
+        label: 'MENUITEMS.PEOPLE.TEXT',
+        icon: 'ph-users-three',
         parentId: 8,
         subItems: [
             {
-                id: 47,
-                label: 'MENUITEMS.APPS.LIST.LISTINGGRID',
-                link: '/real-estate/grid',
-                parentId: 46
+                id: 21,
+                label: 'MENUITEMS.PEOPLE.LIST.STUDENTS',
+                link: '/exp/students/list',
+                parentId: 20
             },
             {
-                id: 48,
-                label: 'MENUITEMS.APPS.LIST.LISTINGLIST',
-                link: '/real-estate/list',
-                parentId: 46
+                id: 22,
+                label: 'MENUITEMS.PEOPLE.LIST.TEACHERS',
+                link: '/aca/teachers/list',
+                parentId: 20
             },
             {
-                id: 49,
-                label: 'MENUITEMS.APPS.LIST.LISTINGMAP',
-                link: '/real-estate/map',
-                parentId: 46
-            },
-            {
-                id: 50,
-                label: 'MENUITEMS.APPS.LIST.PROPERTYOVERVIEW',
-                link: '/real-estate/property-overview',
-                parentId: 46
-            },
-            {
-                id: 51,
-                label: 'MENUITEMS.APPS.LIST.AGENT',
-                parentId: 46,
-                isCollapsed: true,
-                subItems: [
-                    {
-                        id: 52,
-                        label: 'MENUITEMS.APPS.LIST.LISTVIEW',
-                        link: '/real-estate/agent/list',
-                        parentId: 51
-                    },
-                    {
-                        id: 53,
-                        label: 'MENUITEMS.APPS.LIST.GRIDVIEW',
-                        link: '/real-estate/agent/grid',
-                        parentId: 51
-                    },
-                    {
-                        id: 54,
-                        label: 'MENUITEMS.APPS.LIST.OVERVIEW',
-                        link: '/real-estate/agent/overview',
-                        parentId: 51
-                    },
-                ]
-            },
-            {
-                id: 55,
-                label: 'MENUITEMS.APPS.LIST.AGENCIES',
-                parentId: 46,
-                isCollapsed: true,
-                subItems: [
-                    {
-                        id: 56,
-                        label: 'MENUITEMS.APPS.LIST.LISTVIEW',
-                        link: '/real-estate/agencies/list',
-                        parentId: 55
-                    },
-                    {
-                        id: 57,
-                        label: 'MENUITEMS.APPS.LIST.OVERVIEW',
-                        link: '/real-estate/agencies/overview',
-                        parentId: 55
-                    },
-                ]
-            },
-            {
-                id: 58,
-                label: 'MENUITEMS.APPS.LIST.ADDPROPERTY',
-                link: '/real-estate/add-properties',
-                parentId: 46
-            },
-            {
-                id: 59,
-                label: 'MENUITEMS.APPS.LIST.EARNINGS',
-                link: '/real-estate/earnings',
-                parentId: 46
-            },
-        ]
-    },
-    {
-        id: 60,
-        label: 'MENUITEMS.PAGES.TEXT',
-        isTitle: true
-    },
-    {
-        id: 61,
-        label: 'MENUITEMS.AUTHENTICATION.TEXT',
-        icon: 'ph-user-circle',
-        subItems: [
-            {
-                id: 62,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.SIGNIN',
-                link: '/auth/signin',
-                parentId: 61,
-            },
-            {
-                id: 63,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.SIGNUP',
-                link: '/auth/signup',
-                parentId: 61,
-            },
-            {
-                id: 64,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.PASSWORDRESET',
-                link: '/auth/pass-reset',
-                parentId: 61,
-            },
-            {
-                id: 65,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.PASSWORDCREATE',
-                link: '/auth/pass-change',
-                parentId: 61,
-            },
-            {
-                id: 66,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.LOCKSCREEN',
-                link: '/auth/lockscreen',
-                parentId: 61
-            },
-            {
-                id: 67,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.LOGOUT',
-                link: '/auth/logout',
-                parentId: 61
-            },
-            {
-                id: 68,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.SUCCESSMESSAGE',
-                link: '/auth/success-msg',
-                parentId: 61
-            },
-            {
-                id: 69,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.TWOSTEPVERIFICATION',
-                link: '/auth/twostep',
-                parentId: 61
-            },
-            {
-                id: 70,
-                label: 'MENUITEMS.AUTHENTICATION.LIST.ERRORS',
-                parentId: 61,
-                isCollapsed: true,
-                subItems: [
-                    {
-                        id: 71,
-                        label: 'MENUITEMS.AUTHENTICATION.LIST.404ERROR',
-                        link: '/auth/errors/404',
-                        parentId: 70
-                    },
-                    {
-                        id: 72,
-                        label: 'MENUITEMS.AUTHENTICATION.LIST.500',
-                        link: '/auth/errors/500',
-                        parentId: 70
-                    },
-                    {
-                        id: 73,
-                        label: 'MENUITEMS.AUTHENTICATION.LIST.503',
-                        link: '/auth/errors/503',
-                        parentId: 70
-                    },
-                    {
-                        id: 74,
-                        label: 'MENUITEMS.AUTHENTICATION.LIST.OFFLINE',
-                        link: '/auth/errors/offline',
-                        parentId: 70
-                    },
-                ]
-            },
+                id: 23,
+                label: 'MENUITEMS.PEOPLE.LIST.CONTACTS',
+                link: '/exp/contacts/list',
+                parentId: 20
+            }
         ]
     },
     {
@@ -764,12 +396,7 @@ export const MENU: MenuItem[] = [
             }
         ]
     },
-    {
-        id: 124,
-        label: 'MENUITEMS.WIDGETS.TEXT',
-        icon: "ph-paint-brush-broad",
-        link: '/apps/widgets'
-    },
+    
     {
         id: 125,
         label: 'MENUITEMS.FORMS.TEXT',

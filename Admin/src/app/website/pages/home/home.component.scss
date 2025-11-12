@@ -1,0 +1,600 @@
+// Colores CEUTEC
+$dark-blue: #141a2f;
+$red: #df1b3b;
+$white: #ffffff;
+$gray-light: #f5f7fa;
+$gray-text: #6c757d;
+$border-color: #e9ecef;
+
+.home-container {
+    margin: 0 auto;
+    padding:0rem 0.5rem;
+    background: $gray-light;
+    animation: fadeIn 0.6s ease-out;
+}
+
+// Animaciones de entrada
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-5deg) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+// Bento Grid 4 columnas x 3 filas
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 23fr);
+    grid-template-rows: repeat(3, 25vh);
+    gap: 1rem;
+
+    @media (max-width: 1024px) {
+        grid-template-rows: repeat(3, 26vh);
+        padding-top: 2vh;
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 1rem;
+    }
+}
+
+// Base Card
+.card {
+    background: $white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+    margin-bottom:0;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+}
+
+// Card 1: Isotipo CEUTEC (1x1)
+.isotipo-card {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    background: $red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: scaleIn 0.6s ease-out 0.1s both;
+
+    .wave-pattern {
+        position: absolute;
+        inset: 0;
+        background-image: 
+            repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 20px,
+                rgba(255, 255, 255, 0.03) 20px,
+                rgba(255, 255, 255, 0.03) 40px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 20px,
+                rgba(255, 255, 255, 0.03) 20px,
+                rgba(255, 255, 255, 0.03) 40px
+            );
+        opacity: 0.5;
+    }
+
+    .isotipo {
+        width: 80%;
+        height: auto;
+        object-fit: contain;
+        position: relative;
+        z-index: 1;
+        filter: brightness(0) invert(1);
+        animation: rotateIn 0.8s ease-out 0.3s both;
+    }
+
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: auto;
+        height: 150px;
+    }
+}
+
+// Card 2: Bienvenida (1x3)
+.welcome-card {
+    grid-column: 2 / 5;
+    grid-row: 1 / 2;
+    background: $white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    animation: slideInRight 0.7s ease-out 0.2s both;
+
+    h1 {
+        color: $dark-blue;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: $gray-text;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: auto;
+        padding: 2rem 1.5rem;
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 0.95rem;
+        }
+    }
+}
+
+// Card 3: Sistema Info (2x2)
+.sistema-card {
+    grid-column: 1 / 3;
+    grid-row: 2 / 4;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    animation: slideInLeft 0.7s ease-out 0.3s both;
+
+    .sistema-image {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: 10px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sistema-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba($dark-blue, 0.95) 0%, rgba($dark-blue, 0.6) 60%, transparent 100%);
+        }
+    }
+
+    .sistema-content {
+        position: relative;
+        z-index: 1;
+        padding: 2rem;
+        margin-top: auto;
+        color: $white;
+
+        h2 {
+            color: $white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .sistema-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+
+            .feature-item {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                color: $white;
+
+                i {
+                    font-size: 1.2rem;
+                    color: $red;
+                    flex-shrink: 0;
+                }
+
+                span {
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    color: rgba(255, 255, 255, 0.95);
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: auto;
+
+        .sistema-content {
+            padding: 1.5rem;
+        }
+    }
+}
+
+// Card 4: Prematrícula (1x1)
+.prematricula-card {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+    background: #711f25;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid $border-color;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideInUp 0.7s ease-out 0.4s both;
+
+    &:hover {
+        
+        .btn-arrow {
+            background: $red;
+            transform: translate(3px, -3px);
+            color: $white;
+        }
+    }
+
+    .background-svg {
+        position: absolute;
+        bottom: -30%;
+        right: -10%;
+        width: 250px;
+        height: 250px;
+        opacity: 0.1;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 0 0 14px 0;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            transform: translate(10%, 10%);
+        }
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba($white, 0.3);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    h3 {
+        color: $white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    p {
+        color: $gray-text;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-arrow {
+        position: absolute;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 45px;
+        height: 45px;
+        background: rgba($red, 0.1);
+        border: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $red;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 2;
+
+        &:active {
+            transform: translate(0, 0) scale(0.95);
+        }
+    }
+
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+// Card 5: Solicitud Apertura (1x1)
+.solicitud-card {
+    grid-column: 3 / 4;
+    grid-row: 3 / 4;
+    background: #181d32;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid $border-color;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideInUp 0.7s ease-out 0.5s both;
+
+    &:hover {
+        
+        .btn-arrow {
+            background: $dark-blue;
+            color: $white;
+            transform: translate(3px, -3px);
+        }
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(129, 154, 217, 0.164);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .background-svg {
+        position: absolute;
+        bottom: -10%;
+        right: -10%;
+        width: 200px;
+        height: 200px;
+        opacity: 0.1;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 0 0 14px 0;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            transform: translate(10%, 10%);
+        }
+    }
+
+    h3 {
+        color: $white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: #e3e3e3;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+        flex: 1;
+    }
+
+    .btn-arrow {
+        position: absolute;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 45px;
+        height: 45px;
+        background: rgb(255 255 255 / 10%);
+        border: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $white;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:active {
+            transform: translate(0, 0) scale(0.95);
+        }
+    }
+
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+// Card 6: Ayuda/Contacto (2x1)
+.ayuda-card {
+    grid-column: 4 / 5;
+    grid-row: 2 / 4;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    animation: slideInRight 0.7s ease-out 0.6s both;
+
+    .ayuda-image {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: 10px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .ayuda-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba($dark-blue, 0.95) 0%, rgba($dark-blue, 0.7) 50%, transparent 100%);
+        }
+    }
+
+    .ayuda-content {
+        position: relative;
+        z-index: 1;
+        padding: 2rem 1.5rem;
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+
+        .ayuda-icon {
+            width: 50px;
+            height: 50px;
+            background: $red;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            color: $white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: auto;
+
+            .contact-item {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 0.8rem;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+
+                i {
+                    font-size: 1.1rem;
+                    color: $red;
+                }
+
+                span {
+                    color: $white;
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+// Responsive ajustes generales
+@media (max-width: 768px) {
+    .home-container {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 1.2rem;
+    }
+}

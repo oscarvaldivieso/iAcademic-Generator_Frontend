@@ -1,66 +1,90 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/core/services/auth.service';
-import { AuthfakeauthenticationService } from 'src/app/core/services/authfake.service';
-import { login } from 'src/app/store/Authentication/authentication.actions';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-
-// Login Component
-export class LoginComponent {
-
-  // Login Form
+export class LoginComponent implements OnInit {
   loginForm!: UntypedFormGroup;
   submitted = false;
   fieldTextType!: boolean;
   error = '';
-  returnUrl!: string;
-  a: any = 10;
-  b: any = 20;
-  toast!: false;
 
-  // set the current year
-  year: number = new Date().getFullYear();
-
-  // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private store: Store,
-) { }
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private authService: AuthenticationService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    if (localStorage.getItem('currentUser')) {
-      this.router.navigate(['/']);
+    // Redirigir si ya está autenticado
+    if (this.authService.isLoggedIn()) {
+      const userData = this.authService.currentUserValue;
+      if (userData?.tipo_usuario === 'ESTUDIANTE') {
+        this.router.navigate(['/website']);
+      } else {
+        this.router.navigate(['/']);
+      }
     }
-    /**
-     * Form Validatyion
-     */
+
     this.loginForm = this.formBuilder.group({
-      email: ['admin@themesbrand.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required]],
+      email: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
-  /**
-   * Form submit
-   */
   onSubmit() {
+    if (this.submitted) {
+      return; // Evitar múltiples envíos
+    }
+
     this.submitted = true;
+    this.error = '';
 
-    const email = this.f['email'].value; // Get the username from the form
-    const password = this.f['password'].value; // Get the password from the form
+    if (this.loginForm.invalid) {
+      this.submitted = false;
+      return;
+    }
 
-    // Login Api
-    this.store.dispatch(login({ email: email, password: password }));
+    const loginData = {
+      user: this.f['email'].value,
+      password: this.f['password'].value
+    };
+
+    this.authService.login(loginData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Redirección basada en el tipo de usuario
+          if (response.data.tipo_usuario === 'ESTUDIANTE') {
+            this.router.navigate(['/website']);
+          } else if (response.data.tipo_usuario === 'DOCENTE') {
+            this.router.navigate(['/']);
+          }
+        } else {
+          this.error = response.message;
+          this.submitted = false; // Resetear estado del botón
+        }
+      },
+      error: (error) => {
+        if (error.data?.message) {
+          // Si tenemos un mensaje detallado en data
+          this.error = error.data.message;
+        } else if (error.message) {
+          // Si tenemos un mensaje general
+          this.error = error.message;
+        } else {
+          // Mensaje por defecto
+          this.error = 'Error al iniciar sesión. Por favor, intente nuevamente.';
+        }
+        this.submitted = false; // Resetear estado del botón
+      }
+    });
   }
 
   /**

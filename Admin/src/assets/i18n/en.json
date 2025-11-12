@@ -13,51 +13,41 @@
         "REALESTATE": "Real Estate"
       }
     },
-    "APPS": {
-      "TEXT": "Apps",
+    "USERS": {
+      "TEXT": "Gestión de usuarios",
       "LIST": {
-        "CALENDAR": "Calendar",
-        "CHAT": "Chat",
-        "EMAIL": "Email",
+        "USERS": "Usuarios",
+        "ROLES": "Roles y permisos",
         "ECOMMERCE": "Ecommerce",
-        "PRODUCTS": "Products",
-        "PRODUCTGRID": "Products Grid",
-        "PRODUCTDETAILS": "Product Details",
-        "CREATEPRODUCT": "Create Product",
-        "ORDERS": "Orders",
-        "ORDEROVERVIEW": "Order Overview",
-        "CUSTOMERS": "Customers",
-        "SHOPPINGCART": "Shopping Cart",
-        "CHECKOUT": "Checkout",
-        "SELLERS": "Sellers",
-        "SELLEROVERVIEW": "Seller Overview",
-        "FILEMANAGER": "File Manager",
         "LEARNING": "Learning",
-        "COURSES": "Courses",
-        "LISTVIEW": "List View",
-        "GRIDVIEW": "Grid View",
-        "CATEGORY": "Category",
-        "OVERVIEW": "Overview",
-        "CREATECOURSE": "Create Course",
-        "STUDENTS": "Students",
-        "MYSUBSCRIPTIONS": "My Subscriptions",
-        "MYCOURSES": "My Courses",
-        "INSTRUCTORS": "Instructors",
-        "CREATEINSTRUCTOR": "Create Instructor",
-        "INVOICES": "Invoices",
-        "CREATEINVOICE": "Create Invoice",
-        "SUPPORTTICKETS": "Support Tickets",
-        "REALESTATE": "Real Estate",
-        "LISTINGGRID": "Listing Grid",
-        "LISTINGLIST": "Listing List",
-        "LISTINGMAP": "Listing Map",
-        "PROPERTYOVERVIEW": "Property Overview",
-        "AGENT": "Agent",
-        "AGENCIES": "Agencies",
-        "ADDPROPERTY": "Add Property",
-        "EARNINGS": "Earnings"
+        "REALESTATE": "Real Estate"
       }
     },
+    "CATALOG": {
+      "TEXT": "Catálogos Académicos",
+      "LIST": {
+        "CAMPUS": "Campus",
+        "CAREERS": "Carreras",
+        "SUBJECTS": "Materias",
+        "MODALITIES": "Modalidades",
+        "PERIODS": "Periodos",
+        "SECTIONS": "Secciones",
+        "CLASSROOMS": "Aulas",
+        "AREAS": "Áreas"
+      }
+    },
+    "PEOPLE": {
+      "TEXT": "Gestión de personas",
+      "LIST": {
+        "STUDENTS": "Estudiantes",
+        "TEACHERS": "Docentes",
+        "CONTACTS": "Contactos  "
+      }
+    },
+    "OFFER": {
+      "TEXT": "Oferta Académica"
+    },
+    
     "PAGES": {
       "TEXT": "Pages"
     },
@@ -236,6 +226,14 @@
             }
           }
         }
+      }
+    },
+    "WEBSITE": {
+      "TEXT": "Opciones",
+      "LIST": {
+        "INICIO": "Inicio",
+        "PREMATRICULA": "Prematricula",
+        "REQUEST": "Solicitud"
       }
     }
   }
