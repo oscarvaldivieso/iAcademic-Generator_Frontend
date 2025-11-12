@@ -60,6 +60,11 @@ const routes: Routes = [
     path: 'aca',
     loadChildren: () =>
       import('./ACA/aca.module').then((m) => m.AcaModule),
+  },
+  {
+    path: 'sec',
+    loadChildren: () =>
+      import('./SEC/sec.module').then((m) => m.SecModule),
   }
 ];
 
