@@ -2,12 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 import { CreateComponent } from '../create/create.component';
 import { EditComponent } from '../edit/edit.component';
 import { User } from 'src/app/Modelos/sec/user.model';
 import { RouterModule } from '@angular/router';
+import { ReactiveTableService } from 'src/app/shared/reactive-table.service';
+import { TableModule } from 'src/app/pages/table/table.module';
+
+interface ApiResponse<T> {
+  type: number;
+  code: number;
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 @Component({
   selector: 'app-list',
@@ -16,6 +26,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     FormsModule,
     RouterModule,
+    TableModule,
     PaginationModule,
     CreateComponent,
     EditComponent
@@ -31,109 +42,219 @@ export class ListComponent implements OnInit {
     { label: 'Usuarios', active: true }
   ];
 
-  // Lista de usuarios
-  users: User[] = [];
-  filteredUsers: User[] = [];
-  pagedUsers: User[] = [];
+  // Estados de carga
+  mostrarOverlayCarga = false;
+  isLoading = true;
 
-  // Filtros y búsqueda
-  searchTerm: string = '';
-
-  // Paginación
-  currentPage: number = 1;
-  itemsPerPage: number = 10;
-
-  // Modal states
-  showCreateModal = false;
-  showEditModal = false;
+  // Propiedades de control de formularios
+  showCreateForm = false;
+  showEditForm = false;
   selectedUser: User | null = null;
 
-  // API URL
-  private apiUrl = `${environment.apiBaseUrl}/api/Users`;
+  // Propiedades para alertas
+  mostrarAlertaExito = false;
+  mensajeExito = '';
+  mostrarAlertaError = false;
+  mensajeError = '';
+  mostrarAlertaWarning = false;
+  mensajeWarning = '';
 
-  constructor(private http: HttpClient) {}
+  // Propiedades para confirmación de eliminación
+  mostrarConfirmacionEliminar = false;
+  usuarioAEliminar: User | null = null;
 
-  ngOnInit(): void {
-    this.loadUsers();
+  constructor(
+    public table: ReactiveTableService<User>,
+    private http: HttpClient
+  ) {
+    this.cargarDatos(true);
   }
 
-  // Cargar usuarios desde la API
-  loadUsers(): void {
-    this.http.get<{data: User[]}>(this.apiUrl).subscribe({
+  ngOnInit(): void {}
+
+  /**
+   * Sistema de mensajes mejorado
+   */
+  private mostrarMensaje(tipo: 'success' | 'error' | 'warning' | 'info', mensaje: string): void {
+    this.cerrarAlerta();
+    
+    const duracion = tipo === 'error' ? 5000 : 3000;
+    
+    switch (tipo) {
+      case 'success':
+        this.mostrarAlertaExito = true;
+        this.mensajeExito = mensaje;
+        setTimeout(() => this.mostrarAlertaExito = false, duracion);
+        break;
+        
+      case 'error':
+        this.mostrarAlertaError = true;
+        this.mensajeError = mensaje;
+        setTimeout(() => this.mostrarAlertaError = false, duracion);
+        break;
+        
+      case 'warning':
+      case 'info':
+        this.mostrarAlertaWarning = true;
+        this.mensajeWarning = mensaje;
+        setTimeout(() => this.mostrarAlertaWarning = false, duracion);
+        break;
+    }
+  }
+
+  // Abrir formulario de creación
+  openCreateForm(): void {
+    this.showCreateForm = true;
+    this.showEditForm = false;
+    this.selectedUser = null;
+  }
+
+  // Cerrar formulario de creación
+  onCloseCreateForm(): void {
+    this.showCreateForm = false;
+    this.mostrarOverlayCarga = false;
+    this.cargarDatos(false);
+  }
+
+  // Método para guardar usuario (llamado desde el componente hijo)
+  guardarUsuario(usuario: User): void {
+    console.log('Usuario guardado exitosamente:', usuario);
+    this.mostrarMensaje('success', 'Usuario creado exitosamente');
+    this.showCreateForm = false;
+    this.cargarDatos(false);
+  }
+
+  // Abrir formulario de edición
+  openEditForm(user: User): void {
+    this.selectedUser = { ...user };
+    this.showEditForm = true;
+    this.showCreateForm = false;
+  }
+
+  // Cerrar formulario de edición
+  onCloseEditForm(): void {
+    this.mostrarOverlayCarga = false;
+    this.showEditForm = false;
+    this.selectedUser = null;
+    this.cargarDatos(false);
+  }
+
+  // Método para actualizar usuario (llamado desde el componente hijo)
+  actualizarUsuario(usuario: User): void {
+    console.log('Usuario actualizado exitosamente:', usuario);
+    this.mostrarMensaje('success', 'Usuario actualizado exitosamente');
+    this.showEditForm = false;
+    this.selectedUser = null;
+    this.cargarDatos(false);
+  }
+
+  // Confirmar eliminación
+  confirmarEliminar(user: User): void {
+    this.usuarioAEliminar = user;
+    this.mostrarConfirmacionEliminar = true;
+  }
+
+  // Cancelar eliminación
+  cancelarEliminar(): void {
+    this.mostrarConfirmacionEliminar = false;
+    this.usuarioAEliminar = null;
+  }
+
+  // Eliminar usuario
+  deleteUser(): void {
+    if (!this.usuarioAEliminar) return;
+    
+    console.log('Eliminando usuario:', this.usuarioAEliminar);
+    
+    this.mostrarOverlayCarga = true;
+    
+    const url = `${environment.apiBaseUrl}/User/delete?id=${this.usuarioAEliminar.usu_codigo}`;
+    
+    this.http.delete<ApiResponse<any>>(url, {
+      headers: new HttpHeaders({
+        'XApiKey': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+    }).subscribe({
       next: (response) => {
-        this.users = response.data || [];
-        this.filterUsers();
+        this.mostrarOverlayCarga = false;
+        
+        if (response && response.success) {
+          console.log('Usuario eliminado exitosamente');
+          this.mostrarMensaje('success', `Usuario "${this.usuarioAEliminar!.usu_nombre}" eliminado exitosamente`);
+          this.cargarDatos(false);
+          this.cancelarEliminar();
+        } else {
+          const errorMessage = response?.data?.message_Status || response?.message || 'Error al eliminar el usuario.';
+          console.error('Error al eliminar:', errorMessage);
+          this.mostrarMensaje('error', errorMessage);
+          this.cancelarEliminar();
+        }
       },
       error: (error) => {
-        console.error('Error al cargar usuarios:', error);
+        console.error('Error en la solicitud de eliminación:', error);
+        this.mostrarOverlayCarga = false;
+        this.mostrarMensaje('error', 'Error de conexión al eliminar el usuario.');
+        this.cancelarEliminar();
       }
     });
   }
 
-  // Filtrar usuarios
-  filterUsers(): void {
-    if (!this.searchTerm) {
-      this.filteredUsers = [...this.users];
-    } else {
-      const searchTermLower = this.searchTerm.toLowerCase();
-      this.filteredUsers = this.users.filter(user => 
-        (user.usu_nombre?.toLowerCase().includes(searchTermLower)) ||
-        (user.usu_email?.toLowerCase().includes(searchTermLower)) ||
-        (user.usu_codigo?.toLowerCase().includes(searchTermLower))
-      );
-    }
-    this.currentPage = 1;
-    this.updatePagedUsers();
+  cerrarAlerta(): void {
+    this.mostrarAlertaExito = false;
+    this.mostrarAlertaError = false;
+    this.mostrarAlertaWarning = false;
   }
 
-  // Actualizar la lista paginada
-  updatePagedUsers(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.pagedUsers = this.filteredUsers.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  // Cambiar página
-  pageChanged(event: any): void {
-    this.currentPage = event.page;
-    this.updatePagedUsers();
-  }
-
-  // Abrir modal de creación
-  openCreateModal(): void {
-    this.showCreateModal = true;
-  }
-
-  // Cerrar modal de creación
-  onCloseCreateModal(): void {
-    this.showCreateModal = false;
-    this.loadUsers();
-  }
-
-  // Abrir modal de edición
-  openEditModal(user: User): void {
-    this.selectedUser = { ...user };
-    this.showEditModal = true;
-  }
-
-  // Cerrar modal de edición
-  onCloseEditModal(): void {
-    this.showEditModal = false;
-    this.selectedUser = null;
-    this.loadUsers();
-  }
-
-  // Eliminar usuario
-  deleteUser(user: User): void {
-    if (confirm(`¿Está seguro de eliminar al usuario ${user.usu_nombre}?`)) {
-      this.http.delete(`${this.apiUrl}/${user.usu_codigo}`).subscribe({
-        next: () => {
-          this.loadUsers();
-        },
-        error: (error) => {
-          console.error('Error al eliminar usuario:', error);
+  // Método para cargar datos de usuarios
+  private cargarDatos(state: boolean): void {
+    this.mostrarOverlayCarga = state;
+    this.isLoading = true;
+    
+    const url = `${environment.apiBaseUrl}/User/list`;
+    
+    this.http.get<ApiResponse<User[]>>(url, {
+      headers: { 
+        'XApiKey': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true
+    }).subscribe({
+      next: (response) => {
+        console.log('Respuesta completa de la API:', response);
+        
+        if (response.success && response.data) {
+          console.log('Datos de usuarios:', response.data);
+          setTimeout(() => {
+            this.table.setData(response.data);
+            this.table.setPage(1);
+            this.mostrarOverlayCarga = false;
+            this.isLoading = false;
+          }, 500);
+        } else {
+          console.error('Respuesta de API no exitosa:', response);
+          this.mostrarMensaje('error', response.message || 'Error al cargar los usuarios.');
+          this.mostrarOverlayCarga = false;
+          this.isLoading = false;
         }
-      });
-    }
+      },
+      error: (error) => {
+        console.error('Error al cargar los usuarios:', error);
+        
+        let mensaje = 'Error al cargar los usuarios. Por favor, intente de nuevo.';
+        if (error.status === 401) {
+          mensaje = 'Error de autorización. Verifique la API Key.';
+        } else if (error.status === 0) {
+          mensaje = 'Error de conexión. Verifique que la API esté funcionando.';
+        }
+        
+        this.mostrarMensaje('error', mensaje);
+        this.mostrarOverlayCarga = false;
+        this.isLoading = false;
+      }
+    });
   }
 
   // Formatear fecha
