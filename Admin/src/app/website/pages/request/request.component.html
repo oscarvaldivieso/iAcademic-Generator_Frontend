@@ -386,10 +386,11 @@
                 <i class="ri-close-line"></i>
                 Cancelar
             </button>
-            <button type="submit" class="btn btn-primary" [disabled]="!requestForm.valid">
-                <i class="ri-send-plane-line"></i>
-                Enviar Solicitud
-            </button>
+      <button type="submit" class="btn btn-primary" [disabled]="!canSubmit() || isSubmitting">
+    <i class="ri-send-plane-line"></i>
+    Enviar Solicitud
+</button>
+
         </div>
     </form>
         </div>

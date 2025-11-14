@@ -14,6 +14,7 @@ import { ScheduleService } from '../../../core/services/schedule.service';
 import { Schedule } from '../../../Modelos/uni/schedule.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.prod';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 
 interface ApiResponse<T> {
   type: number;
@@ -21,12 +22,14 @@ interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
+  
 }
 
 interface Prerequisite {
   code: string;
   name: string;
   completed: boolean;
+  
 }
 
 interface SelectedSubjectRequest {
@@ -43,6 +46,7 @@ interface SelectedSubjectRequest {
     endTime: string;
     formatted: string;
   };
+  
 }
 
 @Component({
@@ -60,7 +64,7 @@ export class RequestComponent implements OnInit {
   requestForm: FormGroup;
   selectedSubject: Subject | null = null;
   allPrerequisitesMet: boolean = false;
-
+isSubmitting: boolean = false;
   // Lista de materias seleccionadas para la solicitud
   selectedSubjects: SelectedSubjectRequest[] = [];
 
@@ -142,16 +146,17 @@ export class RequestComponent implements OnInit {
   isLoadingSchedules: boolean = false;
   tempScheduleCode: number | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private http: HttpClient,
-    private campusService: CampusService,
-    private teacherService: TeacherService,
-    private subjectService: SubjectService,
-    private modalityService: ModalityService,
-    private scheduleService: ScheduleService
-  ) {
+ constructor(
+  private fb: FormBuilder,
+  private router: Router,
+  private http: HttpClient,
+  private campusService: CampusService,
+  private teacherService: TeacherService,
+  private subjectService: SubjectService,
+  private modalityService: ModalityService,
+  private scheduleService: ScheduleService,
+  private authService: AuthenticationService  // Add this line
+) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
       teacher: ['', Validators.required]
@@ -178,6 +183,11 @@ export class RequestComponent implements OnInit {
   }
 
   ngOnInit() {
+
+      console.log('=== VERIFICACIÓN INICIAL ===');
+  console.log('currentUserValue:', this.authService.currentUserValue);
+  console.log('localStorage:', localStorage.getItem('currentUser'));
+  
     this.loadCampusList();
     this.loadTeachersList();
     this.loadSubjectsList();
@@ -525,40 +535,167 @@ formatPeriodLabel(period: any): string {
     this.selectedSubject = this.availableSubjects.find(s => s.mat_codigo === selectedCode) || null;
   }
 
-  onSubmit() {
-    if (this.selectedSubjects.length === 0) {
-      alert('Por favor agregue al menos una materia a su solicitud');
-      return;
-    }
 
-    const incompleteSubjects = this.selectedSubjects.filter(s => 
-      !s.schedule || !s.campus || !s.modality || !s.period
-    );
+  /** Retorna true si se puede habilitar el botón de envío */
+canSubmit(): boolean {
+  // Evita múltiples envíos
+  if (this.isSubmitting) return false;
 
-    if (incompleteSubjects.length > 0) {
-      alert(`Hay ${incompleteSubjects.length} materia(s) sin configurar. Por favor completa la configuración de todas las materias.`);
-      return;
-    }
+  // Debe haber al menos una materia añadida
+  if (this.selectedSubjects.length === 0) return false;
 
-    const requestData = {
-      subjects: this.selectedSubjects.map(s => ({
-        subjectCode: s.subject.mat_codigo,
-        subjectName: s.subject.mat_nombre,
-        teacherCode: s.teacher.doc_codigo,
-        teacherName: s.teacher.doc_nombre,
-        hor_codigo: s.schedule?.scheduleCode ?? null,
-        schedule: s.schedule,
-        campus: s.campus,
-        modality: s.modality,
-        period: s.period,
-        observations: s.observations
-      }))
-    };
+  // Todas las materias deben tener campus, modalidad, período y scheduleCode
+  const incomplete = this.selectedSubjects.some(s =>
+    !s.campus || !s.modality || !s.period || !s.schedule?.scheduleCode
+  );
 
-    console.log('Solicitud enviada:', requestData);
-    alert(`Solicitud enviada con éxito. Total de materias: ${this.selectedSubjects.length}`);
-    this.router.navigate(['/website']);
+  return !incomplete;
+}
+onSubmit() {
+  if (this.selectedSubjects.length === 0) {
+    alert('Por favor agregue al menos una materia a su solicitud');
+    return;
   }
+
+  // Verificar que todas las materias tengan la configuración necesaria
+  const incompleteSubjects = this.selectedSubjects.some(subject => 
+    !subject.campus || !subject.modality || !subject.period || !subject.schedule?.scheduleCode
+  );
+
+  if (incompleteSubjects) {
+    alert('Por favor complete la configuración de todas las materias antes de enviar la solicitud.');
+    return;
+  }
+
+  if (this.isSubmitting) {
+    return;
+  }
+
+  if (confirm('¿Está seguro que desea enviar la solicitud de apertura de clases?')) {
+    this.isSubmitting = true;
+
+    // Obtener el usuario actual del servicio de autenticación
+    const currentUser = this.authService.currentUserValue;
+
+    // Debug completo
+    console.log('=== DEBUG USUARIO ===');
+    console.log('currentUser:', currentUser);
+    console.log('localStorage currentUser:', localStorage.getItem('currentUser'));
+    
+    // Verificar si el usuario existe
+    if (!currentUser) {
+      console.error('No se encontró la sesión del usuario');
+      
+      // Intentar recuperar de localStorage como fallback
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        console.log('Intentando recuperar de localStorage...');
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          console.log('Usuario recuperado de localStorage:', parsedUser);
+          
+          if (parsedUser.usu_codigo) {
+            // Usar el usuario recuperado
+            this.processRequest(parsedUser);
+            return;
+          }
+        } catch (e) {
+          console.error('Error al parsear usuario de localStorage:', e);
+        }
+      }
+      
+      alert('No se pudo identificar su cuenta. Por favor, inicie sesión nuevamente.');
+      this.isSubmitting = false;
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    // Verificar que tenga el código de usuario
+    if (!currentUser.usu_codigo) {
+      console.error('El usuario no tiene código:', currentUser);
+      alert('Error: No se encontró el código de usuario. Por favor, inicie sesión nuevamente.');
+      this.isSubmitting = false;
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    // Si todo está bien, procesar la solicitud
+    this.processRequest(currentUser);
+  }
+}
+
+/**
+ * Procesa la solicitud de apertura de clases
+ */
+private processRequest(user: any) {
+  const requestData = {
+    pre_codest: user.usu_codigo,
+    created_by: user.usu_nombre || user.usu_email || 'USUARIO_DESCONOCIDO',
+    materias: this.selectedSubjects.map((subject, index) => ({
+      mat_codigo: subject.subject.mat_codigo,
+      sec_codigo: subject.schedule?.scheduleCode?.toString() || '',
+      doc_codigo: subject.teacher.doc_codigo,
+      mod_codigo: subject.modality || '',
+      cam_codigo: subject.campus || '',
+      per_codigo: subject.period || '',
+      pre_prioridad: index + 1,
+      pre_observacion: subject.observations || ''
+    }))
+  };
+
+  console.log('=== DATOS A ENVIAR ===');
+  console.log('Request Data:', JSON.stringify(requestData, null, 2));
+  console.log('URL:', `${environment.apiBaseUrl}/Requests/CreateAssignment`);
+
+  const apiUrl = `${environment.apiBaseUrl}/Requests/CreateAssignment`;
+
+  this.http.post<ApiResponse<any>>(apiUrl, requestData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'XApiKey': environment.apiKey
+    },
+    withCredentials: true
+  }).subscribe({
+    next: (response) => {
+      console.log('=== RESPUESTA DEL SERVIDOR ===');
+      console.log(response);
+      this.isSubmitting = false;
+
+      if (response && response.success) {
+        alert('¡Solicitud enviada con éxito!');
+        this.router.navigate(['/dashboard']);
+      } else {
+        const errorMessage = response?.message || 'Error al procesar la solicitud';
+        console.error('Error en la respuesta:', response);
+        alert(errorMessage);
+      }
+    },
+    error: (error) => {
+      console.error('=== ERROR EN LA PETICIÓN ===');
+      console.error('Error completo:', error);
+      console.error('Status:', error.status);
+      console.error('Error details:', error.error);
+      
+      this.isSubmitting = false;
+      
+      let errorMessage = 'Error al enviar la solicitud. Por favor, intente nuevamente.';
+      if (error.status === 0) {
+        errorMessage = 'No se pudo conectar al servidor. Verifique su conexión a internet.';
+      } else if (error.status === 401) {
+        errorMessage = 'Su sesión ha expirado. Por favor, inicie sesión nuevamente.';
+        this.router.navigate(['/auth/login']);
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
+    }
+  });
+}
+
 
   onCancel() {
     this.router.navigate(['/website']);
