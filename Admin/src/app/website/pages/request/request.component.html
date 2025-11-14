@@ -279,59 +279,8 @@
                     </div>
 
                     <div class="schedule-selector">
-                        <div class="schedule-step">
-                            <span class="step-label">1. Selecciona los días</span>
-                            <div class="day-patterns-grid">
-                                <div 
-                                    *ngFor="let pattern of dayPatterns" 
-                                    class="day-pattern-card"
-                                    [class.selected]="tempDayPattern?.value === pattern.value"
-                                    (click)="selectTempDayPattern(pattern)"
-                                >
-                                    <div class="pattern-icon">
-                                        <i class="ri-calendar-line"></i>
-                                    </div>
-                                    <div class="pattern-info">
-                                        <h4>{{pattern.label}}</h4>
-                                        <p>{{pattern.description}}</p>
-                                    </div>
-                                    <i class="ri-check-circle-fill check-icon" *ngIf="tempDayPattern?.value === pattern.value"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="schedule-step" *ngIf="tempDayPattern">
-                            <span class="step-label">2. Selecciona la hora de inicio</span>
-                            <div class="time-selector">
-                                <div class="time-input-group">
-                                    <label for="tempStartTime">Hora de inicio</label>
-                                    <input 
-                                        type="time" 
-                                        id="tempStartTime"
-                                        [(ngModel)]="tempStartTime"
-                                        [ngModelOptions]="{standalone: true}"
-                                        (change)="onTempStartTimeChange(tempStartTime)"
-                                        class="time-input"
-                                    />
-                                </div>
-                                <div class="time-separator">
-                                    <i class="ri-arrow-right-line"></i>
-                                </div>
-                                <div class="time-input-group">
-                                    <label for="tempEndTime">Hora de fin (automática)</label>
-                                    <input 
-                                        type="time" 
-                                        id="tempEndTime"
-                                        [value]="tempEndTime"
-                                        class="time-input"
-                                        readonly
-                                        disabled
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="schedule-summary" *ngIf="tempScheduleCode || (tempDayPattern && tempStartTime && tempEndTime)">
+                     
+                       <div class="schedule-summary" *ngIf="tempScheduleCode || (tempDayPattern && tempStartTime && tempEndTime)">
                             <div class="summary-icon">
                                 <i class="ri-time-line"></i>
                             </div>
@@ -345,7 +294,7 @@
                         <div class="schedule-step">
                             <span class="step-label">3. Selecciona un horario del catálogo</span>
                             <div class="modal-form-group full-width">
-                                <label for="tempSchedule">Horario (desde API) <span class="required">*</span></label>
+                                <label for="tempSchedule">Horario <span class="required">*</span></label>
                                 <select id="tempSchedule" [(ngModel)]="tempScheduleCode" [ngModelOptions]="{standalone: true}">
                                     <option [ngValue]="null">Seleccione un horario</option>
                                     <option *ngFor="let sch of availableSchedules" [ngValue]="sch.hor_codigo">
@@ -382,17 +331,15 @@
                                         </option>
                                     </select>
                                 </div>
-
-                                <div class="modal-form-group">
-                                    <label for="tempPeriod">Período <span class="required">*</span></label>
-                                    <select id="tempPeriod" [(ngModel)]="tempPeriod" [ngModelOptions]="{standalone: true}">
-                                        <option value="">Seleccione un período</option>
-                                        <option *ngFor="let period of periods" [value]="period.value">
-                                            {{period.label}}
-                                        </option>
-                                    </select>
-                                </div>
-
+<div class="modal-form-group">
+    <label for="tempPeriod">Período <span class="required">*</span></label>
+    <select id="tempPeriod" [(ngModel)]="tempPeriod" [ngModelOptions]="{standalone: true}">
+        <option value="">Seleccione un período</option>
+        <option *ngFor="let period of availablePeriods" [value]="period.per_codigo">
+            {{formatPeriodLabel(period)}}
+        </option>
+    </select>
+</div>
                                 <div class="modal-form-group full-width">
                                     <label for="tempObservations">Observaciones</label>
                                     <textarea 

@@ -12,6 +12,16 @@ import { Subject } from '../../../Modelos/uni/subject.model';
 import { Modality } from '../../../Modelos/uni/modalities.model';
 import { ScheduleService } from '../../../core/services/schedule.service';
 import { Schedule } from '../../../Modelos/uni/schedule.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
+
+interface ApiResponse<T> {
+  type: number;
+  code: number;
+  success: boolean;
+  message: string;
+  data: T;
+}
 
 interface Prerequisite {
   code: string;
@@ -73,21 +83,12 @@ export class RequestComponent implements OnInit {
   isLoadingCampus: boolean = false;
 
   //Modalities
-  availableModalities: Modality[]=[];
+  availableModalities: Modality[] = [];
   isLoadingModality: boolean = false;
 
-  modalities = [
-    { value: 'presencial', label: 'Presencial' },
-    { value: 'virtual', label: 'Virtual' },
-    { value: 'hibrida', label: 'Híbrida' }
-  ];
-
-  periods = [
-    { value: '1', label: 'Periodo 1' },
-    { value: '2', label: 'Periodo 2' },
-    { value: '3', label: 'Periodo 3' },
-    { value: '4', label: 'Periodo 4' }
-  ];
+  //Periods
+  availablePeriods: any[] = [];
+  isLoadingPeriods: boolean = false;
 
   // Opciones de días
   dayPatterns = [
@@ -144,6 +145,7 @@ export class RequestComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private http: HttpClient,
     private campusService: CampusService,
     private teacherService: TeacherService,
     private subjectService: SubjectService,
@@ -164,7 +166,6 @@ export class RequestComponent implements OnInit {
     this.scheduleService.getSchedulesList().subscribe({
       next: (response) => {
         if (response.success && response.data) {
-          // Filtrar solo horarios activos
           this.availableSchedules = response.data.filter(s => s.active);
         }
         this.isLoadingSchedules = false;
@@ -181,6 +182,7 @@ export class RequestComponent implements OnInit {
     this.loadTeachersList();
     this.loadSubjectsList();
     this.loadModalitiesList();
+    this.loadPeriodsList();
     this.loadSchedulesList();
   }
 
@@ -189,44 +191,120 @@ export class RequestComponent implements OnInit {
    */
   loadCampusList() {
     this.isLoadingCampus = true;
-    this.campusService.getCampusList().subscribe({
+    const url = `${environment.apiBaseUrl}/Campus/list`;
+    
+    this.http.get<ApiResponse<Campus[]>>(url, {
+      headers: { 
+        'XApiKey': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
+        console.log('Respuesta completa de la API:', response);
+        
         if (response.success && response.data) {
-          // Filtrar solo los campus activos
+          console.log('Datos de campus:', response.data);
           this.availableCampus = response.data.filter(campus => campus.active);
+        } else {
+          console.error('Respuesta de API no exitosa:', response);
         }
         this.isLoadingCampus = false;
       },
       error: (error) => {
         console.error('Error al cargar la lista de campus:', error);
+        
+        if (error.status === 401) {
+          console.error('Error de autorización. Verifique la API Key.');
+        } else if (error.status === 0) {
+          console.error('Error de conexión. Verifique que la API esté funcionando.');
+        }
+        
         this.isLoadingCampus = false;
-        // Opcional: mostrar mensaje de error al usuario
       }
     });
   }
 
   /**
-   * Carga la lista de campus desde el API
+   * Carga la lista de modalidades desde el API
    */
   loadModalitiesList() {
     this.isLoadingModality = true;
-    this.modalityService.getModalitiesList().subscribe({
+    const url = `${environment.apiBaseUrl}/Modalities/list`;
+    
+    this.http.get<ApiResponse<Modality[]>>(url, {
+      headers: { 
+        'XApiKey': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
+        console.log('Respuesta completa de modalidades:', response);
+        
         if (response.success && response.data) {
-          // Filtrar solo los campus activos
+          console.log('Datos de modalidades:', response.data);
           this.availableModalities = response.data.filter(modality => modality.active);
+        } else {
+          console.error('Respuesta de API no exitosa:', response);
         }
         this.isLoadingModality = false;
       },
       error: (error) => {
-        console.error('Error al cargar la lista de campus:', error);
+        console.error('Error al cargar la lista de modalidades:', error);
+        
+        if (error.status === 401) {
+          console.error('Error de autorización. Verifique la API Key.');
+        } else if (error.status === 0) {
+          console.error('Error de conexión. Verifique que la API esté funcionando.');
+        }
+        
         this.isLoadingModality = false;
-        // Opcional: mostrar mensaje de error al usuario
       }
     });
   }
 
-
+  /**
+   * Carga la lista de períodos desde el API
+   */
+  loadPeriodsList() {
+    this.isLoadingPeriods = true;
+    const url = `${environment.apiBaseUrl}/Periods/list`;
+    
+    this.http.get<ApiResponse<any[]>>(url, {
+      headers: { 
+        'XApiKey': environment.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true
+    }).subscribe({
+      next: (response) => {
+        console.log('Respuesta completa de períodos:', response);
+        
+        if (response.success && response.data) {
+          console.log('Datos de períodos:', response.data);
+          this.availablePeriods = response.data.filter(period => period.active);
+        } else {
+          console.error('Respuesta de API no exitosa:', response);
+        }
+        this.isLoadingPeriods = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar la lista de períodos:', error);
+        
+        if (error.status === 401) {
+          console.error('Error de autorización. Verifique la API Key.');
+        } else if (error.status === 0) {
+          console.error('Error de conexión. Verifique que la API esté funcionando.');
+        }
+        
+        this.isLoadingPeriods = false;
+      }
+    });
+  }
 
   /**
    * Carga la lista de materias desde el API
@@ -236,7 +314,6 @@ export class RequestComponent implements OnInit {
     this.subjectService.getSubjectsList().subscribe({
       next: (response) => {
         if (response.success && response.data) {
-          // Filtrar solo las materias activas y ordenar alfabéticamente
           this.availableSubjects = response.data
             .filter(subject => subject.active)
             .sort((a, b) => a.mat_nombre.localeCompare(b.mat_nombre));
@@ -259,7 +336,6 @@ export class RequestComponent implements OnInit {
     this.teacherService.getTeachersList().subscribe({
       next: (response) => {
         if (response.success && response.data) {
-          // Filtrar solo los docentes activos y ordenar alfabéticamente
           this.availableTeachers = response.data
             .filter(teacher => teacher.active)
             .sort((a, b) => a.doc_nombre.localeCompare(b.doc_nombre));
@@ -290,6 +366,31 @@ export class RequestComponent implements OnInit {
     }
   }
 
+
+/**
+ * Formatea el label del período para mostrarlo de forma amigable
+ */
+formatPeriodLabel(period: any): string {
+  // Convertir trimestre a Q (Quarter)
+  const quarter = `Q${period.per_trimestre}`;
+  
+  // Formatear fechas
+  const inicio = new Date(period.per_inicio).toLocaleDateString('es-HN', { 
+    day: '2-digit', 
+    month: '2-digit', 
+    year: 'numeric' 
+  });
+  
+  const fin = new Date(period.per_fin).toLocaleDateString('es-HN', { 
+    day: '2-digit', 
+    month: '2-digit', 
+    year: 'numeric' 
+  });
+  
+  return `${quarter} - ${period.per_anio} (${inicio} - ${fin})`;
+}
+
+
   /**
    * Selecciona un docente del dropdown
    */
@@ -313,7 +414,6 @@ export class RequestComponent implements OnInit {
   onTeacherSearchInput() {
     this.showTeacherDropdown = true;
     this.filterTeachers();
-    // Limpiar la selección si el usuario está escribiendo
     if (this.requestForm.get('teacher')?.value) {
       this.requestForm.patchValue({ teacher: '' });
     }
@@ -377,17 +477,14 @@ export class RequestComponent implements OnInit {
       return;
     }
 
-    // Verificar si la materia ya está en la lista
     const exists = this.selectedSubjects.some(s => s.subject.mat_codigo === subjectCode);
     if (exists) {
       alert('Esta materia ya está en tu lista de solicitudes');
       return;
     }
 
-    // Agregar a la lista
     this.selectedSubjects.push({ subject, teacher });
 
-    // Limpiar los campos
     this.requestForm.patchValue({ 
       classCode: '', 
       teacher: '' 
@@ -418,7 +515,6 @@ export class RequestComponent implements OnInit {
   onSubjectSearchInput() {
     this.showSubjectDropdown = true;
     this.filterSubjects();
-    // Limpiar la selección si el usuario está escribiendo
     if (this.requestForm.get('classCode')?.value) {
       this.requestForm.patchValue({ classCode: '' });
     }
@@ -435,7 +531,6 @@ export class RequestComponent implements OnInit {
       return;
     }
 
-    // Validar que todas las materias tengan configuración completa
     const incompleteSubjects = this.selectedSubjects.filter(s => 
       !s.schedule || !s.campus || !s.modality || !s.period
     );
@@ -445,16 +540,13 @@ export class RequestComponent implements OnInit {
       return;
     }
 
-    // Preparar los datos de la solicitud
     const requestData = {
       subjects: this.selectedSubjects.map(s => ({
         subjectCode: s.subject.mat_codigo,
         subjectName: s.subject.mat_nombre,
         teacherCode: s.teacher.doc_codigo,
         teacherName: s.teacher.doc_nombre,
-        // Enviar el código de horario requerido por el backend
         hor_codigo: s.schedule?.scheduleCode ?? null,
-        // Mantener detalle local del horario para visualización (opcional)
         schedule: s.schedule,
         campus: s.campus,
         modality: s.modality,
@@ -468,8 +560,6 @@ export class RequestComponent implements OnInit {
     this.router.navigate(['/website']);
   }
 
-  
-
   onCancel() {
     this.router.navigate(['/website']);
   }
@@ -481,7 +571,6 @@ export class RequestComponent implements OnInit {
     this.editingSubjectIndex = index;
     const item = this.selectedSubjects[index];
     
-    // Cargar todos los datos existentes
     if (item.schedule) {
       this.tempDayPattern = this.dayPatterns.find(p => p.value === item.schedule!.dayPattern);
       this.tempStartTime = item.schedule.startTime;
@@ -634,13 +723,13 @@ export class RequestComponent implements OnInit {
     return modality ? modality.mod_nombre : code;
   }
 
-  /**
-   * Obtiene el nombre del período por código
-   */
-  getPeriodName(code: string): string {
-    const period = this.periods.find(p => p.value === code);
-    return period ? period.label : code;
-  }
+/**
+ * Obtiene el nombre del período por código
+ */
+getPeriodName(code: string): string {
+  const period = this.availablePeriods.find(p => p.per_codigo === code);
+  return period ? this.formatPeriodLabel(period) : code;
+}
 
   /**
    * Cierra el dropdown cuando se hace clic fuera
