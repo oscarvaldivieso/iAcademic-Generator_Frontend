@@ -1,0 +1,162 @@
+<div class="academic-offer-container">
+  <div class="header-container">
+    <div class="page-header">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <i class="ri-home-line"></i>
+          <span>Inicio</span>
+          <i class="ri-arrow-right-s-line"></i>
+          <span class="active">Oferta Académica</span>
+        </div>
+        <h1>Oferta Académica</h1>
+        <p>Explora las clases disponibles y encuentra el horario que mejor se adapta a tu plan de estudios.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="offer-content">
+    <div class="top-row">
+      <div class="summary-card" *ngIf="!isLoading && !errorMessage">
+        <div class="summary-item">
+          <span class="summary-label">Materias disponibles</span>
+          <span class="summary-value">{{ totalSubjects }}</span>
+          <span class="summary-caption">Según filtros aplicados</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Cupos totales</span>
+          <span class="summary-value">{{ totalSeats }}</span>
+          <span class="summary-caption">Suma de cupos de las secciones visibles</span>
+        </div>
+      </div>
+
+      <div class="filters-card">
+        <div class="filter-group">
+          <label for="searchTerm">Buscar materia</label>
+          <div class="search-input-wrapper">
+            <input
+              id="searchTerm"
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="onSearchTermChange()"
+              placeholder="Buscar por código, nombre o docente..."
+              autocomplete="off"
+            />
+            <i class="ri-search-line search-icon"></i>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="campusFilter">Campus</label>
+          <div class="select-wrapper">
+            <select
+              id="campusFilter"
+              [(ngModel)]="selectedCampus"
+              (change)="onCampusChange()"
+            >
+              <option value="all">Todos los campus</option>
+              <option *ngFor="let campus of campusOptions" [value]="campus">
+                {{ campus }}
+              </option>
+            </select>
+            <i class="ri-arrow-down-s-line select-icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="state-card" *ngIf="isLoading">
+      <div class="loader"></div>
+      <div class="state-text">
+        <h3>Cargando oferta académica</h3>
+        <p>Por favor espera unos segundos mientras obtenemos la lista de clases.</p>
+      </div>
+    </div>
+
+    <div class="state-card state-error" *ngIf="!isLoading && errorMessage">
+      <div class="state-icon error">
+        <i class="ri-error-warning-line"></i>
+      </div>
+      <div class="state-text">
+        <h3>Ocurrió un problema</h3>
+        <p>{{ errorMessage }}</p>
+        <button type="button" class="btn-retry" (click)="loadOffers()">
+          <i class="ri-refresh-line"></i>
+          Reintentar
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="state-card state-empty"
+      *ngIf="!isLoading && !errorMessage && filteredOffers.length === 0"
+    >
+      <div class="state-icon empty">
+        <i class="ri-search-line"></i>
+      </div>
+      <div class="state-text">
+        <h3>No encontramos clases para tu búsqueda</h3>
+        <p>
+          Revisa el término de búsqueda o selecciona otro campus para ver más
+          opciones de materias.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="offers-grid"
+      *ngIf="!isLoading && !errorMessage && filteredOffers.length > 0"
+    >
+      <div class="offer-card" *ngFor="let offer of filteredOffers">
+        <div class="offer-card-header">
+          <div class="code-and-section">
+            <span class="code-badge">{{ offer.codigo }}</span>
+            <span class="section-chip" *ngIf="offer.seccion">
+              Sección {{ offer.seccion }}
+            </span>
+          </div>
+          <span class="campus-chip">{{ offer.campus }}</span>
+        </div>
+
+        <div class="offer-card-body">
+          <h3>{{ offer.materia }}</h3>
+          <p class="teacher">
+            <i class="ri-user-line"></i>
+            {{ offer.docente }}
+          </p>
+          <div class="meta-row">
+            <span class="meta-item">
+              <i class="ri-calendar-line"></i>
+              {{ offer.dias }}
+            </span>
+            <span class="meta-item">
+              <i class="ri-time-line"></i>
+              {{ offer.hora }}
+            </span>
+            <span class="meta-item" *ngIf="offer.bloque">
+              <i class="ri-layout-grid-line"></i>
+              {{ offer.bloque }}
+            </span>
+          </div>
+        </div>
+
+        <div class="offer-card-footer">
+          <div class="seats">
+            <span class="seats-label">Cupos disponibles</span>
+            <span
+              class="seats-value"
+              [class.low]="offer.cupos <= 5"
+              [class.medium]="offer.cupos > 5 && offer.cupos <= 15"
+              [class.high]="offer.cupos > 15"
+            >
+              {{ offer.cupos }}
+            </span>
+          </div>
+          <button type="button" class="btn-primary-ghost">
+            Ver detalles
+            <i class="ri-arrow-right-line"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

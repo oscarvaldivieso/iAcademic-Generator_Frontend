@@ -701,6 +701,10 @@ private processRequest(user: any) {
     this.router.navigate(['/website']);
   }
 
+  goToMyRequests() {
+    this.router.navigate(['/website/myrequests']);
+  }
+
   /**
    * Abre el modal para editar todos los datos de una materia
    */
