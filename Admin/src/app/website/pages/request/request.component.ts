@@ -187,7 +187,7 @@ isSubmitting: boolean = false;
       console.log('=== VERIFICACIÓN INICIAL ===');
   console.log('currentUserValue:', this.authService.currentUserValue);
   console.log('localStorage:', localStorage.getItem('currentUser'));
-  
+
     this.loadCampusList();
     this.loadTeachersList();
     this.loadSubjectsList();
@@ -633,7 +633,7 @@ private processRequest(user: any) {
     created_by: user.usu_nombre || user.usu_email || 'USUARIO_DESCONOCIDO',
     materias: this.selectedSubjects.map((subject, index) => ({
       mat_codigo: subject.subject.mat_codigo,
-      sec_codigo: subject.schedule?.scheduleCode?.toString() || '',
+      hor_codigo: subject.schedule?.scheduleCode?.toString() || '',
       doc_codigo: subject.teacher.doc_codigo,
       mod_codigo: subject.modality || '',
       cam_codigo: subject.campus || '',
