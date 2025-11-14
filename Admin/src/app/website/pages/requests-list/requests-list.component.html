@@ -1,0 +1,258 @@
+<div class="requests-list-container">
+  <div class="header-container">
+    <div class="page-header">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <i class="ri-home-line"></i>
+          <span>Inicio</span>
+          <i class="ri-arrow-right-s-line"></i>
+          <span class="active">Mis solicitudes</span>
+        </div>
+        <h1>Mis solicitudes de apertura</h1>
+        <p>
+          Revisa el estado de las solicitudes que has enviado y mantén el control de
+          tus materias priorizadas.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="requests-content">
+    <div class="top-row">
+      <div class="summary-card">
+        <div class="summary-item">
+          <span class="summary-label">Solicitudes totales</span>
+          <span class="summary-value">{{ totalRequests }}</span>
+          <span class="summary-caption">Registradas en el sistema</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Pendientes</span>
+          <span class="summary-value">{{ pendingRequests }}</span>
+          <span class="summary-caption">Esperando respuesta</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Alta prioridad</span>
+          <span class="summary-value">{{ highPriorityRequests }}</span>
+          <span class="summary-caption">Marcadas como importantes</span>
+        </div>
+      </div>
+
+      <div class="filters-card">
+        <div class="filter-group">
+          <label for="searchTerm">Buscar solicitud</label>
+          <div class="search-input-wrapper">
+            <input
+              id="searchTerm"
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange()"
+              placeholder="Buscar por materia, docente, período o número de cuenta..."
+              autocomplete="off"
+            />
+            <i class="ri-search-line search-icon"></i>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="statusFilter">Estado</label>
+          <div class="select-wrapper">
+            <select
+              id="statusFilter"
+              [(ngModel)]="statusFilter"
+              (change)="onStatusFilterChange()"
+            >
+              <option value="all">Todos</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="APROBADA">Aprobada</option>
+              <option value="RECHAZADA">Rechazada</option>
+            </select>
+            <i class="ri-arrow-down-s-line select-icon"></i>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="priorityFilter">Prioridad</label>
+          <div class="select-wrapper">
+            <select
+              id="priorityFilter"
+              [(ngModel)]="priorityFilter"
+              (change)="onPriorityFilterChange()"
+            >
+              <option value="all">Todas</option>
+              <option value="high">Solo alta</option>
+              <option value="normal">Normal</option>
+            </select>
+            <i class="ri-arrow-down-s-line select-icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="state-card"
+      *ngIf="isLoading"
+    >
+      <div class="state-icon">
+        <i class="ri-loader-4-line"></i>
+      </div>
+      <div class="state-text">
+        <h3>Cargando solicitudes</h3>
+        <p>Por favor espera mientras obtenemos el historial de tus solicitudes.</p>
+      </div>
+    </div>
+
+    <div
+      class="state-card state-error"
+      *ngIf="!isLoading && errorMessage"
+    >
+      <div class="state-icon">
+        <i class="ri-error-warning-line"></i>
+      </div>
+      <div class="state-text">
+        <h3>Ocurrió un problema</h3>
+        <p>{{ errorMessage }}</p>
+        <button
+          type="button"
+          class="btn-outline"
+          (click)="loadRequests()"
+        >
+          Reintentar
+          <i class="ri-refresh-line"></i>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="state-card"
+      *ngIf="!isLoading && !errorMessage && filteredRequests.length === 0"
+    >
+      <div class="state-icon">
+        <i class="ri-inbox-line"></i>
+      </div>
+      <div class="state-text">
+        <h3>No hay solicitudes para mostrar</h3>
+        <p>
+          Cuando envíes solicitudes de apertura de clase, aparecerán aquí para que
+          puedas darles seguimiento.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="requests-list"
+      *ngIf="!isLoading && !errorMessage && filteredRequests.length > 0"
+    >
+      <div
+        class="request-card"
+        *ngFor="let request of filteredRequests"
+        [ngClass]="{
+          'request-card-pending': (request.pre_estado || '').toUpperCase() === 'PENDIENTE',
+          'request-card-approved': (request.pre_estado || '').toUpperCase() === 'APROBADA' || (request.pre_estado || '').toUpperCase() === 'APROBADO',
+          'request-card-rejected': (request.pre_estado || '').toUpperCase() === 'RECHAZADA' || (request.pre_estado || '').toUpperCase() === 'RECHAZADO'
+        }"
+      >
+        <div class="request-card-inner">
+          <div class="card-header">
+            <div class="title-block">
+              <div class="code-chip">
+                <span class="code">{{ request.mat_codigo }}</span>
+                <span class="period">{{ request.periodo }}</span>
+              </div>
+              <h3>{{ request.mat_nombre }}</h3>
+              <div class="student-info">
+                <i class="ri-id-card-line"></i>
+                <span>{{ request.pre_codest }}</span>
+              </div>
+            </div>
+            <div class="status-block">
+              <span
+                class="priority-pill"
+                *ngIf="request.pre_prioridad"
+              >
+                <i class="ri-flashlight-line"></i>
+                Alta prioridad
+              </span>
+              <span
+                class="status-pill"
+                [ngClass]="getStatusClass(request.pre_estado)"
+              >
+                {{ request.pre_estado | titlecase }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="ri-user-line"></i>
+                  Docente
+                </div>
+                <div class="info-value">{{ request.doc_nombre }}</div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="ri-building-4-line"></i>
+                  Campus
+                </div>
+                <div class="info-value">{{ request.cam_nombre }}</div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="ri-global-line"></i>
+                  Modalidad
+                </div>
+                <div class="info-value">{{ request.mod_nombre }}</div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="ri-calendar-schedule-line"></i>
+                  Días
+                </div>
+                <div class="info-value">{{ request.hor_dia_semana_nombre }}</div>
+              </div>
+            </div>
+
+            <div
+              class="observation"
+              *ngIf="request.pre_observacion"
+            >
+              <div class="observation-label">
+                <i class="ri-message-3-line"></i>
+                Observación
+              </div>
+              <div class="observation-text">
+                {{ request.pre_observacion }}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="footer-meta">
+              <span class="date">
+                <i class="ri-time-line"></i>
+                Creada el
+                {{ request.created_at | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+              <span class="separator">•</span>
+              <span class="period-ref">
+                <i class="ri-calendar-event-line"></i>
+                {{ request.per_codigo }}
+              </span>
+            </div>
+            <button
+              type="button"
+              class="btn-outline"
+            >
+              Ver detalles
+              <i class="ri-arrow-right-line"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

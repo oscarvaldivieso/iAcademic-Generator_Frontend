@@ -474,6 +474,10 @@ export class RequestComponent implements OnInit {
     this.router.navigate(['/website']);
   }
 
+  goToMyRequests() {
+    this.router.navigate(['/website/myrequests']);
+  }
+
   /**
    * Abre el modal para editar todos los datos de una materia
    */
