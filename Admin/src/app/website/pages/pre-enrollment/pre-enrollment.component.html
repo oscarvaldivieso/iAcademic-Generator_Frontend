@@ -1,0 +1,152 @@
+<div class="preenroll-container">
+  <div class="header">
+    <div class="breadcrumb">
+      <i class="ri-home-line"></i>
+      <span>Inicio</span>
+      <i class="ri-arrow-right-s-line"></i>
+      <span class="active">Prematrícula</span>
+    </div>
+    <h1>Prematrícula</h1>
+    <p>Selecciona una o varias asignaturas de la oferta disponible y envía tu prematrícula.</p>
+  </div>
+
+  <div class="layout">
+    <div class="main">
+      <div class="toolbar">
+        <div class="filters">
+          <div class="filter">
+            <label for="searchTerm">Buscar</label>
+            <div class="search-input">
+              <input id="searchTerm" type="text" [(ngModel)]="searchTerm" (input)="onSearchTermChange()" placeholder="Código, nombre o docente..." autocomplete="off" />
+              <i class="ri-search-line"></i>
+            </div>
+          </div>
+          <div class="filter">
+            <label for="campusFilter">Campus</label>
+            <div class="select-input">
+              <select id="campusFilter" [(ngModel)]="selectedCampus" (change)="onCampusChange()">
+                <option value="all">Todos</option>
+                <option *ngFor="let campus of campusOptions" [value]="campus">{{ campus }}</option>
+              </select>
+              <i class="ri-arrow-down-s-line"></i>
+            </div>
+          </div>
+        </div>
+        <div class="summary">
+          <div class="summary-item">
+            <span class="label">Resultados</span>
+            <span class="value">{{ filteredOffers.length }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Seleccionadas</span>
+            <span class="value selected">{{ selectedOffers.length }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="state card" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <div class="state-text">
+          <h3>Cargando oferta</h3>
+          <p>Espera un momento...</p>
+        </div>
+      </div>
+
+      <div class="state card error" *ngIf="!isLoading && errorMessage">
+        <div class="state-icon"><i class="ri-error-warning-line"></i></div>
+        <div class="state-text">
+          <h3>Ocurrió un problema</h3>
+          <p>{{ errorMessage }}</p>
+          <button type="button" class="btn btn-red" (click)="loadOffers()">
+            <i class="ri-refresh-line"></i>
+            Reintentar
+          </button>
+        </div>
+      </div>
+
+      <div class="state card empty" *ngIf="!isLoading && !errorMessage && filteredOffers.length === 0">
+        <div class="state-icon"><i class="ri-search-line"></i></div>
+        <div class="state-text">
+          <h3>No hay resultados</h3>
+          <p>Intenta con otro término de búsqueda o cambia el campus.</p>
+        </div>
+      </div>
+
+      <div class="offers-grid" *ngIf="!isLoading && !errorMessage && filteredOffers.length > 0">
+        <div class="offer-card" *ngFor="let offer of filteredOffers; trackBy: trackByOffer" [class.selected]="isSelected(offer)">
+          <div class="offer-header">
+            <div class="left">
+              <span class="code">{{ offer.codigo }}</span>
+              <span class="section" *ngIf="offer.seccion">Sección {{ offer.seccion }}</span>
+            </div>
+            <span class="campus">{{ offer.campus }}</span>
+          </div>
+          <div class="offer-body">
+            <h3>{{ offer.materia }}</h3>
+            <p class="teacher" *ngIf="offer.docente"><i class="ri-user-line"></i>{{ offer.docente }}</p>
+            <div class="meta">
+              <span class="meta-item"><i class="ri-calendar-line"></i>{{ offer.dias }}</span>
+              <span class="meta-item"><i class="ri-time-line"></i>{{ offer.hora }}</span>
+              <span class="meta-item" *ngIf="offer.bloque"><i class="ri-layout-grid-line"></i>{{ offer.bloque }}</span>
+            </div>
+          </div>
+          <div class="offer-footer">
+            <div class="seats">
+              <span class="label">Cupos</span>
+              <span class="value" [class.low]="offer.cupos <= 5" [class.medium]="offer.cupos > 5 && offer.cupos <= 15" [class.high]="offer.cupos > 15">{{ offer.cupos }}</span>
+            </div>
+            <button type="button" class="btn" [class.btn-dark]="!isSelected(offer)" [class.btn-ghost]="isSelected(offer)" (click)="toggleSelect(offer)">
+              <ng-container *ngIf="!isSelected(offer); else removeTpl">
+                <i class="ri-add-line"></i>
+                Agregar
+              </ng-container>
+              <ng-template #removeTpl>
+                <i class="ri-check-line"></i>
+                Quitar
+              </ng-template>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="cart">
+      <div class="cart-card">
+        <div class="cart-header">
+          <h2>Tu prematrícula</h2>
+          <span class="count">{{ selectedOffers.length }}</span>
+        </div>
+        <div class="cart-body" *ngIf="selectedOffers.length > 0; else emptyCart">
+          <div class="cart-item" *ngFor="let s of selectedOffers; trackBy: trackByOffer">
+            <div class="info">
+              <div class="title">{{ s.materia }}</div>
+              <div class="subtitle">
+                <span class="code">{{ s.codigo }}</span>
+                <span class="sep">•</span>
+                <span class="campus">{{ s.campus }}</span>
+                <span class="sep" *ngIf="s.seccion">•</span>
+                <span class="section" *ngIf="s.seccion">Sec. {{ s.seccion }}</span>
+              </div>
+            </div>
+            <button type="button" class="icon-btn" (click)="removeSelected(s)"><i class="ri-close-line"></i></button>
+          </div>
+          <div class="cart-actions">
+            <button type="button" class="btn btn-ghost" (click)="clearSelection()"><i class="ri-delete-bin-6-line"></i>Vaciar</button>
+            <button type="button" class="btn btn-dark" [disabled]="submitting" (click)="submitPreEnrollment()">
+              <span class="spinner small" *ngIf="submitting"></span>
+              <i class="ri-send-plane-2-line" *ngIf="!submitting"></i>
+              Enviar prematrícula
+            </button>
+          </div>
+        </div>
+        <ng-template #emptyCart>
+          <div class="empty-cart">
+            <i class="ri-inbox-archive-line"></i>
+            <p>No has seleccionado materias</p>
+            <small>Agrega materias desde la lista</small>
+          </div>
+        </ng-template>
+      </div>
+    </aside>
+  </div>
+</div>

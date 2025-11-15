@@ -234,7 +234,8 @@
       "LIST": {
         "INICIO": "Inicio",
         "PREMATRICULA": "Prematricula",
-        "REQUEST": "Solicitud"
+        "REQUEST": "Solicitud",
+        "OFERTA": "Oferta"
       }
     }
   }

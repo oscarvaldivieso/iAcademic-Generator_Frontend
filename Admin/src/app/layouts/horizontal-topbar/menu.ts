@@ -16,9 +16,15 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 10,
-        label: 'MENUITEMS.WEBSITE.LIST.PREMATRICULA',
+        label: 'MENUITEMS.WEBSITE.LIST.OFERTA',
         icon: 'ph-student',
         link: '/website/offer',
+    },
+    {
+        id: 11,
+        label: 'MENUITEMS.WEBSITE.LIST.PREMATRICULA',
+        icon: 'ph-student',
+        link: '/website/pre-enrollment',
     },
     
 ]
