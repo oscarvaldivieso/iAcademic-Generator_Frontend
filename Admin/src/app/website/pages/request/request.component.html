@@ -298,15 +298,59 @@
 
                         <!-- Selección de horario desde API -->
                         <div class="schedule-step">
-                            <span class="step-label">3. Selecciona un horario del catálogo</span>
+                            <span class="step-label">Selecciona un horario del catálogo</span>
                             <div class="modal-form-group full-width">
                                 <label for="tempSchedule">Horario <span class="required">*</span></label>
-                                <select id="tempSchedule" [(ngModel)]="tempScheduleCode" [ngModelOptions]="{standalone: true}">
-                                    <option [ngValue]="null">Seleccione un horario</option>
-                                    <option *ngFor="let sch of availableSchedules" [ngValue]="sch.hor_codigo">
-                                        {{sch.hor_dia_semana_nombre}}: {{formatTime(sch.hor_hora_inicio)}} - {{formatTime(sch.hor_hora_fin)}}
-                                    </option>
-                                </select>
+                                <div class="schedule-search-container" (click)="$event.stopPropagation()">
+                                    <div class="search-input-wrapper">
+                                        <input 
+                                            type="text" 
+                                            id="tempSchedule"
+                                            class="schedule-search-input"
+                                            [(ngModel)]="scheduleSearchTerm"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (focus)="onScheduleInputFocus()"
+                                            (input)="onScheduleSearchInput()"
+                                            [placeholder]="isLoadingSchedules ? 'Cargando horarios...' : 'Buscar por día u hora...'"
+                                            [disabled]="isLoadingSchedules"
+                                            autocomplete="off"
+                                        />
+                                        <i class="ri-search-line search-icon" *ngIf="!isLoadingSchedules"></i>
+                                        <div class="spinner-border spinner-border-sm search-icon" role="status" *ngIf="isLoadingSchedules">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dropdown de resultados -->
+                                    <div class="schedule-dropdown" *ngIf="showScheduleDropdown && !isLoadingSchedules">
+                                        <div class="dropdown-header">
+                                            <span class="results-count">
+                                                {{ filteredSchedules.length }} horario(s) encontrado(s)
+                                            </span>
+                                        </div>
+                                        <div class="schedule-list">
+                                            <div 
+                                                *ngFor="let sch of filteredSchedules" 
+                                                class="schedule-item"
+                                                [class.selected]="tempScheduleCode === sch.hor_codigo"
+                                                (click)="selectSchedule(sch)"
+                                            >
+                                                <div class="schedule-info">
+                                                    <div class="schedule-name">{{ sch.hor_dia_semana_nombre }}</div>
+                                                    <div class="schedule-details">
+                                                        <span class="schedule-time">{{formatTime(sch.hor_hora_inicio)}} - {{formatTime(sch.hor_hora_fin)}}</span>
+                                                    </div>
+                                                </div>
+                                                <i class="ri-check-line check-icon" *ngIf="tempScheduleCode === sch.hor_codigo"></i>
+                                            </div>
+                                            <div class="no-results" *ngIf="filteredSchedules.length === 0">
+                                                <i class="ri-search-line"></i>
+                                                <p>No se encontraron horarios</p>
+                                                <small>Intenta con otro término de búsqueda</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <small class="hint" *ngIf="isLoadingSchedules">Cargando horarios...</small>
                             </div>
                         </div>

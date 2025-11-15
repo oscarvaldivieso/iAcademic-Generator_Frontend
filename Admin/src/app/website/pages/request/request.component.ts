@@ -15,6 +15,8 @@ import { Schedule } from '../../../Modelos/uni/schedule.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.prod';
 import { AuthenticationService } from 'src/app/core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 interface ApiResponse<T> {
   type: number;
@@ -22,14 +24,12 @@ interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
-  
 }
 
 interface Prerequisite {
   code: string;
   name: string;
   completed: boolean;
-  
 }
 
 interface SelectedSubjectRequest {
@@ -46,7 +46,6 @@ interface SelectedSubjectRequest {
     endTime: string;
     formatted: string;
   };
-  
 }
 
 @Component({
@@ -64,7 +63,7 @@ export class RequestComponent implements OnInit {
   requestForm: FormGroup;
   selectedSubject: Subject | null = null;
   allPrerequisitesMet: boolean = false;
-isSubmitting: boolean = false;
+  isSubmitting: boolean = false;
   // Lista de materias seleccionadas para la solicitud
   selectedSubjects: SelectedSubjectRequest[] = [];
 
@@ -145,6 +144,10 @@ isSubmitting: boolean = false;
   availableSchedules: Schedule[] = [];
   isLoadingSchedules: boolean = false;
   tempScheduleCode: number | null = null;
+  // UI de búsqueda para horarios
+  scheduleSearchTerm: string = '';
+  filteredSchedules: Schedule[] = [];
+  showScheduleDropdown: boolean = false;
 
  constructor(
   private fb: FormBuilder,
@@ -155,7 +158,8 @@ isSubmitting: boolean = false;
   private subjectService: SubjectService,
   private modalityService: ModalityService,
   private scheduleService: ScheduleService,
-  private authService: AuthenticationService  // Add this line
+  private authService: AuthenticationService,  
+  private toastr: ToastrService
 ) {
     this.requestForm = this.fb.group({
       classCode: ['', Validators.required],
@@ -172,6 +176,7 @@ isSubmitting: boolean = false;
       next: (response) => {
         if (response.success && response.data) {
           this.availableSchedules = response.data.filter(s => s.active);
+          this.filteredSchedules = [...this.availableSchedules];
         }
         this.isLoadingSchedules = false;
       },
@@ -475,7 +480,7 @@ formatPeriodLabel(period: any): string {
     const teacherCode = this.requestForm.get('teacher')?.value;
 
     if (!subjectCode || !teacherCode) {
-      alert('Por favor seleccione una materia y un docente');
+      this.toastr.warning('Por favor seleccione una materia y un docente');
       return;
     }
 
@@ -483,13 +488,13 @@ formatPeriodLabel(period: any): string {
     const teacher = this.availableTeachers.find(t => t.doc_codigo === teacherCode);
 
     if (!subject || !teacher) {
-      alert('Error al obtener la información de la materia o docente');
+      this.toastr.error('Error al obtener la información de la materia o docente');
       return;
     }
 
     const exists = this.selectedSubjects.some(s => s.subject.mat_codigo === subjectCode);
     if (exists) {
-      alert('Esta materia ya está en tu lista de solicitudes');
+      this.toastr.info('Esta materia ya está en tu lista de solicitudes');
       return;
     }
 
@@ -553,7 +558,7 @@ canSubmit(): boolean {
 }
 onSubmit() {
   if (this.selectedSubjects.length === 0) {
-    alert('Por favor agregue al menos una materia a su solicitud');
+    this.toastr.warning('Por favor agregue al menos una materia a su solicitud');
     return;
   }
 
@@ -563,7 +568,7 @@ onSubmit() {
   );
 
   if (incompleteSubjects) {
-    alert('Por favor complete la configuración de todas las materias antes de enviar la solicitud.');
+    this.toastr.warning('Por favor complete la configuración de todas las materias antes de enviar la solicitud.');
     return;
   }
 
@@ -571,7 +576,19 @@ onSubmit() {
     return;
   }
 
-  if (confirm('¿Está seguro que desea enviar la solicitud de apertura de clases?')) {
+  Swal.fire({
+    title: 'Enviar solicitud',
+    text: '¿Está seguro que desea enviar la solicitud de apertura de clases?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, enviar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#141a2f',
+    cancelButtonColor: '#9ca3af',
+    reverseButtons: true
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+
     this.isSubmitting = true;
 
     // Obtener el usuario actual del servicio de autenticación
@@ -604,7 +621,7 @@ onSubmit() {
         }
       }
       
-      alert('No se pudo identificar su cuenta. Por favor, inicie sesión nuevamente.');
+      this.toastr.error('No se pudo identificar su cuenta. Por favor, inicie sesión nuevamente.');
       this.isSubmitting = false;
       this.router.navigate(['/auth/login']);
       return;
@@ -613,7 +630,7 @@ onSubmit() {
     // Verificar que tenga el código de usuario
     if (!currentUser.usu_codigo) {
       console.error('El usuario no tiene código:', currentUser);
-      alert('Error: No se encontró el código de usuario. Por favor, inicie sesión nuevamente.');
+      this.toastr.error('Error: No se encontró el código de usuario. Por favor, inicie sesión nuevamente.');
       this.isSubmitting = false;
       this.router.navigate(['/auth/login']);
       return;
@@ -621,7 +638,7 @@ onSubmit() {
 
     // Si todo está bien, procesar la solicitud
     this.processRequest(currentUser);
-  }
+  });
 }
 
 /**
@@ -663,12 +680,12 @@ private processRequest(user: any) {
       this.isSubmitting = false;
 
       if (response && response.success) {
-        alert('¡Solicitud enviada con éxito!');
+        this.toastr.success('¡Solicitud enviada con éxito!');
         this.router.navigate(['/dashboard']);
       } else {
         const errorMessage = response?.message || 'Error al procesar la solicitud';
         console.error('Error en la respuesta:', response);
-        alert(errorMessage);
+        this.toastr.error(errorMessage);
       }
     },
     error: (error) => {
@@ -691,7 +708,7 @@ private processRequest(user: any) {
         errorMessage = error.message;
       }
       
-      alert(errorMessage);
+      this.toastr.error(errorMessage);
     }
   });
 }
@@ -717,11 +734,13 @@ private processRequest(user: any) {
       this.tempStartTime = item.schedule.startTime;
       this.tempEndTime = item.schedule.endTime;
       this.tempScheduleCode = item.schedule.scheduleCode ?? null;
+      this.scheduleSearchTerm = item.schedule.formatted;
     } else {
       this.tempDayPattern = null;
       this.tempStartTime = '';
       this.tempEndTime = '';
       this.tempScheduleCode = null;
+      this.scheduleSearchTerm = '';
     }
     
     this.tempCampus = item.campus || '';
@@ -743,6 +762,8 @@ private processRequest(user: any) {
     this.tempPeriod = '';
     this.tempObservations = '';
     this.tempScheduleCode = null;
+    this.scheduleSearchTerm = '';
+    this.showScheduleDropdown = false;
   }
 
   /**
@@ -789,19 +810,19 @@ private processRequest(user: any) {
    */
   saveSubjectData() {
     if (!this.tempScheduleCode) {
-      alert('Por favor selecciona un horario');
+      this.toastr.warning('Por favor selecciona un horario');
       return;
     }
 
     if (!this.tempCampus || !this.tempModality || !this.tempPeriod) {
-      alert('Por favor completa todos los campos requeridos');
+      this.toastr.warning('Por favor completa todos los campos requeridos');
       return;
     }
 
     if (this.editingSubjectIndex >= 0) {
       const schedule = this.availableSchedules.find(s => s.hor_codigo === this.tempScheduleCode!);
       if (!schedule) {
-        alert('Horario seleccionado no válido');
+        this.toastr.error('Horario seleccionado no válido');
         return;
       }
 
@@ -884,5 +905,54 @@ getPeriodName(code: string): string {
     if (!target.closest('.subject-search-container')) {
       this.showSubjectDropdown = false;
     }
+    if (!target.closest('.schedule-search-container')) {
+      this.showScheduleDropdown = false;
+    }
+  }
+
+  /**
+   * Filtro del dropdown de horarios
+   */
+  filterSchedules() {
+    const term = this.scheduleSearchTerm.toLowerCase().trim();
+    if (!term) {
+      this.filteredSchedules = [...this.availableSchedules];
+      return;
+    }
+    this.filteredSchedules = this.availableSchedules.filter(s => {
+      const day = s.hor_dia_semana_nombre?.toLowerCase() || '';
+      const start = this.formatTime(s.hor_hora_inicio).toLowerCase();
+      const end = this.formatTime(s.hor_hora_fin).toLowerCase();
+      const code = (s.hor_codigo ?? '').toString();
+      return day.includes(term) || start.includes(term) || end.includes(term) || code.includes(term);
+    });
+  }
+
+  /**
+   * Muestra el dropdown de horarios
+   */
+  onScheduleInputFocus() {
+    this.showScheduleDropdown = true;
+    this.filterSchedules();
+  }
+
+  /**
+   * Maneja el input de búsqueda de horarios
+   */
+  onScheduleSearchInput() {
+    this.showScheduleDropdown = true;
+    this.filterSchedules();
+    if (this.tempScheduleCode) {
+      this.tempScheduleCode = null;
+    }
+  }
+
+  /**
+   * Selecciona un horario del dropdown
+   */
+  selectSchedule(sch: Schedule) {
+    this.tempScheduleCode = sch.hor_codigo;
+    this.scheduleSearchTerm = `${sch.hor_dia_semana_nombre}: ${this.formatTime(sch.hor_hora_inicio)} - ${this.formatTime(sch.hor_hora_fin)}`;
+    this.showScheduleDropdown = false;
   }
 }

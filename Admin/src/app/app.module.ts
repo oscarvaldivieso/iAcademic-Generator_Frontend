@@ -44,7 +44,9 @@ export function createTranslateLoader(http: HttpClient): any {
     LayoutsModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      closeButton: true
+    }),
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {

@@ -191,7 +191,7 @@ $transition: all 0.3s ease;
 }
 
 .help-card {
-    background: linear-gradient(135deg, $secondary-color 0%, #e63854 100%);
+    background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 8%) 100%);
     border-radius: $border-radius;
     padding: 1.5rem;
     color: #ffffff;
@@ -758,7 +758,7 @@ $transition: all 0.3s ease;
     align-items: center;
     gap: 0.5rem;
     padding: 0.875rem 1.75rem;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 8%) 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -766,7 +766,7 @@ $transition: all 0.3s ease;
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 2px 8px rgba($secondary-color, 0.25);
 
     i {
         font-size: 1.2rem;
@@ -774,7 +774,7 @@ $transition: all 0.3s ease;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 12px rgba($secondary-color, 0.35);
     }
 
     &:active {
@@ -850,7 +850,7 @@ $transition: all 0.3s ease;
 .btn-remove-subject {
     width: 36px;
     height: 36px;
-    background: rgba(239, 68, 68, 0.1);
+    background: rgba($secondary-color, 0.12);
     border: none;
     border-radius: 8px;
     display: flex;
@@ -862,11 +862,11 @@ $transition: all 0.3s ease;
 
     i {
         font-size: 1.2rem;
-        color: #ef4444;
+        color: $secondary-color;
     }
 
     &:hover {
-        background: #ef4444;
+        background: $secondary-color;
         transform: scale(1.05);
 
         i {
@@ -917,8 +917,8 @@ $transition: all 0.3s ease;
         align-items: center;
         gap: 0.25rem;
         padding: 0.25rem 0.75rem;
-        background: rgba(251, 191, 36, 0.15);
-        color: #d97706;
+        background: rgba($primary-color, 0.08);
+        color: $primary-color;
         border-radius: 6px;
         font-size: 0.8rem;
         font-weight: 600;
@@ -932,7 +932,7 @@ $transition: all 0.3s ease;
     justify-content: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 8%) 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -947,14 +947,14 @@ $transition: all 0.3s ease;
 
     &:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.35);
     }
 
     &.has-schedule {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 8%) 100%);
 
         &:hover {
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba($secondary-color, 0.35);
         }
     }
 }
@@ -964,14 +964,14 @@ $transition: all 0.3s ease;
     align-items: flex-start;
     gap: 0.75rem;
     padding: 1rem;
-    background: rgba(99, 102, 241, 0.05);
-    border-left: 3px solid #6366f1;
+    background: rgba($primary-color, 0.05);
+    border-left: 3px solid $primary-color;
     border-radius: 8px;
     margin-top: 1rem;
 
     i {
         font-size: 1.2rem;
-        color: #6366f1;
+        color: $primary-color;
         flex-shrink: 0;
         margin-top: 0.1rem;
     }
@@ -1223,9 +1223,9 @@ $transition: all 0.3s ease;
     }
 }
 
-// Shared Search Dropdown Styles
 .teacher-search-container,
-.subject-search-container {
+.subject-search-container,
+.schedule-search-container {
     position: relative;
     width: 100%;
 }
@@ -1235,7 +1235,8 @@ $transition: all 0.3s ease;
     width: 100%;
 
     .teacher-search-input,
-    .subject-search-input {
+    .subject-search-input,
+    .schedule-search-input {
         width: 100%;
         padding: 0.75rem;
         border: 1px solid #ddd;
@@ -1277,7 +1278,8 @@ $transition: all 0.3s ease;
 }
 
 .teacher-dropdown,
-.subject-dropdown {
+.subject-dropdown,
+.schedule-dropdown {
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
@@ -1315,7 +1317,8 @@ $transition: all 0.3s ease;
     }
 
     .teacher-list,
-    .subject-list {
+    .subject-list,
+    .schedule-list {
         max-height: 350px;
         overflow-y: auto;
         
@@ -1339,7 +1342,8 @@ $transition: all 0.3s ease;
     }
 
     .teacher-item,
-    .subject-item {
+    .subject-item,
+    .schedule-item {
         padding: 1rem;
         display: flex;
         align-items: center;
@@ -1360,19 +1364,22 @@ $transition: all 0.3s ease;
             background: rgba(20, 26, 47, 0.05);
             border-left: 3px solid $primary-color;
 
-            .teacher-name {
+            .teacher-name,
+            .schedule-name {
                 color: $primary-color;
                 font-weight: 600;
             }
         }
 
         .teacher-info,
-        .subject-info {
+        .subject-info,
+        .schedule-info {
             flex: 1;
         }
 
         .teacher-name,
-        .subject-name {
+        .subject-name,
+        .schedule-name {
             font-size: 0.95rem;
             font-weight: 500;
             color: #1e293b;
@@ -1392,7 +1399,16 @@ $transition: all 0.3s ease;
             margin-top: 0.25rem;
         }
 
-        .subject-code {
+        .schedule-details {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.25rem;
+        }
+
+        .subject-code,
+        .schedule-time {
             font-size: 0.8rem;
             color: #64748b;
             font-weight: 600;
@@ -1401,8 +1417,8 @@ $transition: all 0.3s ease;
         .subject-area {
             font-size: 0.75rem;
             padding: 0.15rem 0.5rem;
-            background: rgba(99, 102, 241, 0.1);
-            color: #6366f1;
+            background: rgba($primary-color, 0.08);
+            color: $primary-color;
             border-radius: 4px;
             font-weight: 500;
         }
@@ -1410,8 +1426,8 @@ $transition: all 0.3s ease;
         .subject-badge {
             font-size: 0.75rem;
             padding: 0.15rem 0.5rem;
-            background: rgba(251, 191, 36, 0.15);
-            color: #d97706;
+            background: rgba($secondary-color, 0.12);
+            color: $secondary-color;
             border-radius: 4px;
             font-weight: 500;
             display: inline-flex;
@@ -1635,25 +1651,30 @@ $transition: all 0.3s ease;
 // Responsive adjustments for dropdowns
 @media (max-width: 768px) {
     .teacher-dropdown,
-    .subject-dropdown {
+    .subject-dropdown,
+    .schedule-dropdown {
         max-height: 300px;
 
         .teacher-list,
-        .subject-list {
+        .subject-list,
+        .schedule-list {
             max-height: 250px;
         }
 
         .teacher-item,
-        .subject-item {
+        .subject-item,
+        .schedule-item {
             padding: 0.75rem;
 
             .teacher-name,
-            .subject-name {
+            .subject-name,
+            .schedule-name {
                 font-size: 0.9rem;
             }
 
             .teacher-code,
-            .subject-code {
+            .subject-code,
+            .schedule-time {
                 font-size: 0.75rem;
             }
 
