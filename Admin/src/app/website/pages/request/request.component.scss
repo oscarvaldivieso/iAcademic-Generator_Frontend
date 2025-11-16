@@ -196,16 +196,57 @@ $transition: all 0.3s ease;
     padding: 1.5rem;
     color: #ffffff;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba($secondary-color, 0.25);
+
+    &::before {
+        content: '';
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(255,255,255,0.18), rgba(255,255,255,0));
+        top: -80px;
+        right: -80px;
+        pointer-events: none;
+        filter: blur(0.5px);
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 40%);
+        pointer-events: none;
+    }
+
+    .help-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.85rem;
+
+        i { font-size: 1rem; }
+    }
 
     .help-icon {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1rem;
+        margin: 0 auto 0.9rem;
+        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.18);
 
         i {
             font-size: 1.8rem;
@@ -215,13 +256,41 @@ $transition: all 0.3s ease;
     h4 {
         font-size: 1.1rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.35rem;
     }
 
     p {
         font-size: 0.9rem;
-        opacity: 0.9;
-        margin-bottom: 1rem;
+        opacity: 0.95;
+        margin-bottom: 0.9rem;
+    }
+
+    .help-chips {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.9rem;
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.75rem;
+            font-weight: 600;
+
+            i { font-size: 1rem; }
+        }
+    }
+
+    .help-actions {
+        display: flex;
+        justify-content: center;
     }
 
     .help-link {
@@ -232,17 +301,26 @@ $transition: all 0.3s ease;
         text-decoration: none;
         background: rgba(255, 255, 255, 0.2);
         padding: 0.75rem 1.25rem;
-        border-radius: 8px;
+        border-radius: 10px;
         font-size: 0.9rem;
         transition: $transition;
+    }
+
+    .help-btn {
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.15);
 
         &:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
         }
 
-        i {
-            font-size: 1.1rem;
+        &:active {
+            transform: translateY(-1px);
         }
+
+        i { font-size: 1.1rem; }
     }
 }
 
