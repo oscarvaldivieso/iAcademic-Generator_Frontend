@@ -1,0 +1,353 @@
+.plan {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  padding: 0 0.5rem 2.5rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.header-container {
+  padding-top: 1.25rem;
+}
+
+.page-header {
+  background: #141a2f;
+  padding: 2rem 0;
+  border-radius: 10px;
+}
+
+.header-content {
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb i {
+  font-size: 1rem;
+}
+
+.breadcrumb .active {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.page-header h1 {
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.page-header p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  margin-top: 0.9rem;
+}
+
+.btn-header-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-header-secondary i {
+  font-size: 1.05rem;
+}
+
+.btn-header-secondary:hover {
+  background: #ffffff;
+  color: #111827;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.35);
+}
+
+.btn-header-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.plan__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.plan__stat {
+  min-width: 110px;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.plan__stat-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 0.15rem;
+}
+
+.plan__stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.plan__stat-value--available {
+  color: #16a34a;
+}
+
+.plan__stat-value--locked {
+  color: #b91c1c;
+}
+
+.plan__body {
+  margin-top: 1.5rem;
+}
+
+.plan__loading,
+.plan__error,
+.plan__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: #4b5563;
+}
+
+.plan__error {
+  color: #b91c1c;
+}
+
+.plan__empty {
+  color: #6b7280;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.4);
+  border-top-color: #6366f1;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.plan__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.plan-year {
+  position: relative;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.plan-year::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(59, 130, 246, 0.04));
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.plan-year__header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.plan-year__tag {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111827;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.plan-year__count {
+  font-size: 0.8rem;
+  color: #4b5563;
+}
+
+.plan-year__subjects {
+  position: relative;
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.plan-year__subjects::-webkit-scrollbar {
+  width: 4px;
+}
+
+.plan-year__subjects::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.plan-year__subjects::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.6);
+  border-radius: 999px;
+}
+
+.subject-chip {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.85rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.subject-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+}
+
+.subject-chip__check {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.1rem;
+}
+
+.subject-chip__checkbox {
+  margin: 0;
+}
+
+.subject-chip__check-label {
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+.subject-chip__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.subject-chip__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.subject-chip__code {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4b5563;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.subject-chip__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.subject-chip__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.subject-chip__uv {
+  font-weight: 600;
+}
+
+.subject-chip__divider {
+  opacity: 0.6;
+}
+
+.subject-chip--completed {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, rgba(22, 163, 74, 0.12), rgba(187, 247, 208, 0.4));
+}
+
+.subject-chip--available {
+  border-color: #3b82f6;
+}
+
+.subject-chip--locked {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.9), rgba(254, 242, 242, 0.98));
+}
+
+@media (max-width: 768px) {
+  .plan {
+    padding-inline: 1rem;
+  }
+
+  .plan__title {
+    font-size: 1.5rem;
+  }
+
+  .plan-year {
+    max-height: none;
+  }
+
+  .plan-year__subjects {
+    max-height: none;
+  }
+}
+

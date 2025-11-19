@@ -1,0 +1,93 @@
+<section class="plan">
+  <div class="header-container">
+    <div class="page-header">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <i class="ri-home-line"></i>
+          <span>Inicio</span>
+          <i class="ri-arrow-right-s-line"></i>
+          <span class="active">Mi plan de clases</span>
+        </div>
+        <h1>Mi plan de materias</h1>
+        <p>Consulta el plan de tu carrera y marca las materias que ya has cursado.</p>
+        <div class="header-actions">
+          <button type="button" class="btn-header-secondary" (click)="onSaveProgress()">
+            <i class="ri-save-3-line"></i>
+            Guardar progreso
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="plan__body">
+    <div class="plan__summary" *ngIf="groupedByYear.length">
+      
+    </div>
+    <div class="plan__loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Cargando tu plan de materias...</p>
+    </div>
+
+    <div class="plan__error" *ngIf="!isLoading && errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <div
+      class="plan__grid"
+      *ngIf="!isLoading && !errorMessage && groupedByYear.length"
+    >
+      <div class="plan-year" *ngFor="let group of groupedByYear">
+        <div class="plan-year__header">
+          <span class="plan-year__tag">Año {{ group.year }}</span>
+          <span class="plan-year__count">
+            {{ group.subjects.length }} materias
+          </span>
+        </div>
+
+        <div class="plan-year__subjects">
+          <label
+            class="subject-chip"
+            *ngFor="let subject of group.subjects"
+            [ngClass]="{
+              'subject-chip--completed': subject.cursada,
+              'subject-chip--available': !subject.cursada && subject.puede_cursar,
+              'subject-chip--locked': !subject.cursada && !subject.puede_cursar
+            }"
+          >
+            <div class="subject-chip__check">
+              <input
+                type="checkbox"
+                class="subject-chip__checkbox"
+                [(ngModel)]="subject.cursada"
+              />
+              <span class="subject-chip__check-label">Cursado</span>
+            </div>
+            <div class="subject-chip__info">
+              <div class="subject-chip__title">
+                <span class="subject-chip__code">{{ subject.mat_codigo }}</span>
+                <span class="subject-chip__name">{{ subject.mat_nombre }}</span>
+              </div>
+              <div class="subject-chip__meta">
+                <span class="subject-chip__uv">
+                  {{ subject.mat_unidades_valorativas || 0 }} UV
+                </span>
+                <span class="subject-chip__divider">·</span>
+                <span class="subject-chip__type">
+                  {{ subject.mat_obligatoria ? 'Obligatoria' : 'Optativa' }}
+                </span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="plan__empty"
+      *ngIf="!isLoading && !errorMessage && !groupedByYear.length"
+    >
+      <p>No se encontraron materias en tu plan de carrera.</p>
+    </div>
+  </div>
+</section>

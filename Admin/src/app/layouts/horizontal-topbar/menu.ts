@@ -26,5 +26,11 @@ export const MENU: MenuItem[] = [
         icon: 'ph-student',
         link: '/website/pre-enrollment',
     },
+    {
+        id: 12,
+        label: 'MENUITEMS.WEBSITE.LIST.MATERIAS',
+        icon: 'ph-student',
+        link: '/website/myclasses',
+    },
     
 ]

@@ -7,6 +7,7 @@ import { AcademicOfferComponent } from './pages/academic-offer/academic-offer.co
 import { RequestComponent } from './pages/request/request.component';
 import { RequestsListComponent } from './pages/requests-list/requests-list.component';
 import { PreEnrollmentComponent } from './pages/pre-enrollment/pre-enrollment.component';
+import { PlanSubjectsComponent } from './pages/plan-subjects/plan-subjects.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'myrequests', component: RequestsListComponent },
       { path: 'offer', component: AcademicOfferComponent },
       { path: 'pre-enrollment', component: PreEnrollmentComponent },
+      {path:'myclasses', component: PlanSubjectsComponent}
     ]
   }
 ];

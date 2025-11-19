@@ -17,6 +17,7 @@ export interface AuthData {
     usu_nombre: string;
     usu_email: string;
     tipo_usuario: string;
+    car_codigo: string;
     roles: string;
     expires_at: string;
 }
